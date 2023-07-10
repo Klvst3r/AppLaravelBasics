@@ -1,0 +1,123 @@
+3. Instalando lo Necesario en Mac
+
+1. Lo primero necesario sera Composer
+
+en el navegador:
+	composer.org
+
+2. Copiar en la terminal el codigo
+
+3. Verificar PHP instalado
+	php -v
+
+4. Copiar y verificar
+
+5. Ahora se puede ejecutar 
+	php composer.phar
+
+Para evitar escribir esto al inicio y alfinal. Con el comando touch se crea un directorio en la raiz de home
+
+	touch ~/.bash_profile
+
+Abrir el archivo con
+	open ~/.bash_profile
+
+6. Agregar la siguiente linea en el archivo creado
+	export PATH="$PATH:$HOME/.composer/vendor/bin"
+
+Lo que se hace es exponer el comando composer en la linea de comandos.
+
+
+Parte 2. Instalar el Instalador de Laravel
+
+1. composer global require laravel/installer
+
+Si escribimos ahora
+	laravel
+
+Nos mostrara un conjunto de instrucciones para trabajar con laravel
+
+Si Se tiene PHP 7 instalado se puede hacer facilmente con
+	Homebrew desde
+		brew.sh
+
+Para instalarlo vamos desde el sitio web y copiamos la linea presentada en la terminal.
+
+/usr/bin/ruby ...
+
+Lo pegamos en la terminal.
+
+Si escribimos en la terminal ahora 
+	brew
+Con esto ya esta listo 
+
+Buscamos 
+	brew search php7
+
+En nuestro caso sera con la version php81
+
+Ya se tiene instalado pero si no podemos hacer
+	brew install homebrew/php/php81
+
+Una vez instalado homebrew ejecutamos
+	composer global require laravel/valet
+
+Para instalar Valet, y si todo sale bien ya podemos ejecutar valet
+	valet
+una vez instalado el paquete, se debe ejecutar el comando install
+	valet install 
+
+Este comando lo debemos ejecutar una sola vez, en adelante ya no debemos preocuparnos por esto.
+
+Ahora debemos crearuna carpeta para crear nuestro proyectos
+	en el home de la makina
+		mkdir ~/dev
+
+Ahora vamos a ingresar y ejeciutar otro comando de Valet "park", este comando sirve para que valet registre esta carpeta y asi poder acceder a una url por cada proyecto creado.
+
+Ahora si creamos un nuevo proyeto tal como
+	laravel new blog
+
+Podemos ahora acceder desde blog.dev en el navegador tendremos acceso al proyecto.
+
+Mas adelante se trabajara con Bd por lo tanto se instalara MySQL o MariaDB
+
+Proceso 3. Base de datos
+
+Instalar con Brew
+	brew search mysql
+
+Para instalarla basta con ejecutar
+	brew install mysql 
+
+Podemos buscar tambien MariaDB
+	brew search mariadb
+
+si se quiere instalar 
+	brew install mariadb
+
+Proceso 4 Con Valet
+
+Si ingresamos al proyecto creado ej. "blog" y ejecutamos
+	valet share
+
+Veremos que da una rul global con la cual podemos acceder desde cualquier lugar del mundo mientras tengamos encendido el servicio.
+
+
+Proceso 5. Editor de Codigo
+
+Sublime Text.
+
+1. Descargar e instalr
+
+
+Proceso 6. Instalar un gestgor de base de datos Sequel Pro
+	Desde
+		sequelpro.com
+
+1. Descargar
+
+2- Instalar
+
+Ahora Ya tenemos lo necesario para progamar en laravel 
+	valet park
