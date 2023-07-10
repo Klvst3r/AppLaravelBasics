@@ -1,0 +1,47 @@
+2. Configurando Sublime Text en Windows
+
+Descargamos Sublime Text
+
+1. Instalar Package control el instalador de paquetes 
+
+2. Cambiar apariencia
+	CTRL + SHIT + P
+
+	Tema
+		Material Theme
+
+Preferencies
+	Color Scheme > Material Theme
+
+	Preferences
+		Package Settings > Material Theme > Activate
+
+
+3. Abrir carpeta el proyecto
+	Preferences
+			Package Settings > Material Theme > Configuration 
+				Magterial Theme > Material Theme 
+
+Para abrir el side bar
+	CTRL + K y CTRL + B
+
+4. Key Bindings
+	Preferences > Key Bindings
+
+	Buscar
+		tiggle_side_bar -> CTRL + 1
+
+			{ "keys": ["ctrl+1"], "command": "toggle_side_bar" },
+
+
+5. Instalar Paquete para que Sublime Reconozca el paquete de Plantillas Blade 
+
+	CTRL + SHIT + P
+		Install 
+
+			Paquete: laravel blade
+
+6. Abrir 
+	/resources/views/welcome.blade.php
+
+	Ya se esta listo para crear conytenido con Laravel
