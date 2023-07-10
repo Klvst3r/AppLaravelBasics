@@ -1,0 +1,156 @@
+1. Instalando lo necesario en Windows
+
+En esta leccion instalaremos todo el sowftware necesario para programar con Laravel en Windows, con la ayuda de Laragon.
+
+Para trabajar con Laravel es necesario tener configurado PHP, MySQL, Composer se recomeinda tambien Git, NodeJS y NPM.
+
+Una opcion para ayudarnos con tyodos estos programas es utilizar WAMP o XAMP y por nuestra cuneta el resto, pero existe una alternativa para instalar todo esto con un par de clicks adicionalmente de Host Virtuales.
+
+Esta altarnetativa es Laragon, desde laragon.org
+
+https://laragon.org/
+
+Desde
+
+https://laragon.org/download/
+
+Descargando la versión de:
+
+
+    Laragon Full (64-bit): Apache 2.4, Nginx, MySQL 8, PHP 8, Redis, Memcached, Node.js 18, npm, git
+
+
+El asistente guiara, sugiere instalarse en:
+
+C:\laragon
+
+Se dejan activas las casillas de que Laragon inice cuando arranque Windows y Auto Virtual Host
+
+El README tiene la información relevante para acceder con el usuario Root con la contraseña en blanco.
+
+La primera vez que abrimos la terminal instalara Git, ir al panel de laragon iniciando todos los servicios en Laragon
+
+Nuesra ruta estara disponible en>
+
+C:/laragon/www
+
+NGInex y apache esta encendido, ahora podremos ir a:
+    localhost
+
+Raiz de los proyectos.
+
+
+Los datos de la base de datos son
+Host:
+127.0.0.1
+
+
+User:
+    root
+
+Pass
+
+
+Se verifica funcionamiento de la BD
+
+
+Ingresamos a la ruta
+
+C:/laragon/www
+
+
+Escribimos got y verificamos que esta instalado
+
+Si escribimos en la terminal de Laragon "cmder" y escribimos composer, verificamos que esta instalado.
+
+La verion de PHP es:
+
+λ php -v
+PHP 8.1.10 
+
+La ultima version en el 2023 al mes de julio
+
+Node:
+λ node -v
+v18.8.0
+
+NPM
+λ npm -v
+8.18.0
+
+
+Aca solo existe un archivo index.php, aqui se crearan los proyectos de laravel
+
+
+Si escribimos laravel, no reconoce el comando aun asi que podemos escribir:
+
+Comando de ejecucion del proyecto de laravel
+Ej
+    composer create-proyect laravel/laravel <nombre_app>
+
+    composer create-proyect laravel/laravel AppLaravelBasics
+
+
+Pero el creador de Laravel ha hecho un instalador que hace este proceso mucho mas sencillo 
+
+Para instalarlo necesitamos hacer esto una sola vez
+
+    composer global require laravel/installer
+
+
+Esperamos
+
+Y ahora ya tenemos acceso al comando laravel
+
+
+λ composer global require laravel/installer
+Changed current directory to C:/Users/Klvst3r/AppData/Roaming/Composer
+Info from https://repo.packagist.org: #StandWithUkraine
+Using version ^4.5 for laravel/installer
+./composer.json has been created
+
+
+Entonces de ahora en adelante para crear aplicación de laravel ejecutamos:
+Ej.
+    laravel new <nombre-app>
+
+ laravel new AppLaravelBasics
+
+ Laravel la primera vez puede tardar un poco por los paquetes que descarga pero quedan almacenados en el cache de composer, para al instalar nuevamente la creación de un nuevo proyecto, la creación sera más rapida.
+
+ ahora vamos a:
+
+ blog.dev en el navegador en nuestro caso
+
+ applaravelbasic.dev
+
+
+Aunque laragon nos debe ayudar con el host virtual de nuestro poryecto podemos tambien acudir a la ruta publica del proyecto
+
+
+http://localhost/applaravelbasic/public/
+
+o simplemente podemos recargar en la ventana de laragon
+
+
+Para poder trabajar con nuestro poryecto podremos usar ahora la ruta:
+
+    http://applaravelbasic.test/
+
+Pero coomo estamos en fase de desarrollo cambiarem el subdominio
+http://applaravelbasic.io/
+
+
+
+Para poder trabajar correctamente ahora.
+
+En Windows
+
+Ahora para crear una nueva app
+    larael new <nombre-app>
+
+
+Ahora en la carpeta de proyectos 
+
+    /resources/view/view.blade.
+
