@@ -121,3 +121,297 @@ Proceso 6. Instalar un gestgor de base de datos Sequel Pro
 
 Ahora Ya tenemos lo necesario para progamar en laravel 
 	valet park
+
+Resumen de la Instalacion en Mac Monterey
+
+
+1.  composer -v 
+2. touch ~/.bash_profile 
+3. export PATH="$PATH:$HOME/.composer/vendor/bin"
+4. composer global require laravel/installer 
+5. laravel
+6. brew
+7.  brew install homebrew/php/php81 
+8. composer global require laravel/valet 
+9. valet
+10.mkdir ~/www
+11. cd www
+12. laravel new AppLaravelBasics
+
+...
+- Installing spatie/laravel-ignition (2.2.0): Extracting archive
+43 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating optimized autoload files
+> Illuminate\Foundation\ComposerScripts::postAutoloadDump
+> @php artisan package:discover --ansi
+
+   INFO  Discovering packages.  
+
+  laravel/sail ...................................................................................................................... DONE
+  laravel/sanctum ................................................................................................................... DONE
+  laravel/tinker .................................................................................................................... DONE
+  nesbot/carbon ..................................................................................................................... DONE
+  nunomaduro/collision .............................................................................................................. DONE
+  nunomaduro/termwind ............................................................................................................... DONE
+  spatie/laravel-ignition ........................................................................................................... DONE
+
+82 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+> @php artisan vendor:publish --tag=laravel-assets --ansi --force
+
+   INFO  No publishable resources for tag [laravel-assets].  
+
+No security vulnerability advisories found
+> @php artisan key:generate --ansi
+
+   INFO  Application key set successfully.  
+
+   INFO  Application ready! Build something amazing.
+
+
+BD
+
+13. brew search mysql
+14. brew install mysql 
+
+----------------------------------------------------
+...
+
+ Fetching dependencies for mysql: icu4c, ca-certificates, openssl@3, libevent, libcbor, libfido2, protobuf@21, zlib, xz and zstd
+==> Fetching icu4c, ca-certificates, openssl@1.1, openldap, apr, apr-util, libssh2, rtmpdump, libnghttp2, curl, freetds, jpeg-turbo, libtiff, 
+, libpng, webp, highway, imath, little-cms2, openexr, jpeg-xl, aom, freetype, fontconfig, gd, libzip, sqlite, php@8.1, nginx
+
+==> Upgrading krb5
+  1.20.1 -> 1.21.1 
+
+==> Upgrading libpq
+  15.1 -> 15.3_1 
+
+==> Upgrading openssl@1.1
+  1.1.1s -> 1.1.1u 
+
+==> Upgrading openldap
+  2.6.3 -> 2.6.5 
+
+==> Upgrading apr-util
+  1.6.1_4 -> 1.6.3_1 
+
+==> Installing apr-util
+
+==> Upgrading libssh2
+  1.10.0 -> 1.11.0_1 
+
+==> Upgrading rtmpdump
+  2.4+20151223_1 -> 2.4+20151223_2
+
+==> Upgrading curl
+  7.87.0 -> 8.2.1 
+
+==> Installing dependencies for curl: libnghttp2
+==> Installing curl dependency: libnghttp2
+
+==> Installing curl
+==> Pouring curl--8.2.1.monterey.bottle.tar.gz
+
+==> Upgrading freetds
+  1.3.17 -> 1.3.18_1 
+
+==> Upgrading libtiff
+  4.4.0_1 -> 4.5.1 
+
+==> Installing dependencies for libtiff: jpeg-turbo
+==> Installing libtiff dependency: jpeg-turbo
+
+==> Installing libtiff
+
+==> Upgrading webp
+  1.3.0 -> 1.3.1 
+
+==> Installing dependencies for webp: libpng
+==> Installing webp dependency: libpng
+
+==> Installing webp
+
+==> Upgrading jpeg-xl
+  0.7.0_1 -> 0.8.2 
+
+==> Installing dependencies for jpeg-xl: highway, imath, little-cms2 and openexr
+==> Installing jpeg-xl dependency: highway
+
+==> Installing jpeg-xl dependency: imath
+
+==> Installing jpeg-xl dependency: little-cms2
+
+==> Installing jpeg-xl dependency: openexr
+
+==> Installing jpeg-xl
+
+==> Upgrading aom
+  3.5.0_1 -> 3.6.1 
+
+==> Upgrading gd
+  2.3.3_4 -> 2.3.3_5 
+
+==> Installing dependencies for gd: freetype and fontconfig
+==> Installing gd dependency: freetype
+
+==> Installing gd dependency: fontconfig
+
+==> Installing gd
+
+==> Upgrading libzip
+  1.9.2 -> 1.10.0_1 
+
+
+==> Upgrading php@8.1
+  8.1.14_1 -> 8.1.21 
+
+==> Installing dependencies for php@8.1: sqlite
+==> Installing php@8.1 dependency: sqlite
+
+==> Installing php@8.1
+
+==> Pouring php@8.1--8.1.21.monterey.bottle.tar.gz
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set php_ini /usr/local/etc/php/8.1/php.ini system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set php_dir /usr/local/share/pear@8.1 system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set doc_dir /usr/local/share/pear@8.1/doc system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20210902 system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set bin_dir /usr/local/opt/php@8.1/bin system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set data_dir /usr/local/share/pear@8.1/data system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set cfg_dir /usr/local/share/pear@8.1/cfg system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set www_dir /usr/local/share/pear@8.1/htdocs system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set man_dir /usr/local/share/man system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set test_dir /usr/local/share/pear@8.1/test system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear config-set php_bin /usr/local/opt/php@8.1/bin/php system
+==> /usr/local/Cellar/php@8.1/8.1.21/bin/pear update-channels
+==> Caveats
+To enable PHP in Apache add the following to httpd.conf and restart Apache:
+    LoadModule php_module /usr/local/opt/php@8.1/lib/httpd/modules/libphp.so
+
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+
+Finally, check DirectoryIndex includes index.php
+    DirectoryIndex index.php index.html
+
+The php.ini and php-fpm.ini file can be found in:
+    /usr/local/etc/php/8.1/
+
+php@8.1 is keg-only, which means it was not symlinked into /usr/local,
+because this is an alternate version of another formula.
+
+If you need to have php@8.1 first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/php@8.1/bin:$PATH"' >> ~/.zshrc
+  echo 'export PATH="/usr/local/opt/php@8.1/sbin:$PATH"' >> ~/.zshrc
+
+For compilers to find php@8.1 you may need to set:
+  export LDFLAGS="-L/usr/local/opt/php@8.1/lib"
+  export CPPFLAGS="-I/usr/local/opt/php@8.1/include"
+
+To restart php@8.1 after an upgrade:
+  brew services restart php@8.1
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/php@8.1/sbin/php-fpm --nodaemonize
+==> Summary
+🍺  /usr/local/Cellar/php@8.1/8.1.21: 514 files, 80.3MB
+==> Running `brew cleanup php@8.1`...
+Removing: /usr/local/Cellar/php@8.1/8.1.14_1... (513 files, 80.2MB)
+Warning: Directory not empty @ dir_s_rmdir - /usr/local/Cellar/php@8.1/8.1.14_1
+==> Upgrading nginx
+  1.23.3 -> 1.25.1_1 
+
+==> Pouring nginx--1.25.1_1.monterey.bottle.tar.gz
+==> Caveats
+Docroot is: /usr/local/var/www
+
+The default port has been set in /usr/local/etc/nginx/nginx.conf to 8080 so that
+nginx can run without sudo.
+
+nginx will load all files in /usr/local/etc/nginx/servers/.
+
+To start nginx now and restart at login:
+  brew services start nginx
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/nginx/bin/nginx -g daemon off;
+==> Summary
+🍺  /usr/local/Cellar/nginx/1.25.1_1: 26 files, 2.4MB
+==> Running `brew cleanup nginx`...
+Removing: /usr/local/Cellar/nginx/1.23.3... (26 files, 2.2MB)
+Warning: Directory not empty @ dir_s_rmdir - /usr/local/Cellar/nginx/1.23.3
+==> Checking for dependents of upgraded formulae...
+==> No broken dependents found!
+==> `brew cleanup` has not been run in the last 30 days, running now...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+
+Pruned 0 symbolic links and 11 directories from /usr/local
+==> Caveats
+==> mysql
+We've installed your MySQL database without a root password. To secure it run:
+    mysql_secure_installation
+
+MySQL is configured to only allow connections from localhost by default
+
+To connect run:
+    mysql -u root
+
+To start mysql now and restart at login:
+  brew services start mysql
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/mysql/bin/mysqld_safe --datadir=/usr/local/var/mysql
+==> php@8.1
+To enable PHP in Apache add the following to httpd.conf and restart Apache:
+    LoadModule php_module /usr/local/opt/php@8.1/lib/httpd/modules/libphp.so
+
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+
+Finally, check DirectoryIndex includes index.php
+    DirectoryIndex index.php index.html
+
+The php.ini and php-fpm.ini file can be found in:
+    /usr/local/etc/php/8.1/
+
+php@8.1 is keg-only, which means it was not symlinked into /usr/local,
+because this is an alternate version of another formula.
+
+If you need to have php@8.1 first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/php@8.1/bin:$PATH"' >> ~/.zshrc
+  echo 'export PATH="/usr/local/opt/php@8.1/sbin:$PATH"' >> ~/.zshrc
+
+For compilers to find php@8.1 you may need to set:
+  export LDFLAGS="-L/usr/local/opt/php@8.1/lib"
+  export CPPFLAGS="-I/usr/local/opt/php@8.1/include"
+
+To restart php@8.1 after an upgrade:
+  brew services restart php@8.1
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/php@8.1/sbin/php-fpm --nodaemonize
+==> nginx
+Docroot is: /usr/local/var/www
+
+The default port has been set in /usr/local/etc/nginx/nginx.conf to 8080 so that
+nginx can run without sudo.
+
+nginx will load all files in /usr/local/etc/nginx/servers/.
+
+To start nginx now and restart at login:
+  brew services start nginx
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/nginx/bin/nginx -g daemon off;
+
+----------------------------------------------------
+
+15. brew services start mysql 
+16. mysql -u root
+
+17. valet share-tool ngrok
+...
+Would you like to install ngrok via Homebrew now? [y/N] y
+
+18. http://applaravelbasics.test/
+
+
+
