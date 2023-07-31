@@ -1,0 +1,36 @@
+4. Importando un proyecto de Plataforma de windows a Mac
+
+Migrar proyecto desde github o bien de equipo a equipo
+
+Al hacer la clonación del proyecto en un servidor local, aun cumpliendo los requisitos de origen instalados, suele presentarse un error como se describe a continuación.
+
+Incluso suele suceder cuando se pasa de un proyecto a otro de computadora a computadora.
+
+En nuestro caso especifico lo haremos iniciando el proyecto en windows y Migrandolo a Plataforma Mac.
+
+Solución:
+
+1. Ejecuta en la raiz de tu proyecto
+
+	composer install
+
+ej.
+	cd /var/www/html/dev/AppLaravelBasics/
+	composer install
+
+2. Seguido tendrás que copiar el archivo '.env.example' a '.env'
+
+	cp .env.example .env
+
+3. Luego ejecutar
+
+	php artisan key:generate
+
+4. Configurar la conexión a la base de datos.
+
+	php artisan migrate (si tiene seeders utiliza  --seed)
+
+5. Visualizar al proyecto desde la ruta adecuada en el navegador.
+
+    Para ello ejecutamos
+        php artisan serve
