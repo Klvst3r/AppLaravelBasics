@@ -132,3 +132,20 @@ No habra necesidad de modificar estas referencias en el futuro
 	El ejercicio es cambiar solamente  una persona llamandose a contactame
 
 	
+	Route::get('contactame', ['as' => 'contactos', function(){
+    	return "Hola desde la pagina de contacto";     
+    }]);
+
+En la url desplegara la ruta:
+	http://127.0.0.1:8000/contactame
+
+
+Se hace referencia con esto a la ruta y uno a la URL
+
+
+
+Retornar paginas HTML cuando se accedan a determinadas rutas:
+------------------------------------------------------------
+Aunque esto no es la forma correcta en un sitio web
+
+Entonces se hace utilizando vistas

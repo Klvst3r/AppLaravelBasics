@@ -26,7 +26,7 @@ Route::get('/', function () {
    
 });
 
-Route::get('contactanos', ['as' => 'contactos', function(){
+Route::get('contactame', ['as' => 'contactos', function(){
     return "Hola desde la pagina de contacto";     
     }]);
 
