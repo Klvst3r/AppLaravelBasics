@@ -57,3 +57,13 @@ En la ruta.
 	Route::get('saludos/{nombre}, function($nombre){
 		return "Saludos $nombre";
 	})
+
+
+
+Sin parmetros:
+
+Si no esta difinida en la ruta el parametro no encontrara la pagina, por que inicialmente se esta indicando que el parametro es obligatorio, para este caso
+
+	Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+		return "Saludos $nombre";
+	})

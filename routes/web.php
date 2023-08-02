@@ -22,7 +22,10 @@ Route::get('contacto', function(){
     return "Hola desde la pagina de contacto";     
     });
 
-Route::get('saludos/{nombre}', function($nombre){
+/*Route::get('saludos/{nombre}', function($nombre){
+        return "Saludos $nombre";
+    });*/
+
+Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
         return "Saludos $nombre";
     });
-
