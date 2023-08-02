@@ -1,0 +1,59 @@
+1. Rutas - Que son y comó se utilizan
+
+Todas las rutas estan en alrchivo
+	app/Http/routes.php
+
+Ahora se encuentran en
+	routes/web.php
+
+Este archivo se carga automaticamente en el Framework.
+
+Las rutas son las URL de entrada de nuestra aplicación.
+
+Ej. Donde por ejemplo nuestro sitio es www.misio.com
+
+
+Entonces si quermos definir una ruta, que responda cuando se ingrasa al dominio, se hace de la siguiete forma
+routes.php
+
+	----
+	// www.misitio.com = Routes::get('/');
+	----
+
+Si queremos que sea a la pagina de contacto, se define de la siguiente forma:
+ 	
+ 	// www.misitio.com/contacto = Routes::get('contacto');
+
+El primer parametro es el archivo, y el segundo parametro es una funcion anonima, conocida como clousure, y lo que sea que retornemos de aqui es lo que el usuario vera en el navegador.
+
+Ej. Retornando una cadena de caracteres
+	
+	Route::get('/', function(){
+		return "Hola desde la pagina de inicio";
+	});
+
+Levantamos servicio
+	php artisan serve
+
+
+Contacto:
+---------
+Se creamos la sección de contaco
+
+	Route::get('contacto', function(){
+		
+	});
+
+
+Resumiendo es definir una URL y se responde con una función.
+
+Parametros por URL
+Si se necesita enviar parametros por URL.
+
+
+Ej. Pasndo el parametro a la funciń anonima
+
+En la ruta.
+	Route::get('saludos/{nombre}, function($nombre){
+		return "Saludos $nombre";
+	})
