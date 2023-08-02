@@ -60,10 +60,75 @@ En la ruta.
 
 
 
-Sin parmetros:
+Parametros
+----------
+
+Para utilizar parametrs obligatorios y opcionales
+
 
 Si no esta difinida en la ruta el parametro no encontrara la pagina, por que inicialmente se esta indicando que el parametro es obligatorio, para este caso
 
 	Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
 		return "Saludos $nombre";
-	})
+	});
+
+
+
+Validación de parametros
+-----------------------
+
+Cuando no queremos utiiza en el nombre numeros, para eviarlo uiizamos
+Validando el parametro y en seguida la expresión regular
+
+
+
+	Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+
+        return "Saludos $nombre";
+
+    })->where('nombre', "[A-Za-Z]+");
+
+
+
+Rutas con nombre
+-----------------
+
+Teemos una ruta para los contactos, retornamos solo 
+
+Route::get('/', function () {
+    echo "<a href='contactos'>Contacto</a><br/>";
+    echo "<a href='contactos'>Contacto</a><br/>";
+    echo "<a href='contactos'>Contacto</a><br/>";
+    echo "<a href='contactos'>Contacto</a><br/>";
+   
+});
+
+Y el dueño del sitio nos solicita que cambiamos la dirección de contacto a contactanos.
+
+De inicio le damos nombres a las rutas de la siguiente manera:
+
+
+	Route::get('/', function () {
+	    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
+	    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
+	    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
+	    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
+	   
+	});
+
+	Route::get('contactanos', ['as' => 'contactos', function(){
+	    return "Hola desde la pagina de contacto";     
+	    }]);
+
+
+En la URL
+	Apuntara a:
+		http://127.0.0.1:8000/contactanos
+	Desplegando:
+		Hola desde la pagina de contacto
+
+
+No habra necesidad de modificar estas referencias en el futuro
+	El ejercicio es cambiar solamente  una persona llamandose a contactame
+
+	
