@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Route;
     return "Hola desde la pagina de inicio";
 });*/
 
-Route::get('/', function () {
+// 2.1 Vista home
+//Route::get('/', function () {
     //1.1 
    /* echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
     echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
@@ -27,13 +28,23 @@ Route::get('/', function () {
 
     //2.1 Retornar la vista con la funcion view
 
-    return view('home');
+    /*return view('home');
 
    
-});
+});*/
+
+// 2.1 Ruta contactos
+Route::get('/', ['as' => 'home', function () {
+   
+    return view('home');
+   
+}]);
+
+
 
 Route::get('contactame', ['as' => 'contactos', function(){
-    return "Hola desde la pagina de contacto";     
+    //return "Hola desde la pagina de contacto";     
+    return view('contactos');
     }]);
 
 /*Route::get('saludos/{nombre}', function($nombre){
@@ -53,7 +64,7 @@ Route::get('contactame', ['as' => 'contactos', function(){
 */
 
 //2.1 Vistas con parametros
-Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+//Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
 
         //2.1 paramtetros en la url
         //return view('saludo', ['nombre' => $nombre]);
@@ -63,7 +74,16 @@ Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
         //return view('saludo')->with(['nombre' => $nombre]);
 
         //2.1 Paso de parametros con la funcion de php compact
-        return view('saludo', compact('nombre'));
+        /*return view('saludo', compact('nombre'));
 
 
-    })->where('nombre', "[A-Za-z1-9]+");
+    })->where('nombre', "[A-Za-z1-9]+");*/
+
+
+
+
+Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado"){
+
+    return view('saludo', compact('nombre'));
+
+}])->where('nombre', "[A-Za-z1-9]+");

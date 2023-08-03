@@ -104,3 +104,48 @@ Devolvera un array con la llave nombre y el valor nombre, siempr ey cuando la va
             return view('saludo', compact('nombre'));
 
     })->where('nombre', "[A-Za-z1-9]+");	
+
+
+
+
+Vista de contactos
+-----------------
+
+
+Se crea una vista saludo.php para imprimir la variable
+	<h1>Saludos para <?php echo $nombre; ?></h1>
+
+En la ruta se crean las referencias a las url	
+	home.php
+
+		<nav>
+			<a href="<?php echo route('home') ?>">Inicio</a>
+			<a href="<?php echo route('saludos', 'Klvst3r') ?>">Saludos</a>
+			<a href="<?php echo route('contactos') ?>">contactos</a>
+		</nav>
+
+
+En las rutas saluds reciben un parametro opcional, para enviar un parametro con la funcion route, se agrega como segundo parametro
+
+	Route::get('/', ['as' => 'home', function () {
+   
+    return view('home');
+	   
+	}]);
+
+
+
+	Route::get('contactame', ['as' => 'contactos', function(){
+	    return view('contactos');
+	    }]);
+
+	
+
+	Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado"){
+
+	    return view('saludo', compact('nombre'));
+
+	}])->where('nombre', "[A-Za-z1-9]+");
+
+
+Aunque es funcional hay duplicidad en el menu, aun cuando solo se tienen pocas paginas, se optara por optimizar esto mediante el motor de plantillas blade.	
