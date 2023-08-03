@@ -19,10 +19,16 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Route::get('/', function () {
+    //1.1 
+   /* echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
     echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
     echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
-    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
-    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";
+    echo "<a href=" . route('contactos') . ">Contacto</a><br/>";*/
+
+    //2.1 Retornar la vista con la funcion view
+
+    return view('home');
+
    
 });
 
@@ -38,9 +44,18 @@ Route::get('contactame', ['as' => 'contactos', function(){
         return "Saludos $nombre";
     });*/
 
-
-Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+//1.1 
+/*Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
 
         return "Saludos $nombre";
 
     })->where('nombre', "[A-Za-z]+");
+*/
+
+//2.1 Vistas con parametros
+Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+
+        return view('saludo', ['nombre' => $nombre]);
+        //return "Saludos $nombre";
+
+    })->where('nombre', "[A-Za-z1-9]+");

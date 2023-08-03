@@ -1,0 +1,71 @@
+2.1. HTML con Vistas
+
+Las vistas son la parte visual de la aplicación, lo que ve el usuario visual, que ocntinene el HTML de la aplicación en:
+
+	/resources/views/
+
+	Pord efecto
+		welcome.blade.php (Se elimina)
+
+
+Creación de vista
+--------------------
+
+Para crear una vista llamada home.php
+
+
+Modificando la ruta
+	web.php
+
+Creando una instancia de la clase ViewFactory que es un alias de la interfaz Factory, donde si no se pasa ningun parametro devolvera la nueva instancia que se acaba de crear, asi se podria hacer meta chaing de la siguiente forma:
+
+	ej.
+		view()->make()
+
+
+
+Debido a que se tiene un parametro sellama al metodo make que la clase que implementa Factory.
+
+En la ruta no es necesario agragar la ruta completa del archivo.
+
+No es necesario incluir la extensión del archivo,
+
+	quedando el llamado a la vista desde la ruta web.php de la siguiente manera:
+
+---
+Route::get('/', function () {
+
+    return view('home');
+   
+});		
+
+
+
+
+Pasar datos a las vistas
+---------------------
+
+
+Crear una vista
+	saludo.php
+
+
+en la ruta
+	Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+
+        return view('saludo', ['nombre' => $nombre]);
+        
+
+    })->where('nombre', "[A-Za-z1-9]+");	
+
+Se va a enviar un parametro a la vista, porl o que lo que se pasa por un array por el segundo parametro de la función view.
+
+
+
+En la vista saludo ya se tiene acceso a esta variable
+	
+	<h1>Saludos para <?php echo $nombre; ?></h1>    
+
+En el navegador
+
+	http://127.0.0.1:8000/saludos/klvst3r
