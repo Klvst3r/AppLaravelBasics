@@ -69,3 +69,38 @@ En la vista saludo ya se tiene acceso a esta variable
 En el navegador
 
 	http://127.0.0.1:8000/saludos/klvst3r
+
+
+
+
+Pasar variables a la vistas
+---------------------------
+
+Mediante la funcion with con el array creado anteriormente
+
+	Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+
+            return view('saludo')->with(['nombre' => $nombre]);
+
+
+    })->where('nombre', "[A-Za-z1-9]+");	
+
+Se obtiene el mismo resultado.
+
+
+
+La segunda forma es la que se utilizara de ahora en adelante de la siguiente manera.
+
+Mediante a funcion compact, lo que hace es devolver un array asosiativo con el nombre que le pasemos como llave y el valor de una variable ecistente del mismo nombre.
+
+	Ej.
+		compact('nombre')
+
+Devolvera un array con la llave nombre y el valor nombre, siempr ey cuando la varieble nombre exista.
+
+
+		Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
+
+            return view('saludo', compact('nombre'));
+
+    })->where('nombre', "[A-Za-z1-9]+");	

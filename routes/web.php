@@ -55,7 +55,15 @@ Route::get('contactame', ['as' => 'contactos', function(){
 //2.1 Vistas con parametros
 Route::get('saludos/{nombre?}', function($nombre = "Invitado"){
 
-        return view('saludo', ['nombre' => $nombre]);
+        //2.1 paramtetros en la url
+        //return view('saludo', ['nombre' => $nombre]);
         //return "Saludos $nombre";
+
+        //2.1 Paso de variables
+        //return view('saludo')->with(['nombre' => $nombre]);
+
+        //2.1 Paso de parametros con la funcion de php compact
+        return view('saludo', compact('nombre'));
+
 
     })->where('nombre', "[A-Za-z1-9]+");
