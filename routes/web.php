@@ -84,6 +84,8 @@ Route::get('contactame', ['as' => 'contactos', function(){
 
 Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado"){
 
-    return view('saludo', compact('nombre'));
+    $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
+
+    return view('saludo', compact('nombre', 'html'));
 
 }])->where('nombre', "[A-Za-z1-9]+");

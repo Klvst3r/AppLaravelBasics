@@ -1,0 +1,56 @@
+2.2. Blade el motor e plantillas de Laravel
+
+Permite escribir de forma sencilla y diverttida, basta con agregar la extensión .blade al archivo.
+
+Vista saludo
+------------
+
+
+Renombrar a 
+	saludo.blade.php
+
+Ahora para hacer un echo de la varible:
+	
+	<h1>Saludos para {{ $nombre }}</h1>	
+
+
+Mas limpio sin afectar el rendimiento de la palicación
+
+La vista se compila y guarda en:
+
+	/storage/framework/views
+
+Detras de escenas hace 
+	echo e($nombre);
+
+Pasa por la funcion nativa de php //htmlentities($nombre)	Para proteger de XSS Cross Site Scripting o inyección de codigo malisioso.
+
+Para evitar escribir o ejecutar codigios maliciosos en la aplicación.
+
+
+
+Ejemplo de ejecución de Js
+-------------------------
+
+En las rutas se crea la variable
+
+	
+Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado"){
+
+    $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
+
+    return view('saludo', compact('nombre', 'html'));
+
+}])->where('nombre', "[A-Za-z1-9]+");
+
+Con esto el codigo es escapado y mostrado como una cadena de caracteres.
+
+
+Para visualizar ejecutamos:
+
+	<h2>{!! $html !! }</h2>	
+
+Los signos de admiración son para alertarnos de que el codigo no esta siendo escapado y puede ser pelibroso.
+
+
+	

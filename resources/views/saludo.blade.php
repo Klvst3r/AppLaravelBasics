@@ -8,6 +8,10 @@
 <body>
 	<h1>Saludos para <?php echo $nombre; ?></h1>
 
+	<h1>Saludos para {{ $nombre }}</h1>
+
+	<h2>{{!! $html !!}}</h2>	
+
 	<header>
 		<nav>
 			<a href="<?php echo route('home') ?>">Inicio</a>
