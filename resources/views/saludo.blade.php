@@ -24,6 +24,14 @@
 				<p>No hay consolas</p>
 			@endforelse
 		</ul>
+
+
+		@if(count($consolas) === 1)
+			
+			<p>Solo tienes una consola</p>
+		
+		@endif		
+
 	</div>
 
 	<header>

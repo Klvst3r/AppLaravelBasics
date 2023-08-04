@@ -100,3 +100,35 @@ Para estos casos se puede ocupar forelse
 		</ul>	
 
 
+Condicioinales		
+--------------
+
+
+Escribir mensaje solo si hay un elemento en el array
+
+	$consolas = [
+        "Play Station 4"
+    ];
+
+    return view('saludo', compact('nombre', 'html', 'consolas'));
+
+Con el uso de if se puede enviar mensaje
+
+	<div>
+		<ul>
+			@forelse($consolas as $consola)
+				<li>{{ $consola }}</li>
+			@empty
+				<p>No hay consolas</p>
+			@endforelse
+		</ul>
+
+
+		@if(count($consolas) === 1)
+			
+			<p>Solo tienes una consola</p>
+		
+		@endif		
+
+	</div>
+    	

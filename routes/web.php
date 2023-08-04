@@ -95,7 +95,11 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado
     ];
 */
 
-    $consolas = [];
+    //$consolas = [];
+
+    $consolas = [
+        "Play Station 4"
+    ];
 
     return view('saludo', compact('nombre', 'html', 'consolas'));
 
