@@ -86,6 +86,17 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado
 
     $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
 
-    return view('saludo', compact('nombre', 'html'));
+    /*$script = "<script>alert('Problema XSS - Cross Site Scripting!')</script>"; //XSS por formulario*/
+
+    /*$consolas = [
+        "Play Station 4", 
+        "Xbox One", 
+        "Wii U"
+    ];
+*/
+
+    $consolas = [];
+
+    return view('saludo', compact('nombre', 'html', 'consolas'));
 
 }])->where('nombre', "[A-Za-z1-9]+");

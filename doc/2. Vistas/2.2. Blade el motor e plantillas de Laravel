@@ -50,7 +50,45 @@ Para visualizar ejecutamos:
 
 	<h2>{!! $html !! }</h2>	
 
-Los signos de admiración son para alertarnos de que el codigo no esta siendo escapado y puede ser pelibroso.
+Los signos de admiración son para alertarnos de que el codigo no esta siendo escapado y puede ser peligroso.
+
+Esta lina no ejecuta codigo JS
+	<h2>{{ $script }}</h2>
+
+Se ejecuta Js por lo que hay que tener cuidado
+	<h2>{!! $script !!}</h2> 	
 
 
-	
+
+
+Array de consolas
+-----------------
+
+Se pasa a la vista
+rota:
+	$consolas = [
+        "Play Station 4", 
+        "Xbox One", 
+        "Wii U"
+    ];
+
+
+
+    return view('saludo', compact('nombre', 'html', 'consolas'));
+
+
+
+Vista:
+		<ul>
+			@foreach($consolas as $consola)
+				<li>{{ $consola }}</li>
+			@endforeach
+		</ul>
+
+si el array esta vacio 
+
+	$consolas = [];
+
+Para estos casos se puede ocupar forelse
+
+		

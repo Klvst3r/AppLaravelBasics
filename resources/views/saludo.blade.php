@@ -10,7 +10,19 @@
 
 	<h1>Saludos para {{ $nombre }}</h1>
 
-	<h2>{{!! $html !!}}</h2>	
+	<h2>{!! $html !!}</h2>	
+
+
+	<h2></h2>
+
+
+	<div>
+		<ul>
+			@foreach($consolas as $consola)
+				<li>{{ $consola }}</li>
+			@endforeach
+		</ul>
+	</div>
 
 	<header>
 		<nav>
