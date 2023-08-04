@@ -91,4 +91,12 @@ si el array esta vacio
 
 Para estos casos se puede ocupar forelse
 
-		
+		<ul>
+			@forelse($consolas as $consola)
+				<li>{{ $consola }}</li>
+			@empty
+				<p>No hay consolas</p>
+			@endforelse
+		</ul>	
+
+
