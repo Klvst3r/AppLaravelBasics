@@ -34,11 +34,16 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 // 2.1 Ruta contactos
-Route::get('/', ['as' => 'home', function () {
+/*Route::get('/', ['as' => 'home', function () {
    
     return view('home');
    
 }]);
+*/
+
+//3.1
+
+Route::get('/', ['as' => 'home', 'uses' => 'PagesController@home']);
 
 
 

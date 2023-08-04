@@ -1,0 +1,157 @@
+3.1 Utilizando controladores
+
+En lugar de definir toda la logica de la aplicación en el archivo web.php
+
+Lo conveniente es utilizar controllers, ubicados en:
+
+	/app/Http/controllers
+
+Por defecto se tiene 
+	Controller.php
+
+Incluye muchos trails, 
+
+
+Creación de controladores
+------------------------
+
+Se cra una nueva clase en un archivo 
+
+Ej.
+	Pagescontrollers.php
+
+Agregando todo el codigo, namespaces.
+
+
+Uno de los objetivos del desarrollo de aplicaciones sea lo mas raido posible.
+
+
+
+Comandos para crear archivos rapidamente
+----------------------------------------
+
+Muestra todos los comandos disponibles
+	php artisan	 		
+
+Comandos para crear archivos
+	php artisan make:controller
+
+
+ej. 
+	php artisan make:controller PagesController
+
+
+En este archivo se crearan los metodos que reemplazaran a los que se encunetran en las rutas.
+
+
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+
+	class PagesController extends Controller
+	{
+	    //
+	}
+
+
+Ej.En el archivo web.php de rutas
+	
+	Route::get('/', ['as' => 'home', 'uses' => 'PagesController@home']);
+
+En el controlador PagesController se crea el metodo correspondiente (home)	
+
+	class PagesController extends Controller
+{
+    public function home()
+    {
+        return view('home');
+    }
+}
+
+Se retorna la vista home del metodo con el mismo nombre.
+
+
+
+Errores con los controladores
+------------------------------
+
+
+https://litvinjuan.medium.com/how-to-fix-target-class-does-not-exist-in-laravel-8-f9e28b79f8b4
+
+
+Laravel 8 se lanzó en septiembre de 2020 con un montón de nuevas características y cambios. Uno de esos cambios fue la eliminación del espacio de nombres de ruta predeterminado.
+
+Aunque este cambio es compatible con versiones anteriores, lo que significa que los proyectos más antiguos que usaban Laravel 7.x pueden migrar fácilmente a Laravel 8.x sin tener que cambiar nada, los nuevos proyectos creados en Laravel 8 (a partir del 8 de septiembre de 2020) deben tener esto en cuenta. cuenta.
+
+Muchos desarrolladores se han enfrentado a un problema en sus aplicaciones Laravel 8 recién creadas donde intentan cargar sus rutas y se encuentran con una excepción que dice algo como:
+
+
+	Target class [PagesController] does not exist.
+
+
+Para solucionar este problema
+
+	How to fix ‘Target class does not exist’ in Laravel
+
+
+No te preocupes, tu código no está roto. Lo que sucedió es que la forma en que está acostumbrado a hacer las cosas y la forma en que la mayoría de los tutoriales describen el enrutamiento no funcionan ahora. Pero esto se puede arreglar en solo unos minutos.
+El cambio
+
+Hasta Laravel 7, el archivo RouteServiceProvider.php tenía el siguiente código:
+
+	
+
+	protected $namespace = 'App\Http\Controllers';
+
+	Route::middleware('web')
+		->namespace($this->namespace)
+		->group(base_path('routes/web.php'));
+
+
+Lo que esto hace es decirle a Laravel que cargue las rutas en route/web.php, usando el middleware web y el espacio de nombres App\Http\Controllers. Esto, a su vez, significa que cada vez que declaraste una ruta usando la sintaxis de cadena, Laravel buscaría ese controlador en la carpeta App\Http\Controllers:		
+	Route::get('/post', 'PostController@all');
+
+En Laravel 8, se eliminó la variable $namespace y se cambió la declaración de ruta a:
+	
+	Route::midleware('web')
+		->group(base_path('routes/web.php'));
+
+
+
+Ahora, Laravel está buscando rutas dentro de tu archivo web.php, como siempre. También está aplicando el middleware web, como siempre. Pero tenga en cuenta que ya no usa el espacio de nombres anterior.
+
+Esto significa que a partir de Laravel 8, cuando declaras tus rutas usando la sintaxis de cadena, Laravel no buscará tu controlador dentro de App\Http\Controllers.
+
+		Route::get('/posts', 'PostController@all');
+
+
+En nuestro caso es el problema que se presenta.
+
+¿Cómo puedo solucionar esto?
+
+El problema aquí es que Laravel no tiene idea de dónde buscar su controlador, ¡así que todo lo que tenemos que hacer es avisarle! Hay 3 formas de lograr esto:
+
+     Vuelva a agregar el espacio de nombres manualmente para que pueda usarlo como lo hizo en Laravel 7.x y antes
+     Use el espacio de nombres completo en sus archivos de ruta cuando use la sintaxis de cadena
+     Usar la sintaxis de acción (recomendado)
+
+
+
+Agregar el espacio de nombres manualmente
+-----------------------------------------
+
+Esto es bastante simple. Vaya a su archivo RoutesServiceProvider.php y verá lo siguiente:		
+
+
+
+	public function boot()
+	{
+
+		$this->configureRateLimiting
+	}
+
+
+
+
