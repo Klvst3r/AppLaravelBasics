@@ -188,3 +188,22 @@ Asi para contenido y home se modificara solamente el layout
 
 Cambio en la navegación
 ----------------------
+
+En el archivo de rutas se tiene ya mucho contenido y solo se han utilizado tres 3, esto para hacer escalar nuestra aplicación tener el codigo aca es muy complicado por ello.
+
+Se utilizaran los controlers para eficientar esto.
+
+
+Resumen
+--------
+
+
+Para las vitas y tutas unicamente se utilizan las plantillas en
+
+	/resources/vies/<plantilla>
+
+Para enviar contenido desde la ruta se hace desde
+
+	/routes/web.php
+
+Desde donde se invoca la visualización de contenido al clinete y tambien desde las rutas se puede enviar parametros desde las rutas.
