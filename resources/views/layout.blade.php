@@ -6,7 +6,7 @@
 	<title>Home</title>
 </head>
 <body>
-	<h1>Home</h1>
+	
 	<header>
 		<nav>
 			<a href="<?php echo route('home') ?>">Inicio</a>

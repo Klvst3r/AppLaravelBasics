@@ -172,3 +172,19 @@ Asi @section genera la seccion a visualizarse en la plantilla, y @yield invoca a
 	<h1>Saludos a {{ $nombre }}</h1>
 
 	@stop
+
+
+Asi para contenido y home se modificara solamente el layout
+
+
+	@extends('layout')
+
+	@section('contenido')
+
+		<h1>Home</h1>
+
+	@stop	
+
+
+Cambio en la navegación
+----------------------
