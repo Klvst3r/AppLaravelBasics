@@ -100,7 +100,7 @@ Para estos casos se puede ocupar forelse
 		</ul>	
 
 
-Condicioinales		
+Condicionales		
 --------------
 
 
@@ -131,4 +131,3 @@ Con el uso de if se puede enviar mensaje
 		@endif		
 
 	</div>
-    	

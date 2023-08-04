@@ -88,14 +88,14 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado
 
     /*$script = "<script>alert('Problema XSS - Cross Site Scripting!')</script>"; //XSS por formulario*/
 
-    $consolas = [
+ /*   $consolas = [
         "Play Station 4", 
         "Xbox One", 
         "Wii U"
-    ];
+    ];*/
 
 
-    //$consolas = [];
+    $consolas = [];
 
    /* $consolas = [
         "Play Station 4"

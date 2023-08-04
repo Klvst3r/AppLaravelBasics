@@ -33,6 +33,8 @@
 		@elseif(count($consolas) > 1)
 
 			<p>Tienes varias consolas</p>
+		@else 
+			<p>Array vacio</p>
 		
 		@endif		
 
