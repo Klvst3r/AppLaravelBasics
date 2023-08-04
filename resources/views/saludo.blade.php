@@ -29,6 +29,10 @@
 		@if(count($consolas) === 1)
 			
 			<p>Solo tienes una consola</p>
+
+		@elseif(count($consolas) > 1)
+
+			<p>Tienes varias consolas</p>
 		
 		@endif		
 
