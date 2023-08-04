@@ -115,19 +115,60 @@ Escribir mensaje solo si hay un elemento en el array
 Con el uso de if se puede enviar mensaje
 
 	<div>
-		<ul>
-			@forelse($consolas as $consola)
-				<li>{{ $consola }}</li>
-			@empty
-				<p>No hay consolas</p>
-			@endforelse
-		</ul>
+			<ul>
+				@forelse($consolas as $consola)
+					<li>{{ $consola }}</li>
+				@empty
+					<p>No hay consolas</p>
+				@endforelse
+			</ul>
 
 
-		@if(count($consolas) === 1)
+			@if(count($consolas) === 1)
+				
+				<p>Solo tienes una consola</p>
+
+			@elseif(count($consolas) > 1)
+
+				<p>Tienes varias consolas</p>
+			@else 
+				<p>Array vacio</p>
 			
-			<p>Solo tienes una consola</p>
-		
-		@endif		
+			@endif		
 
-	</div>
+		</div>
+
+
+
+Atendiendo duplicación de contenido HTML
+----------------------------------
+
+usando plantillas de blade socluionamos la repetición de codigo.
+
+Creamos una plantilla base
+
+	layout.blade.php
+
+Contendra la navegación y lo importante
+
+
+
+Espacio de contenido individual
+-------------------------------
+
+escribiendo yield y la sección que vamos a contener
+	@yield(' contenido ')	
+
+En la vista saludo quitamos todo y colocamos:
+	@extends('layout')
+
+Similar a extender una clase en la cual, heredamos todos los metodos de la clase padre, en este caso se hereda todo el html de la plantilla layout.
+
+
+Asi @section genera la seccion a visualizarse en la plantilla, y @yield invoca al contenido a utilizar y visualizarse
+
+	@section('contenido')
+
+	<h1>Saludos a {{ $nombre }}</h1>
+
+	@stop
