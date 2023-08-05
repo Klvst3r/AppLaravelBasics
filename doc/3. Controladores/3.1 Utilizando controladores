@@ -192,7 +192,118 @@ Todo lo que necesita hacer es agregar las siguientes tres líneas a este archivo
 ¿Qué acabamos de hacer? Declaramos la variable $namespace con el espacio de nombres predeterminado para nuestros controladores y le dijimos a laravel que lo usara para nuestras rutas web y api.
 
 Si intenta ejecutar su aplicación nuevamente, todo debería funcionar.
+
+
+
+
+
 Uso del espacio de nombres completo
 
-Este implica cambiar todas sus declaraciones de ruta, pero la idea es simple: anteponga los nombres de su controlador con su espacio de nombres. Vea el siguiente ejemplo para nuestro PostsController dentro de la carpeta app/Http/Controllers.
+Este implica cambiar todas sus declaraciones de ruta, pero la idea es simple: anteponga los nombres de su controlador con su espacio de nombres. Vea el 
+siguiente ejemplo para nuestro PostsController dentro de la carpeta app/Http/Controllers.
 	
+	Route::get('/posts', 'App\Http\Controllers\PostsController@all');
+
+
+Si vuelve a intentarlo, todo debería funcionar sin problemas.
+
+
+
+
+Uso de la sintaxis de acción
+
+Esta es la alternativa que personalmente recomiendo, ya que la encuentro más a prueba de errores tipográficos y, según mi experiencia, proporciona una mejor compatibilidad con IDE, ya que le indicamos explícitamente al código qué clase usar. En lugar de usar nuestra sintaxis de cadena habitual, podemos usar la sintaxis de acción donde especificamos la clase y el método a usar en una matriz:	
+
+	
+		//String syntax
+		Route::get('/post', 'PostsController@all');
+
+		//Action syntax (don't forget to import your controller class)
+		Route::get('/posts', [PostController::class, 'all']);
+
+
+Tenga en cuenta que aquí no estamos pasando PostsController entre comillas, sino PostsController::class, que internamente devolverá 'App\Http\Controllers\PostsController'. El segundo valor en la matriz es el método para llamar dentro de ese controlador, lo que significa: “En PostsController.php llame al método 'todos'.
+
+Nuevamente, si intenta ejecutar su aplicación nuevamente, todo debería estar en funcionamiento.
+
+
+
+Palabras de cierre
+
+A estas alturas, su aplicación debería estar funcionando nuevamente. Si no es así, no dude en pedir ayuda. Todos en la comunidad están ansiosos por dar una mano.
+
+Ya sea que hayas agregado el espacio de nombres manualmente, hayas especificado el espacio de nombres completo en tus rutas o hayas optado por la sintaxis de acción, lo que acabas de hacer es decirle a Laravel en qué espacio de nombres están realmente tus controladores, por lo que ahora sabe dónde buscar.
+
+
+
+
+
+Opcion 2
+
+https://medium.com/@onwuka_gideon/laravel-illuminate-contracts-container-bindingresolutionexception-70fda953e7af
+
+
+Laravel Illuminate\Contracts\Container\BindingResolutionException
+
+
+Después de un tiempo fuera de PHP, comencé un proyecto en el que tengo un middleware que verifica si un usuario que ha iniciado sesión es un usuario o un administrador, y luego lo redirige a su ruta respectiva.
+
+Como de costumbre, me encontré con un error que me molestó por un tiempo :):
+
+
+	Mirando inocentemente, no creo que haya hecho algo malo. ¡Funciona localmente! pero cuando lo empujo a producción, sigo recibiendo el error:
+
+	La clase de destino [App\Http\Middleware\IsUser] no existe.
+
+     Creé la clase de middleware `IsUser` en la carpeta correcta: `/app/Http/Middleware/isUser.php`
+     Y puedes ver el archivo de clase bien colocado:
+
+     		<?phpnamespace App\Http\Middleware;
+			use Closure;use Illuminate\Http\Request;
+			use Illuminate\Support\Facades\Auth;
+			use App\Providers\RouteServiceProvider;
+			
+			class IsUser
+			{
+			/*** Handle an incoming request.
+			** @param  \Illuminate\Http\Request  $request
+			* @param  \Closure  $next
+			* @return mixed*/
+
+			public function handle(Request $request, Closure $next)
+			{   
+				if (Auth::check()) 
+				{
+				       if (Auth::user()->isAdmin()) 
+				       {
+				                  return redirect(RouteServiceProvider::ADMIN_HOME);        
+				        }
+				                return $next($request);   
+				}   
+				return redirect('/login');  
+				}
+			}
+
+
+3. Y por supuesto, registré el middleware en el archivo kernel.php
+
+
+¿Y ahora qué?
+como lo arreglé
+
+Resulta ser un problema de distinción entre mayúsculas y minúsculas. Dado que funciona bien localmente con el código, y si inserto el código correctamente en el servidor, no funciona.
+
+Aviso, registré el middleware en el archivo kernel.php como:
+
+\Aplicación\Http\Middleware\IsUser::class
+
+Guardé mi clase anteriormente como `isUser.php` en lugar de `IsUser.php` para que coincida con la clase media que registré en el archivo kernel.php.
+
+Así que simplemente cambiar el archivo de `isUser.php` a `IsUser.php` me lo arregló.
+Conclusión
+
+Si enfrenta el mismo problema, asegúrese de que el nombre de su archivo coincida con el middleware de clase que registró en el archivo kernel.php.
+
+
+
+			
