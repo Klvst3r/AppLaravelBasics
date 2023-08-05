@@ -146,47 +146,62 @@ Esto es bastante simple. Vaya a su archivo RoutesServiceProvider.php y verá lo 
 
 
 
-	public function boot()
-	{
+	---
+    public function boot()
+    {
+        $this->configureRateLimiting();
 
-		$this->configureRateLimiting();
+        $this->routes(function () {
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
 
-		$this->routes(function () {
-
-			Route::middleware('web')
-				->group(base_path('routes/web.php'));
-
-
-			Route::prefix('api')
-				->middleware('api')
-				->group(base_path('routes/api.php'));
-		});
-	}
+            Route::prefix('api')
+                ->middleware('api')
+                ->group(base_path('routes/api.php'));
+        });
+    }
+    ---
 
 
 
 Todo lo que necesita hacer es agregar las siguientes tres líneas a este archivo y Laravel volverá a usar el espacio de nombres predeterminado como en Laravel 7.x:
 
 
+Esto es en la ruta:
 
-	protected $namespace = 'App\Http\Controllers';
 
-	public function boot()
-	{
+/app/Providers/RouteServiceProvider.php
 
-		$this->configureRateLimitting();
+	 ---
 
-		$this->routes(function() {
-			Route::middleware('web')
-				->namespace(base_path('routes/web.php'));
-		
 
-		Route::prefix('api')
-			->middleware('api')
-			->namespace($this->namespace)
-			->group(base_path('routes/api.php'));
-		});
-	}
+
+    //Se agrega esta linea para volver a usar el nombre de espacio predeterminado como en laravel 7.x
+        protected $namespace = "App\Http\Controllers"; 
+
+
+
+
+
+
+
+
+        public function boot()
+        {
+            $this->configureRateLimiting();
+
+            $this->routes(function () {
+                Route::middleware('api')
+                    ->prefix('api')
+                    ->namespace($this->namespace)// Se agrega esta linea como en Versiones 7.x
+                    ->group(base_path('routes/api.php'));
+
+                Route::middleware('web')
+                    ->namespace($this->namespace)// Se agrega esta linea como en Versiones 7.x
+                    ->group(base_path('routes/web.php'));
+            });
+        }
+    ---
 
 
 ¿Qué acabamos de hacer? Declaramos la variable $namespace con el espacio de nombres predeterminado para nuestros controladores y le dijimos a laravel que lo usara para nuestras rutas web y api.
@@ -202,8 +217,10 @@ Uso del espacio de nombres completo
 Este implica cambiar todas sus declaraciones de ruta, pero la idea es simple: anteponga los nombres de su controlador con su espacio de nombres. Vea el 
 siguiente ejemplo para nuestro PostsController dentro de la carpeta app/Http/Controllers.
 	
-	Route::get('/posts', 'App\Http\Controllers\PostsController@all');
-
+	routes/web.php
+    ---
+    //Route::get("/", 'App\Http\Controllers\PagesController@home');
+    ---
 
 Si vuelve a intentarlo, todo debería funcionar sin problemas.
 
@@ -215,11 +232,16 @@ Uso de la sintaxis de acción
 Esta es la alternativa que personalmente recomiendo, ya que la encuentro más a prueba de errores tipográficos y, según mi experiencia, proporciona una mejor compatibilidad con IDE, ya que le indicamos explícitamente al código qué clase usar. En lugar de usar nuestra sintaxis de cadena habitual, podemos usar la sintaxis de acción donde especificamos la clase y el método a usar en una matriz:	
 
 	
-		//String syntax
-		Route::get('/post', 'PostsController@all');
+		routes/web.php
+    ---
+    //Podemos utilizar este formato
+    //Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home']);
+    //o bien 
+    //Route::get("/", 'PagesController@home');
 
-		//Action syntax (don't forget to import your controller class)
-		Route::get('/posts', [PostController::class, 'all']);
+    // Usando la sintaxis de acción (recomendado)
+    Route::get("/", [PagesController::class, 'home']);
+    ---
 
 
 Tenga en cuenta que aquí no estamos pasando PostsController entre comillas, sino PostsController::class, que internamente devolverá 'App\Http\Controllers\PostsController'. El segundo valor en la matriz es el método para llamar dentro de ese controlador, lo que significa: “En PostsController.php llame al método 'todos'.
@@ -228,12 +250,101 @@ Nuevamente, si intenta ejecutar su aplicación nuevamente, todo debería estar e
 
 
 
+
+Solucion aplicada
+-----------------
+
+Continuando con el ejericio, las ruta quedan:
+
+routes/web.php
+
+    ---
+    Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home']);
+
+    Route::get('contactame',['as' =>'contactos', 'uses' => 'PagesController@contacto']);
+
+    Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre',"[A-Za-z0-9]+");
+
+    ---
+
+En la parte del controlador:
+
+    ---
+        public function home()
+        {
+            return view('home');
+        }
+
+        
+        public function contacto()
+        {
+            return view('contactos');
+        }
+        
+
+        public function saludo($nombre = "Invitado")
+        {
+            $html = "<h2>Contenido HTML</h2>";
+            
+            $script = "<script>alert('Problema XSS - Cross Site Scripting!')</script>";
+            
+            $consolas = [
+                "Play Station 4", 
+                "Xbox One",
+                "Wii U"
+            ];
+            return view('saludo', compact('nombre', 'html', 'script', 'consolas'));
+        }
+
+    ---
+
+
+Si verificamos en el navegador todo funcionara sin problema
+
+Si queremos verifica si las variables ha sido pasadas a la vista saludo, En la vista saludo:
+
+saludo.blade.php
+    ---
+     @extends('layout')
+
+    @section('contenido')
+        <h1>Saludos a {{ $nombre }}</h1>
+
+        <ul>
+            @forelse($consolas as $consola)
+                <li>{{ $consola }} </li>
+            @empty
+                <p>No hay consolas-</p>
+            @endforelse
+        </ul>
+    @stop
+    ---
+
+todo funciona como antes, pero ahora es con una estructura mucho mas escalable que antes.
+
+si regresamos al controlador vemos que cuando se creo con el comando make:
+
+automaticamente Laravel añade la clase, 
+
+Pagescontroller.php
+    ---
+    namespace App\Http\Controllers;
+
+    use Illuminate\Http\Request;
+
+    use App\Http\Requests;
+
+    ---
+
+
+En la siguiente sección se vera como utiilzarse.
+
+
 Palabras de cierre
 
 A estas alturas, su aplicación debería estar funcionando nuevamente. Si no es así, no dude en pedir ayuda. Todos en la comunidad están ansiosos por dar una mano.
 
 Ya sea que hayas agregado el espacio de nombres manualmente, hayas especificado el espacio de nombres completo en tus rutas o hayas optado por la sintaxis de acción, lo que acabas de hacer es decirle a Laravel en qué espacio de nombres están realmente tus controladores, por lo que ahora sabe dónde buscar.
-
 
 
 
@@ -306,4 +417,35 @@ Si enfrenta el mismo problema, asegúrese de que el nombre de su archivo coincid
 
 
 
-			
+
+
+Tercera forma
+---------------
+
+Resolviendo el problema			
+=======================
+
+
+ Composer provides a convenient, automatically generated class loader for this application. We just need to utilize it! We'll simply require 
+    into the script here so we don't need to manually load our classes.            
+
+Respuesta:
+    
+Necesitamos regenerar las clases con dump-autoload de composer dentro del namespace de RegisterController 
+
+Asi que ejecutamos con composer 
+
+    composer dump-autoload 
+
+Existe una forma de arreglar el error de ‘Target class does not exist’ en Laravel 
+
+
+Aunque este cambio es compatible con versiones anteriores, lo que significa que los proyectos más antiguos que usaban Laravel 7.x pueden migrar fácilmente a Laravel 8.x sin tener que cambiar nada, los nuevos proyectos creados en Laravel 8 (a partir del 8 de septiembre) deben tener esto en cuenta. .
+
+
+Muchos desarrolladores se han enfrentado a un problema en sus aplicaciones Laravel 9 recién creadas en las que intentan cargar sus rutas y se encuentran con una excepción que dice algo como:
+    ---
+        Target class [PagesController] does not exist
+    ---
+
+El problema no es que el código esté roto, sino que el 99,9% de los tutoriales de Laravel ahora están rotos en este departamento porque la mayoría de ellos se basaron en este espacio de nombres predeterminado para la sintaxis de la cadena.

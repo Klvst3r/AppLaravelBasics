@@ -43,7 +43,10 @@ use Illuminate\Support\Facades\Route;
 
 //3.1
 
-Route::get('/', ['as' => 'home', 'uses' => 'PagesController@home']);
+Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home']);
+
+
+
 
 
 
