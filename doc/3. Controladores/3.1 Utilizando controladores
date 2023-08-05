@@ -149,9 +149,50 @@ Esto es bastante simple. Vaya a su archivo RoutesServiceProvider.php y verá lo 
 	public function boot()
 	{
 
-		$this->configureRateLimiting
+		$this->configureRateLimiting();
+
+		$this->routes(function () {
+
+			Route::middleware('web')
+				->group(base_path('routes/web.php'));
+
+
+			Route::prefix('api')
+				->middleware('api')
+				->group(base_path('routes/api.php'));
+		});
 	}
 
 
 
+Todo lo que necesita hacer es agregar las siguientes tres líneas a este archivo y Laravel volverá a usar el espacio de nombres predeterminado como en Laravel 7.x:
 
+
+
+	protected $namespace = 'App\Http\Controllers';
+
+	public function boot()
+	{
+
+		$this->configureRateLimitting();
+
+		$this->routes(function() {
+			Route::middleware('web')
+				->namespace(base_path('routes/web.php'));
+		
+
+		Route::prefix('api')
+			->middleware('api')
+			->namespace($this->namespace)
+			->group(base_path('routes/api.php'));
+		});
+	}
+
+
+¿Qué acabamos de hacer? Declaramos la variable $namespace con el espacio de nombres predeterminado para nuestros controladores y le dijimos a laravel que lo usara para nuestras rutas web y api.
+
+Si intenta ejecutar su aplicación nuevamente, todo debería funcionar.
+Uso del espacio de nombres completo
+
+Este implica cambiar todas sus declaraciones de ruta, pero la idea es simple: anteponga los nombres de su controlador con su espacio de nombres. Vea el siguiente ejemplo para nuestro PostsController dentro de la carpeta app/Http/Controllers.
+	
