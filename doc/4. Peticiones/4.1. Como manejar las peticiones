@@ -1,0 +1,18 @@
+4.1. Como manejar las peticiones
+
+Los request se refeire a las solicitudes o peticiones HTTP, que realiza el usuario a traves del navegador.
+
+En el archivo de plantillas, para ctualizar con la sintaxis de blade
+
+layout.blade.php
+
+---
+		header>
+		<nav>
+			<a href="{{ route('home') }}">Inicio</a>
+			<a href="{{ route('saludos', 'klvst3r') }}">Saludos</a>
+			<a href="{{ route('contactos') }}">Contactos</a>
+		</nav>
+	</header>
+
+---

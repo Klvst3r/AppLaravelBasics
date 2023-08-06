@@ -9,9 +9,9 @@
 	
 	<header>
 		<nav>
-			<a href="<?php echo route('home') ?>">Inicio</a>
-			<a href="<?php echo route('saludos', 'klvst3r') ?>">Saludos</a>
-			<a href="<?php echo route('contactos') ?>">Contactos</a>
+			<a href="{{ route('home') }}">Inicio</a>
+			<a href="{{ route('saludos', 'klvst3r') }}">Saludos</a>
+			<a href="{{ route('contactos') }}">Contactos</a>
 		</nav>
 	</header>
 
