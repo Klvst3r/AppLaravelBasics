@@ -3,6 +3,6 @@
 
 @section('contenido')
 
-<h1>Saludos al usuario {{ $nombre }}</h1>
+<h1>Saludos  {{ $nombre }}</h1>
 
 @stop

@@ -449,3 +449,64 @@ Muchos desarrolladores se han enfrentado a un problema en sus aplicaciones Larav
     ---
 
 El problema no es que el código esté roto, sino que el 99,9% de los tutoriales de Laravel ahora están rotos en este departamento porque la mayoría de ellos se basaron en este espacio de nombres predeterminado para la sintaxis de la cadena.
+
+
+
+
+Codigo final
+-------------
+Quedando Finalmente y funcionando la ruta:
+
+ web.php
+ ---
+
+    Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home']);
+
+
+    Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
+
+
+    Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre', "[A-Za-z1-9]+");
+ ---
+
+
+
+
+
+
+
+
+El controlador PagesController.php
+
+---
+         class PagesController extends Controller
+    {
+        public function home()
+        {
+            return view('home');
+        }
+
+
+        public function contact()
+        {
+
+            return view('contactos');
+        }
+
+        public function saludo($nombre = "Invitado")
+        {
+            $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
+
+            $script = "<script>alert('Problema XSS - Cross Site Scripting!')</script>"; //XSS por formulario
+
+            $consolas = [
+                "Play Station 4", 
+                "Xbox One", 
+                "Wii U"
+            ];
+
+
+            return view('saludo', compact('nombre', 'html', 'consolas'));
+        }
+    }
+---

@@ -46,14 +46,16 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home']);
 
 
+Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
 
 
+Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre', "[A-Za-z1-9]+");
 
 
-Route::get('contactame', ['as' => 'contactos', function(){
+//Route::get('contactame', ['as' => 'contactos', function(){
     //return "Hola desde la pagina de contacto";     
-    return view('contactos');
-    }]);
+  //  return view('contactos');
+  //  }]);
 
 /*Route::get('saludos/{nombre}', function($nombre){
         return "Saludos $nombre";
@@ -90,9 +92,11 @@ Route::get('contactame', ['as' => 'contactos', function(){
 
 
 
-Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado"){
+/*Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado"){
 
     $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
+*/
+
 
     /*$script = "<script>alert('Problema XSS - Cross Site Scripting!')</script>"; //XSS por formulario*/
 
@@ -103,12 +107,13 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', function($nombre = "Invitado
     ];*/
 
 
-    $consolas = [];
+    //$consolas = [];
 
    /* $consolas = [
         "Play Station 4"
     ];
 */
-    return view('saludo', compact('nombre', 'html', 'consolas'));
+/*    return view('saludo', compact('nombre', 'html', 'consolas'));
 
 }])->where('nombre', "[A-Za-z1-9]+");
+*/
