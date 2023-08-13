@@ -214,8 +214,13 @@ Si intenta ejecutar su aplicación nuevamente, todo debería funcionar.
 
 Uso del espacio de nombres completo
 
+<<<<<<< HEAD
 Este implica cambiar todas sus declaraciones de ruta, pero la idea es simple: anteponga los nombres de su controlador con su espacio de nombres. Vea el 
 siguiente ejemplo para nuestro PostsController dentro de la carpeta app/Http/Controllers.
+=======
+Este implica cambiar todas sus declaraciones de ruta, pero la idea es simple: anteponga los nombres de su controlador con su espacio de nombres. Vea el siguiente ejemplo para nuestro PostsController dentro de la carpeta app/Http/Controllers.
+
+>>>>>>> d8f0b74 (3.1. Solución del problema de los controladores)
 	
 	routes/web.php
     ---
