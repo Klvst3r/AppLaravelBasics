@@ -1,6 +1,6 @@
 4.1. Como manejar las peticiones
 
-Los request se refeire a las solicitudes o peticiones HTTP, que realiza el usuario a traves del navegador.
+Los request se refiere a las solicitudes o peticiones HTTP, que realiza el usuario a traves del navegador.
 
 En el archivo de plantillas, para ctualizar con la sintaxis de blade
 
@@ -14,5 +14,119 @@ layout.blade.php
 			<a href="{{ route('contactos') }}">Contactos</a>
 		</nav>
 	</header>
+---
+
+
+Vamos a ver un ejemplo practico sobre el manejo de Requests, digamos que se quieren añadir estados a los links del menu, es decir que cambien, dependiendo de la página que se encunetran.
+
+Para ello se va a crear una clase de CSS, para mostrar el menu cuando este activo.
+
+Por comodidad se creara en el mismo layout.
+
+
+ ---
+    <style>
+		.active{
+			text-decoration: none;
+			color: green;
+		}
+	</style>
+
+ ---
+
+ Con esto el link cambia a verde, ahora se usara una funcion que se llama requests, que al igual que las funcinoes, devuelve una nueva instancia de la clase en cuestion, en este caso la clase:
+
+    Illuminate\Http\Request
+
+A traves de esta funcion, se accedera al metodo URL que imprimi la URL actual.
+
 
 ---
+	<h1>
+			{{ request()->url() }}
+		</h1>
+	  
+---
+
+Refrescamos en el navegador. Esto imrpimira la URL web.
+
+Tambien tenemos un metodo llamado is, lo que hace es preguntar si la url en la que estamos es la misma que le pasamos por parametro.
+
+Aca no es necesario pasar la url completa.
+
+Utilizando un operador ternario,si es verdadero imprime 
+    Estas en el home
+si es falso 
+    No estas en el home.
+
+---
+    <h1>
+			{{ request()->is('/') ? 'Estás en el Home' : 'No estas en el home' }}
+		</h1>
+---
+
+
+En el navegador os muestra la ejecución. Con esto ya podemos saber en que pagina estamos, solo nos queda agregar la clase.
+
+En la clase del link se repitre el operador ternario. 
+
+---
+    <a class="{{ request()->is('/') ? 'active' : '' }}" href="{{ route('home') }}">Inicio</a>
+---
+
+Si estamo en home se utiliza la clase active, en caso contrario lo dejamos en blanco.
+
+Activandose el link solo cuando se esta en el home, se repite lo mismo con los demas links
+
+---
+<header>
+		<h1>
+			{{ request()->is('/') ? 'Estás en el Home' : 'No estas en el home' }}
+		</h1>
+		  <nav>
+			<a class="{{ request()->is('/') ? 'active' : '' }}" href="{{ route('home') }}">Inicio</a>
+			<a class="{{ request()->is('saludos/Klvst3r') ? 'active' : '' }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+			<a class="{{ request()->is('contactame') ? 'active' : '' }}" href="{{ route('contactos') }}">Contactos</a>
+		</nav>
+	</header>
+---
+
+ahora ya se tiene una navegación dinamicam, pero si se cambia el parametro de saludo, deja de funcionar, esto es por que la url es distinta a la que se definio en el link. Para solucionar esto, se agrega un * o comodin lo que significa que se puede escribir cualquier cosa, en  lugar del asterisco  
+
+
+---
+    <a class="{{ request()->is('saludos/*') ? 'active' : '' }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+---
+
+Ahora puedo cambiar el aprametro que sea necesario.
+
+Para evitar la repetición creamos una funcion de la siguiente maner:
+
+---
+<header>
+
+		<header>
+		<?php function activeMenu($url){
+			return request()->is($url) ? 'active' : ''; 
+		}
+
+		?>
+		  <nav>
+			<a class="{{ activeMenu('/') }}" 
+				href="{{ route('home') }}">Inicio</a>
+			
+			<a class="{{ activeMenu('saludos/*') }}" 
+				href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+			
+			<a class="{{ activeMenu('contactame') }}" 
+				href="{{ route('contactos') }}">Contactos</a>
+		</nav>
+	</header>
+
+---
+ 
+
+ Verificando que aun siga funcionado todo.
+
+
+Aunque es necesario decir que una vista no es un buen lugar para definir funciones.
