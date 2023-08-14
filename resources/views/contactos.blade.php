@@ -13,11 +13,12 @@
 	<p><label for="nombre">
 		Nombre
 		<input type="text" name="nombre">
+		{{ $errors->first() }}
 	</label></p>
 	
 	<p><label for="email">
 		Email
-		<input type="email" name="email">
+		<input type="text" name="email">
 	</label></p>
 	
 	<p><label for="nombre">

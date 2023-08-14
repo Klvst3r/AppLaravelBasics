@@ -153,3 +153,8 @@ Laravel automaticamente nos resolvera la clase y la asignara a la variable reque
 
 
 Obteniendose el mismo resultado 
+
+
+Tambien se puede revisar por ejemplo si un campo fue llenado o no de la siguiente forma:
+
+

@@ -1,0 +1,43 @@
+5.2. Validación de formularios
+
+Veremos como validar las peticiones hechas por el navegador de manera que concuerden con la logica de la aplicaci´pon.
+
+en el controlador observamos que se extiende a un controlador base
+
+	    class PagesController extends Controller
+
+Ubicado en 
+
+	App\Http\Controller.php
+
+
+Este a su vez utiliza un trail 
+
+	use Illuminate\Foundation\Validation\ValidatesRequests;
+
+que viene con Laravel que provee varios metoos utiles para la validación..
+
+
+Regresando al controlador PaqgesControler borando el contenido del metodo mensaje
+
+El primer parametro que recibe es el reuqest y el segundo un array con las reglas de validación.
+
+'nombre' => 'required',
+                'email' => 'email'
+
+
+Donde el nombre es requerido y el campo email es validado con html5 del lado del cliente y si esta desactivo la validación del lado del cliente, quedara activo la validación del lado del servidor.
+
+en el formulario dejamos el campo email como tipo texto, al enviar la información retorna el formulario pero no informa laravel del por que regresa asi al formulario.
+
+Se tiene para esto un objeto que esta dispoible en todas las vistas llada errors, que contiene los errores de validación..
+
+Para acceder a ellos. en el formulario:
+
+accedemos con:
+
+			<input type="text" name="nombre">
+		{{ $errors->first() }}
+
+Para obtener el primer error del campo nombre en este caso, debemos ver ahora si el error.
+		                		

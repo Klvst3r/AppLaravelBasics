@@ -34,13 +34,22 @@
 
 
             //Verificación de campos del formulario
-            if($request->has('nombre'))
-            {
-                return "Si tiene nombre. Es " . $request->input('nombre');
-            }
-            else{ 
-                return "No tiene nombre";
-            }
+            // if($request->has('nombre'))
+            // {
+            //     return "Si tiene nombre. Es " . $request->input('nombre');
+            // }
+            // else{ 
+            //     return "No tiene nombre";
+            // }
+            
+
+            //5.2. Validación del formulario
+            
+            $this->validate($request, [
+                'nombre' => 'required',
+                'email' => 'email'
+            ]);
+            return $request->all();
 
 
         }
