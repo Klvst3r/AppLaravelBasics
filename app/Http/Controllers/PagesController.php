@@ -20,7 +20,12 @@
             return view('contactos');
         }
 
-        public function saludo($nombre = "Invitado")
+        public function mensajes()
+        {
+            return 'Procesando el mensaje';
+        }
+
+        public function saludo($nombre = "Invitado...")
         {
             $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
 

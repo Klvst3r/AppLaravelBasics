@@ -1,0 +1,62 @@
+5.1 Procesar formularios
+
+Vista contacto
+
+Formulario en contactos.blade.php
+---
+
+---
+
+
+Ahora se va a defirnir la ruta que se encargara de  procesar el formulario atendiendo el metodo post
+
+En la ruta procesar
+
+	Route::post('contacto', 'PagesController@mensajes');
+
+En el controlador asegurar que se devuelvce el metodo
+
+En el controlador 	
+---
+	 public function mensajes()
+        {
+            return 'Procesando el mensaje';
+        }
+	
+---
+
+Al Hacer la prueba de procesamiento del formulario nos aparece un error 410 | Page espired
+
+https://parzibyte.me/blog/2020/07/04/solucion-error-419-laravel-page-expired/
+
+
+Solución a Error 419 en Laravel – Page Expired
+-------------------------------------------------
+
+Resumen: mostrar cómo solucionar el error 419 Page Expired en Laravel, mismo que se ocasiona al enviar un formulario o al hacer una petición AJAX.
+
+
+Explicación del error
+Este error de programación en Laravel nos puede ocurrir al empezar a usar este framework. Se trata de que enviamos un formulario pero en lugar de que los datos se guarden, aparece un error 419 y dice “Page expired”.
+
+El problema es que no estamos enviando el token CSRF con el formulario.
+
+Podemos tener varios campos, pero dentro del formulario debe estar un input hidden con el token CSRF para prevenir ataques.
+
+Solución
+Simplemente agrega el token CSRF a tu formulario. Con blade esto es fácil, solo debes colocar @csrf dentro del form. Así (línea 4):
+
+	form method="POST" action="contacto">
+
+		 @csrf
+	      ...
+	  @csrf
+	    ...
+	</form>
+
+
+Eso va a generar (al renderizarse) algo así:
+
+<input type="hidden" name="_token" value="ggmY2I1Gjt0wDFRU1ds0cP9H4g5dJaFg7X6wXgXU">
+
+De este modo estarás enviando el token CSRF en la petición, y de este modo Laravel dejará de mostrar ese error.
