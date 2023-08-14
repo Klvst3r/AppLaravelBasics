@@ -40,4 +40,36 @@ accedemos con:
 		{{ $errors->first() }}
 
 Para obtener el primer error del campo nombre en este caso, debemos ver ahora si el error.
-		                		
+
+Si se desea tener mas de una validación se puede hacer de la siguiente manera:
+
+	//'email' => 'required | email'
+      'email' => ['required , email']
+
+Otra forma es pasar un array de la siguiejte forma, y cualquiera de las dos funciona
+
+Con las dos reglas de validación de email, requerida y un email valido.
+
+Pero al hacer una validación que no pasa devolvera el valor que se tenia anteriormente en el formaulario con el metodo old().
+
+	<input type="text" name="nombre" value={{ old('nombre') }}>
+
+
+con esto el valor se mantiene. Creando otra regla de validación para el textarea requerido y con un alongitud minima de 5 caracteres.
+
+	'mensaje' => 'required | min:5'
+
+Hay varias opciones de validación y si se quieren saber cuales son podemos ir a:
+	
+	https://laravel.com/docs/10.x/validation
+
+Haciendo click en 
+
+	https://laravel.com/docs/10.x/validation#available-validation-rules
+
+Con todas las reglas de validación 
+
+
+Se agregan os mensajes de error al textarea				
+
+

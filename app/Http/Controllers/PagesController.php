@@ -47,7 +47,9 @@
             
             $this->validate($request, [
                 'nombre' => 'required',
-                'email' => 'email'
+                //'email' => 'required | email'
+                'email' => ['required' , 'email'],
+                'mensaje' => 'required | min:5'
             ]);
             return $request->all();
 
