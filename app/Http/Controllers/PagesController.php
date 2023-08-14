@@ -26,9 +26,23 @@
 
         public function mensajes(Request $request)
         {
-            //return 'Procesando el mensaje';
             
-            return $request->all();
+            //return 'Procesando el mensaje';
+                        
+            //Procesamiento de la clase Request en este metodo
+            //return $request->all();
+
+
+            //Verificación de campos del formulario
+            if($request->has('nombre'))
+            {
+                return "Si tiene nombre. Es " . $request->input('nombre');
+            }
+            else{ 
+                return "No tiene nombre";
+            }
+
+
         }
 
         public function saludo($nombre = "Invitado...")
