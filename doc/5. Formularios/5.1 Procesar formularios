@@ -112,4 +112,44 @@ https://www.arquitecturajava.com/json-viewer-awesome-y-google-chrome/
 
 
 
-Ahora si solo vamos a 
+Ahora si solo vamos a utilizar solamente la calse request en este metodo, podemos inyectarla directamente desde este metodo.
+
+Se borra lo siguiente 
+
+
+		protected $request;   
+
+        public function __construct(Request $request)
+        {
+            $this->request = $request;
+        }
+
+En el metodo se agrega la clase
+
+
+
+
+protected $request;   
+
+        public function __construct(Request $request)
+        {
+            $this->request = $request;
+        }
+
+
+       ....
+
+       public function mensajes(Request $request)
+        {
+            //return 'Procesando el mensaje';
+            
+            return $request->all();
+        
+        }        
+
+
+
+Laravel automaticamente nos resolvera la clase y la asignara a la variable request por ahora ya se puede utilizar        
+
+
+Obteniendose el mismo resultado 

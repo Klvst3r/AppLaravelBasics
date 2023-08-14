@@ -9,12 +9,7 @@
     class PagesController extends Controller
     {
             
-        protected $request;   
-
-        public function __construct(Request $request)
-        {
-            $this->request = $request;
-        }
+        
 
 
         public function home()
@@ -29,11 +24,11 @@
             return view('contactos');
         }
 
-        public function mensajes()
+        public function mensajes(Request $request)
         {
             //return 'Procesando el mensaje';
             
-            return $this->request->all();
+            return $request->all();
         }
 
         public function saludo($nombre = "Invitado...")
