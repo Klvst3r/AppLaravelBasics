@@ -60,3 +60,56 @@ Eso va a generar (al renderizarse) algo así:
 <input type="hidden" name="_token" value="ggmY2I1Gjt0wDFRU1ds0cP9H4g5dJaFg7X6wXgXU">
 
 De este modo estarás enviando el token CSRF en la petición, y de este modo Laravel dejará de mostrar ese error.
+
+
+
+Ahora vemos a utilizar la clase Request
+
+en PagesController
+
+Tenemos varias opciones una de ellas es 
+
+	    use Illuminate\Http\Request; 
+
+Una de ellas es inyectarla a traves del contructor
+
+Veamos:
+
+         
+          protected $request;   
+
+        public function __construct(Request $request)
+        {
+            $this->request = $request;
+        }
+
+
+
+        ...
+
+          public function mensajes()
+        {
+                        
+            return $this->request->all();
+        }
+
+
+
+en el metodo de procesamiento del formulario accedemos a la propiedad de esta forma y ahora podemos utilizar cualquier metodo de la calse request, en este caso vamos a devolver todos los datos con el metodo old 
+
+
+Se visualiza ahora JSON de modo plano por lo que instalaremos un plugin para mejora de visualización del formato JSON
+
+
+Extensiones posibles:
+
+
+https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh
+
+
+https://www.arquitecturajava.com/json-viewer-awesome-y-google-chrome/
+
+
+
+
+Ahora si solo vamos a 

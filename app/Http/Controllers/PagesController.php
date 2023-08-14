@@ -4,10 +4,19 @@
 
     use Illuminate\Http\Request; 
 
-    //use App\Http\Request;
+    use App\Http\Requests;
 
     class PagesController extends Controller
     {
+            
+        protected $request;   
+
+        public function __construct(Request $request)
+        {
+            $this->request = $request;
+        }
+
+
         public function home()
         {
             return view('home');
@@ -22,7 +31,9 @@
 
         public function mensajes()
         {
-            return 'Procesando el mensaje';
+            //return 'Procesando el mensaje';
+            
+            return $this->request->all();
         }
 
         public function saludo($nombre = "Invitado...")
