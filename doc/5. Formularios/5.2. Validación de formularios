@@ -288,11 +288,159 @@ Si se abra la carpeta app/Http/Request
 
 Veremos que al ejecutar el comando se crea un nuevo archivo. Esta clase "CreateMessageRequest" . Esta clase posee dos metodos
 
+Se crea:
+	C:\laragon\www\AppLaravelBasics\app/Http/Requests/CreateMessageRequest.php
+
 authorize: Sirve para determinar si el usuario esta autorizado para realizar est acción
 
 Co ocualquier usuario esta autorizado para enviarm un mensaje, por tanto regresamos todo a true
 
 
+CreateMessageRequest
+---
 
+public function authorize(): bool
+    {
+        return true;
+    }
+
+---
+
+Rules por su parte regresa un array de reglas de validación igual que las que teniamos en el controler, se copian y pegan en este bloque
+
+---
+	{
+        return [
+            'nombre' => 'required',
+                
+            'email' => ['required' , 'email'],
+
+            'mensaje' => 'required | min:5'
+        ];
+    }
+
+---
+
+
+Ahora debemos inyectar esta clase en el metodo mensaje, 
+
+
+
+Inyectar clase al metodo
+----------------------
+en esta clase en la parte superior observamos que la clase se extiende a:
+
+	class CreateMessageRequest extends FormRequest
+
+Esta clase se estaba utilizando en el controlador.
+
+Asi que podemos reemplazar de la sguiente forma 
+
+Dentro del controlador:
+
+		---
+
+			public function mensajes(App\Http\Requests\CreateMessageRequest $request)			
+
+		---
+
+Eliminando el codigo del metodo quedando solamente en el controlador
+
+---
+	public function mensajes(App\Http\Requests\CreateMessageRequest $request)
+    {
+
+		return $request->all();
+	}
+---
+
+
+Esto es todo lo que se debe hacer, de ahora en adelante el contenido de este metodo solo se ejecutara si la validación pasa, en caso contrario esto no se ejecutara.
+
+
+
+Probando:
+---------
+El codigo de Pagescontroller queda
+
+---
+<?php
+
+   namespace App\Http\Controllers;
+   
+    use App\Http\Requests;
+
+        class PagesController extends Controller
+    {
+            
+        public function home()
+        {
+            return view('home');
+        }
+
+
+        public function contact()
+        {
+
+            return view('contactos');
+        }
+
+        public function mensajes(\App\Http\Requests\CreateMessageRequest $request)
+        {
+
+
+         return $request->all();
+
+
+        }
+
+        public function saludo($nombre = "Invitado...")
+        {
+            $html = "<h2>Contenido de html</h2>"; //ingresado por formulario
+
+            $script = "<script>alert('Problema XSS - Cross Site Scripting!')</script>"; //XSS por formulario
+
+            $consolas = [
+                "Play Station 4", 
+                "Xbox One", 
+                "Wii U"
+            ];
+
+
+            return view('saludo', compact('nombre', 'html', 'consolas'));
+        }
+    }
+
+---
+
+
+Regresamos al formulario y verificamos que todo funciona de manera normal
+
+
+Finalemnte limpiamos un poco el codigo
+
+---
+
+use App\Http\Requests\CreateMessageRequest;
+
+
+...
+
+
+
+        public function mensajes( $request)
+        {
+        	return $request->all();
+        }
+       ...
+
+---
+
+
+Se importa la clase del metodo al principio para limpiar un poco el codigo.
+
+Una vez que se ha validado y guardado la información, se debe dar una respuesta al usuario , para ello se utilizan los responses.
+
+Se vera en la siguiente lección
 
 

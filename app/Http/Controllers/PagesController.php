@@ -1,10 +1,14 @@
 <?php
 
-    namespace App\Http\Controllers;
-
-    use Illuminate\Http\Request; 
-
+   namespace App\Http\Controllers;
+   
     use App\Http\Requests;
+
+   //use App\Http\Request;    
+   //use Illuminate\Http\Requests;
+
+   //use App\Http\Requests\CreateMessageRequest;
+
 
     class PagesController extends Controller
     {
@@ -24,7 +28,7 @@
             return view('contactos');
         }
 
-        public function mensajes(Request $request)
+        public function mensajes(\App\Http\Requests\CreateMessageRequest $request)
         {
             
             //return 'Procesando el mensaje';
@@ -45,12 +49,12 @@
 
             //5.2. Validación del formulario
             
-            $this->validate($request, [
-                'nombre' => 'required',
+            //$this->validate($request, [
+            //    'nombre' => 'required',
                 //'email' => 'required | email'
-                'email' => ['required' , 'email'],
-                'mensaje' => 'required | min:5'
-            ]);
+            //    'email' => ['required' , 'email'],
+            //    'mensaje' => 'required | min:5'
+            //]);
             return $request->all();
 
 
