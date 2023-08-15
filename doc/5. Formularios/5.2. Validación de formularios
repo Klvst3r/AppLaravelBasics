@@ -70,6 +70,123 @@ Haciendo click en
 Con todas las reglas de validación 
 
 
-Se agregan os mensajes de error al textarea				
+Se agregan os mensajes de error al textarea
+
+Se finaliza el formulario y la validaci[on es para todos los campos y el campo mensaje debe ser mayor a cinco caracteres				
+
+
+---
+	<form method="POST" action="contacto">
+
+	 @csrf
+	
+	<p><label for="nombre">
+		Nombre
+		<input type="text" name="nombre" value={{ old('nombre') }}>
+		{{ $errors->first('nombre') }}
+	</label></p>
+	
+	<p><label for="email">
+		Email
+		<input type="text" name="email" value={{ old('email') }}>
+		{{ $errors->first('email') }}
+	</label></p>
+	
+	<p><label for="nombre">
+		Mensaje
+		<textarea name="mensaje"></textarea>
+		{{ $errors->first('mensaje') }}
+
+	</label></p>
+	
+	<input type="submit" value="Enviar">
+
+</form>
+
+---
+
+
+Estilos a errores
+--------------------
+
+Para dar un color rojo en el layout de las plantillas y como no hay un proyecto real se hace en linea
+
+
+Los estilos deben ir en archivos separados.
+
+En el formulario se agrega como segundo parametro de la siguiente forma con la clase error, se buscara la cadena :message.
+
+
+
+---
+
+			<input type="text" name="nombre" value={{ old('nombre') }}>
+		{{ $errors->first('nombre','<span class=error>:message</span>') }}
+
+---
+
+
+Aplicandose el formato a los demas campos
+
+...,'<span class=error>:message</span>'
+
+
+solo que ahora en el formulario se visualizan los mensajes de rror tal cual
+
+	<span class=error>The nombre field is required.</span>
+
+Ahora para imprimir HTML como estructura debemos utilizar esta sintaxis 
+
+
+---
+
+	{!! $errors->first('nombre', '<span class=error>:message</span>') !!}
+---	
+
+volvemos a la validación del formulario y listo se tiene el formato de forma correcta
+
+
+
+
+
+Cambiar los mensajes de ingles a español
+---------------------------------------
+
+
+Desde la carpeta Resources
+
+	resources/lang/en
+
+Ha una carpeta llamada eng, aqui se guardan ñas traducciones de mensajes de validación entre otros,
+
+Revisar el archivo
+
+	validation.php
+
+
+Buscar la palabra: required que es el mensaje que se visualiza cuando es requerido.
+
+attribute es enlazada por el nombre del campo, en este campo nombre.
+
+Se podria editar el mensaje directamente desde aqui. aunque hay una mejor forma de hacerla.
+
+duplicar la carpeta llamarla es de español. En esta es donde se haran las traducciones abriendo el archivo
+
+	resources/lang/es/validation.php
+
+buscando : required
+
+Este es el mensaje que se debe modificare
+
+Pero debemos indicar a laravel que el mensaje esta en español
+
+Para ello vamos a la carpeta config/app.php
+
+Cambiamos en la region, cambiandolo a es que se acaba de crear
+
+	'locale' => 'es',	
+
+
+Reenviamos y ahora los mensajes deben desplegarse en español.
 
 
