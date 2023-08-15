@@ -190,3 +190,109 @@ Cambiamos en la region, cambiandolo a es que se acaba de crear
 Reenviamos y ahora los mensajes deben desplegarse en español.
 
 
+Para el mensaje del email
+
+buscamos la palabra email del archivo validation.php de la traducción en español.
+
+	'email' => 'El campo :attribute no parece un correo electronico válido.',
+
+con esto se entiende que se tiene que traducir todos los errores, pero existe un repositorio creado por la comunidad de laravel que se puede utilizar 
+
+Bucarg en Google
+	laravel validation languajes
+
+Abrir la primera opcion y se veran las traduccciones con los archivos
+
+Se puee intentar copiar el contenido del archivo validation, solo que ahora no se puestra el repositorio tal cual.
+
+
+https://github.com/Laravel-Lang/lang/tree/main/locales/es
+
+
+Repositorio
+https://github.com/Laravel-Lang/lang
+
+documentaciópn:
+
+	https://github.com/Laravel-Lang/lang
+
+Manual de instalación
+	https://laravel-lang.com/installation/
+
+Cln la guia de instalación basica podemos utilizar las siguientes instrucciones desde laragon para cambiar la configuración de las alertas en español.
+
+
+https://laravel-lang.com/installation/#quick-start
+
+---
+
+	composer require laravel-lang/common --dev
+
+	php artisan lang:add es
+
+	php artisan lang:update
+---		
+
+
+
+con esto debe ser suficiente para que ahora todos los mensajes esten en español
+
+Ruta de los archivos de traducción a español
+
+
+	C:\laragon\www\AppLaravelBasics\vendor\laravel\framework\src\Illuminate\Translation\lang\es
+
+Con esto ya no sera necesario sustituir a cada uno de los archivos.
+
+En teoria deben sustituirse los siguientes archivos.
+
+	auth.php
+	pagination.php
+	passwords.php
+	validation.php
+
+
+Ahora si cambiamos a nuestra app a lenaguaje es, nuevamente los mensajes estaran en ingles.
+
+De esta forma pueden convivir varios lenaguajes en la misma aplicación.
+
+
+
+Regresanoo al PagesController
+
+
+Validación de formularios
+---------------------------------
+
+Cuando tenemos archivos pequeños de validación dentro del controlador no es ningun problema, pero cuando tenemos muchos campos que validar, lo mejor es utilizar algo que se conoce como form object, o como Laravel los llama Request::object 
+
+
+en la terminal
+
+ 	php artisan make:request
+
+
+Lo que hace es crearnos una nueva clase Request.
+
+
+Para utiliarlo hacemos en erminal:
+
+	php artisan make:request <Parametro_nombre-de-la-clase>
+
+Creamos
+	php artisan make:request CreateMessageRequest
+
+
+Si se abra la carpeta app/Http/Request
+
+
+Veremos que al ejecutar el comando se crea un nuevo archivo. Esta clase "CreateMessageRequest" . Esta clase posee dos metodos
+
+authorize: Sirve para determinar si el usuario esta autorizado para realizar est acción
+
+Co ocualquier usuario esta autorizado para enviarm un mensaje, por tanto regresamos todo a true
+
+
+
+
+
