@@ -1,0 +1,358 @@
+5.3. Como manejar respuestas del servidor - Responses
+
+Archivos
+-----
+
+    Secciones:
+           
+        Controladores
+            app/Http/Controllers/
+                PagesController.php
+                
+
+        Vista
+            resources/views/
+                contacto.blade.php
+
+        helper  
+            helper.php
+                
+
+        middleware
+            App/Http/Middleware/VerirycsrfToken.php
+
+
+
+        ResponseFactory.php
+
+        AppLaravelBasics/vendor/laravel/framework/src/Illuminate/Contracts/Routing/ResponseFactory.php
+
+
+
+            Contenido
+----------
+En la sección anterior vimos como validar formularios, en esta sección vamos a profundizar un poco en los responses, o respuestas.
+
+Los Responses son las respuestas que da el servidor, y Laravel tenemos algunas formas de devolver estas respuestas, algunas ya se vieron, por ejemplo cuando retornamos un string.
+
+el string es automaticamente convertido en un respuesta http, por Laravel.
+
+En el metodo mensajes en realidad estamos devolviendo un array
+
+
+---
+    return $request->all(); //Devuelve un array
+
+---
+
+Lo convierte automaticamente en una respuesta de tipo JSON.
+
+Nos referimos a esto:
+
+Pages Controller
+    ---
+    public functin home()        
+    {
+        return ['key' => 'value']  
+    }
+    ---
+
+Al verlo en el navegador  la salida se retornara en formato JSON
+
+{
+    "key" : "value
+}
+
+Incluso si tenemos un array de arrays.
+
+    ---
+    public functin home()        
+    {
+        return ['key' => ['value1', 'value2']]  
+    }
+    ---
+
+Los convierte en objeto de JSON multidimensional
+
+{
+    "key" : [
+        "value1",
+        "value2"
+    ]
+}
+
+
+Tambien se tiene un función llamada response, que se puede utilizar, si se revisa al igual que las funciones vistas anteriormente, devuelve una nueva instancia de la clase "ResponseFactory" en los helṕers de laravel.
+
+En este caso Response Factory, como primer parametro tenemos el contenido de la respuesta, el segundo paramtetro es el statud e la respuesta,
+
+funcion response($content = '', $status = 200, array $header = [])
+{
+    $factory = app(ResponseFactory::class);
+
+    if(func_args() === 0){
+        return $factory;
+    }
+
+    return $factory->make($content, $status, $headers);
+}
+
+que por defecto es 200 que significa Ok, el tercer parametro tambien opcional es un array de las cabeceras o headers, entonces podemos pasarle un solo paramtetro que seria el contenido de la respuesta
+
+---
+    public functin home()        
+    {
+        return response('contenido de la respuesta'); //200
+    }
+    ---
+
+Los header estaran vacios.    
+
+Pero si se inspecciona en la pestaña Network vemos que estatus es 200, pero si queremos cambiarlo.
+
+---
+    public functin home()        
+    {
+        return response('contenido de la respuesta',201); //200
+    }
+    ---
+
+Cambiando la respuesta de esa forma, si se hace click sobre el nombre del recurso se podran ver a detalle los headers, 
+
+Para agregar  un header se hace en el tercer parametro en forma de array
+
+    ---
+    public functin home()        
+    {
+        return response('contenido de la respuesta',200, ['X-token' => 'SECRET']);
+    }
+    ---
+
+Se puede cambiar la sintaxis pare mejorar la legibilidad.
+
+    ---
+    public functin home()        
+    {
+        return response('contenido de la respuesta',200)->header('X-token', 'SECRET');
+    }
+    ---
+
+Es el resultado es el mismo  al revisar los header en el navegador. 
+
+
+    ---
+    public functin home()        
+    {
+        return response('contenido de la respuesta',200)
+            ->header('X-token', 'SECRET');
+    }
+    ---
+
+Se pone en otra linea para verlo mejor.
+
+si queremos añadir mas headers podemos volver a llmar al metodo header
+
+    ---
+    public functin home()        
+    {
+        return response('contenido de la respuesta',200)
+            ->header('X-token', 'SECRET')
+            ->header('X-token-2', 'SECRET-2');
+    }
+    ---
+
+    Tambien se pueden agregar cokies a las responses
+    ---
+    public functin home()        
+    {
+        return response('contenido de la respuesta',200)
+            ->header('X-token', 'SECRET')
+            ->header('X-token-2', 'SECRET-2')
+            ->cookie('X-cookie', 'cookie');
+    }
+    ---
+
+El valor sera automaticamente encriptado.
+
+
+
+
+
+
+Responses en la Pagina de Contacto
+------------------------------------
+
+Regresando a la pagina de contacto, si se inspecciona al enviar el formulario, regresar una respuesta en formato JSON con el Status 200, recordadno que al regresar un array desde la ruta o controlador se transforma automaticamente en JSON. 
+
+{
+"nombre": "Klvst3r",
+"email": "klvst3r@email.com",
+"mensaje": "Mensaje"
+}
+
+
+Name            Method      Status      Type
+contacto        POST          200       document
+
+
+
+
+
+Pero que pasa si queremos cambiar el estatus, para ello tenemos un metodo json, donde pasamos el contenido en forma de array.
+Pagescontroller
+---
+public function mensajes(CreateMessageRequest $request)
+    {
+        $data = $request->all();
+        return response()->json(['data' => $data],202)
+    }
+---
+
+{
+    "data": {
+    "nombre": "Klvst3r",
+    "email": "klvst3r@email.com",
+    "mensaje": "Mensaje"
+    }
+}
+
+Ahora el estaus es 202, asi mismo se puden pasar headers.
+
+---
+public function mensajes(CreateMessageRequest $request)
+    {
+        $data = $request->all();
+        return response()->json([
+            'data' => $data
+            ],202)
+            ->header('TOKEN','secret')
+    }
+---
+
+continuando con el formulario, se va a utilizar una funcion llamada redirect que es una instancia de la clase redirect del helper.php que alfinal devuelve un response con el estatus 302, que significa redirección.
+
+el primer parametro es la url que se acomodo a redirect, indicandole que luego de enviar el formulario  nos redireccione al home.
+
+
+---
+public function mensajes(CreateMessageRequest $request)
+    {
+    $data = $request->all();
+    return redirect('/');
+ }
+---
+
+Tambien se puede redireccionar a una ruta con nombre con el metodo route().
+---
+public function mensajes(CreateMessageRequest $request)
+    {
+    $data = $request->all();
+    return redirect()->route('saludos');
+ }
+---
+
+Si tenemos la necesidad de redireccionarlo a la misma pagina de contactos, acas e va a ver como utilizar sesiones para enviar mensajes..
+
+Esto es con el metodo with()
+
+El primer parametro es el nombre de la llave que contenga el mensaje, y el segundo es el valor del mensaje en si.
+
+Se coloca cada metodo en cada linea para leerlo mejor.
+
+
+---
+public function mensajes(CreateMessageRequest $request)
+    {
+    $data = $request->all();
+     return redirect()
+                ->route('contactos')
+                ->with('info', 'Tu mensaje ha sido enviado correctamente :)');
+
+ }
+---
+ 
+ si enviamos el formulario, simplemente redireccionara a la pagina de contactos, pero no se vera el mensaje.
+
+ sucede que enviamos el mensaje, pero no se esta mostrando, para ello.
+
+ en la vista de contactos
+ contactos.blade.php
+ ---
+	<!-- 6.3.3 Redirección con sesiones -->
+
+		@if( session()->has('info') )
+			<h3>{{ session()->has('info')}}</h3>
+		@endif
+
+ ---
+
+ La funcion llamada session, con el metod ohas, para preguntar si existe el mensaje de información en la sessión, recordando que en el controlador, definimos el mensaje info, en caso de existir imprimimos lo que tiene en el mensaje.
+
+ que tal si mostramos el formulario solamente si el mensaje de la sesion no existe, es decir si info, existe en la sesion, se imprime el mensaje en pantalla, en caso contratrio mostramos el formulario.
+
+ contato.blade.php
+ ---
+		@if( session()->has('info') )
+			<h3>{{ session('info') }}</h3>
+		@else
+
+
+		<!-- 6.3.1. Formularios -->
+		<form method="POST" action="contacto">
+			<p><label for="nombre">Nombre
+				<input type="text" name="nombre" value="{{ old('nombre') }}">
+				{!! $errors->first('nombre','<span class=error>:message</span>') !!}
+			</label></p>
+			<p><label for="email">Email
+				<input type="email" name="email" value="{{ old('email') }}">
+					{!! $errors->first('email','<span class=error>:message</span>') !!}
+			</label></p>
+			<p><label for="mensaje">Mensaje
+				<textarea name="mensaje">{{ old('mensaje') }}</textarea>
+				{!! $errors->first('mensaje','<span class=error>:message</span>') !!}
+			</label></p>
+			<p><input type="submit" value="Enviar">
+		</form>
+
+
+		@endif
+
+si se envia el formlario el mensaje aparece y desaparece el formulario pues ya no necesita nuevemante solicitar sta información .
+
+Por ultimo se va a reemplazar todo, por otro helper.
+
+Pagescontroller
+---
+
+public function mensajes(CreateMessageRequest $request)
+    {
+     $data = $request->all();
+         
+         return back()
+            ->with('info', 'Tu mensaje ha sido enviado correctamente :)');
+        
+    }
+---
+Se prueba en el navegador funcionando sin problema alguno
+
+
+
+----------------
+Recordando en la seccion de request que el Archivo
+    App/Http/Middleware/VerirycsrfToken.php
+
+Se añadio la ruta contacto, para que no sea verificado el origen del formulario, si se comenta esta linea    
+
+---
+protected $except = [
+       // 'contacto'
+    ];
+---
+
+si se intenta enviar el formulario, aparece el siguiente error:
+
+1/1 TokenMismatchException in VerifyCsrfToken.php
+
+Debidoa que el middleware intercepto el request. 
+
+en la siguiente sección veremos que son y como funcionan los middlewares.

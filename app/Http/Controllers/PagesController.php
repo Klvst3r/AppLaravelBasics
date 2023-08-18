@@ -18,7 +18,11 @@
 
         public function home()
         {
+            //return['key' => ['value1', 'value2']];
+
             return view('home');
+
+            //return response();
         }
 
 
@@ -55,7 +59,30 @@
             //    'email' => ['required' , 'email'],
             //    'mensaje' => 'required | min:5'
             //]);
-            return $request->all();
+            //return $request->all();
+
+            //5.3. Manejo de responses
+
+            $data = $request->all();
+            
+            //Primer response de prueba
+            /*return response()->json(['data' => $data], 202)
+            -> header('TOKEN', 'secret');*/
+
+            //Se utiliza una funcion llamada redirect
+            //  return redirect('/');
+
+            //Redirección a la pagina saludos
+            //return redirect()->route('saludos');
+
+            //Redirección a la misma página de contactos
+            /*return redirect()
+                ->route('contactos')
+                ->with('info', 'Tu mensaje ha sido enviado correctamente :)');*/
+
+           //Helper back
+             return back()
+                ->with('info', 'Tu mensaje ha sido enviado correctamente :)');
 
 
         }
