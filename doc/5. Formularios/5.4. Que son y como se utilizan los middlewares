@@ -1,0 +1,522 @@
+5.4. Que son y como se utilizan los middlewares
+
+
+Archivos
+-----
+
+    Secciones:
+           
+        Controladores
+            app/Http/Controllers/
+                Pagescontrollers.php
+                
+                
+
+        Vista
+            resources/views/
+                
+
+        helper  
+            helper.php
+                
+
+        middleware
+            App/Http/Middleware/
+                VerirycsrfToken.php
+                Example.php //ambos casos de uso de middleware
+
+            vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware
+                VerifyCsrfToken.php
+
+        Archivos Kernel
+            App/Http/Kernel.php    
+
+        Rutas:
+            routes/
+                web.php
+
+Contenido
+----------
+En la sección anterior vimos como manejar respuestas del lado del servidor.
+
+Ahora se vera que son los middlewares.
+
+
+Un middleware es algo asi como un guardian, una capa que intercepta las peticiones del usuario y verifica que cumplan sus reglas y en caso de que estas reglas no se cumplan, la peticion es terminada.
+
+ se toma como ejemplo el middleware
+    VerirycsrfToken.php
+    ---
+    class VerifyCsrfToken extends Middleware
+    ---
+
+Vemos como el middleware se extiende a la clase BaseVerifier.php desde  
+    Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+
+
+
+
+---
+
+public function handle($request, Closure $next)
+    {
+        if (
+            $this->isReading($request) || //Si el request es de tipo GET
+            $this->runningUnitTests() || // Si estamos ejecutando un test
+            $this->inExceptArray($request) ||  // Si la URL está dentro de la propiedad except
+            $this->tokensMatch($request)
+        ) {
+            return tap($next($request), function ($response) use ($request) {
+                if ($this->shouldAddXsrfTokenCookie()) {
+                    $this->addCookieToResponse($request, $response);
+                }
+            });
+        }
+
+        throw new TokenMismatchException('CSRF token mismatch.');
+    }
+
+---
+
+El metodo handle es el que nos interesa.
+
+Todo middleware tiene un metodo llamado handle que es el reponsable de verificar lo que necesitamos para determinar si se le permite continuar o no. En el caso que se muestra es un if que verifica varias cosas. a breves razgos en el perimer metodo se verifica si el request es de tipo get, luego si se esta ejecutando un test, despues si la url del request se se encuentra en la propiedad escepto donde pusimos la url contacto.
+
+
+VerifyCsrfToken.php
+---
+class VerifyCsrfToken extends Middleware
+{
+    /**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array<int, string>
+     */
+    //6.3.1.
+    protected $except = [
+       // 'contacto'
+    ];
+}
+---
+
+
+
+
+
+
+
+
+
+min 2.12
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Al agregar la ahi actualiza la propiedad en:
+
+ Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+
+ ---
+/**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array
+     */
+    protected $except = []; //se actualiza la propiedad en:
+ ---
+
+ Y por ultimo verifica el origen del request
+
+ ---
+public function handle($request, Closure $next)
+    {
+        ...
+        
+            $this->tokensMatch($request)
+        ...
+    }
+ --
+
+ Verificando como lo hace:
+
+ Primero obtiene un token unico de la sessión, luego trata de encontrar un token enviado por el request ya sea un compa de formulario  o en una cabecera.
+
+ ---
+    protected function tokensMatch($request)
+    {
+        $token = $this->getTokenFromRequest($request);
+
+        return is_string($request->session()->token()) &&
+               is_string($token) &&
+               hash_equals($request->session()->token(), $token);
+    }
+ ---
+
+ al final hace la comparación, si sin iguales significa que el origen es el mismo, por lo tanto permite el paso, si cualquiera de estas condiciones devuelve verdadeo, el request pasa:
+
+
+ ---
+ if (
+            $this->isReading($request) || //Si el método es GET
+            $this->runningUnitTests() || // Si estamos ejecutando un test
+            $this->inExceptArray($request) ||  // Si la URL está dentro de la propiedad except
+            $this->tokensMatch($request)
+        ) {
+            return tap($next($request), function ($response) use ($request) {
+                if ($this->shouldAddXsrfTokenCookie()) {
+                    $this->addCookieToResponse($request, $response);
+                }
+            });
+        }
+
+ ---
+
+ Caso contrario lanza una excepcion, 
+
+ ---
+...
+    throw new TokenMismatchException('CSRF token mismatch.');
+ ---
+
+ entonces, para hacer que la verificación pase, podemos enviar un campo llamado 
+    _token
+
+ ---
+
+ return is_string($request->session()->token()) &&
+               is_string($token) &&
+               hash_equals($request->session()->token(), $token);
+
+ ---
+
+ con el valor del token de la sesión, 
+
+Para ello abrimos la vista contactos.blade.php
+
+Y dentro del formulario vamos a agregar un campo oculto.
+
+
+Se descomento
+App/Http/Middleware/VerifyCsrfToken
+---
+protected $except = [
+       'contacto'
+    ];
+---
+
+
+Para ello abrimos la vista contactos.blade.php
+
+Y dentro del formulario vamos a agregar un campo oculto.
+
+---
+<!-- 6.3.4. Middleware -->
+			<input type="hidden" name="_token" value="{{ csrf_token() }}">
+---
+
+Inspección del formulario
+    <input type="hidden" name="_token" value="NeAc2yRmp1L79KF47m52HSnU1encvFc7mgWVvlwK">
+
+con el valor del Token, si se llena el formulario y se envia, el middleware identifica el token y me permite pasar al siguiente request.
+
+Ahora, una ultima cosa antes de crear nuestro propio middleware, en lugar de escribir el codigo para el formulario, se tienen a disposición, otra cuncion llamada.
+    {!! csrf_field() !!}
+
+Lo que hace es regresar, el campo completo con el token,     
+contactos.blade.php
+---
+<!-- 6.3.4. Middleware -->
+			<input type="hidden" name="_token" value="{{ csrf_token() }}">
+			{!! csrf_field() !!}
+---
+
+
+Lo que hace es regresar el campo completo con el token
+
+Insepccionando:
+
+    <input type="hidden" name="_token" value="NeAc2yRmp1L79KF47m52HSnU1encvFc7mgWVvlwK">
+    <input type="hidden" name="_token" value="NeAc2yRmp1L79KF47m52HSnU1encvFc7mgWVvlwK">
+
+
+solo que ahora nos ahorramos unos cuantos caracteres.
+
+
+
+
+
+Creación de un middleware propio
+----------------------------------
+
+En la terminal
+    php artisan make:middleware <nombre-Middleware>
+
+Una buena practica es nombrar los archivos de forma que describa la acción que realizn, Por ejemplo el middleware revisado antoeriormente se traduce  VerifyCsrfToken (Verifica el token csrf)
+
+Describe la acción que realizam; existe otro que Redirecciona si esta autorizado (RedirectIfAuthenticated)
+
+Incluso podria nombrarse en español, por ejemploe 
+    RedireccionasiTalCosaSeCumple
+
+En lo personal se prefiere nombrear a los archivos en ingles, por principio de universalidad.
+
+Ej.     
+    php artisan make:middleware Example
+
+Esto crea dentro de la Carpeta Middleware el archivo recien creado.
+
+
+Al abrirlo:
+
+---
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class Example
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        
+        if (true){
+
+            return $next($request);
+        }
+
+        return response('No puedes continuar',404);
+    }
+}
+
+---
+
+Esta es la estructura basica de un middleware, se tienen el metodo handle, que todo middleware debe tener, es donde se define el condicional.
+
+Si la condicion se cumple, dejamos pasar al siguiente request, casoconttario devovemos una respuesta, no puedes continuar y se agrega un codigo de 404 o 403.
+
+Aqui ya se tendria nuestro middleware listo
+
+Para utilizarlo, debemos ir al archivo 
+    App/Http/Kernel.php
+
+Vemos  que es en donde se definen los middlewares, en la primera propiedad llamada middleware se definen los middewares de forma glbal.
+
+
+---
+protected $middleware = [
+        // \App\Http\Middleware\TrustHosts::class,
+        \App\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+    ];
+---
+
+
+Es decir que se aplicaran a todas y cada una de las peticiones Http, en la parte inferior se tiene la propiedad, middlewaregroups, donde podemos definir middlewares agrupado.
+
+---
+protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+---
+
+se tiene un middleware llamado web, que agrupa a cinco middleware, por ultimo se tienen los routeMiddlewares donde se definen, los middlewares que se pueden aplicar, a rutas y controladores.
+
+Se agregara el middleware example que se acaba de crear 
+
+
+---
+protected $routeMiddleware = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'example' => \App\Http\Middleware\Example::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+---
+
+Se le da una llave al middeware, en este caso se llama example y el nombfre de la clase creada es Example.
+
+Se tienen dos formas de aplicar el middleweare.
+
+1. La primera es desde la ruta
+
+desde
+    routes/web.php
+
+Simplemente añadimos el metodo del middleware  y elnombre que definimos en el kernel.
+
+   ---
+    Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home'])->middleware('example');
+   ---
+
+De esta manera cuando acceda al home, el middleware interceptara el request, hara la comprobación, y respondera en consecuencia.
+Middleware/Example.php
+---
+
+public function handle(Request $request, Closure $next)
+    {
+        
+        if (true){
+
+            return $next($request);
+        }
+
+        return response('No puedes continuar',404);
+    }
+
+---
+
+En este caso como la comprobación siempre va a retornar verdadero el request va a continuar.
+
+En el navegador
+
+home
+ Y accedemos a la pagina.
+
+ Pero si la condicion no se cumple
+
+ ---
+public function handle(Request $request, Closure $next)
+    {
+        
+        if (false){
+
+            return $next($request);
+        }
+
+        return response('No puedes continuar',404);
+    }
+
+---
+ No sdeja pasar al home, y si vamos a otras rutas, se pude acceder sin problemas
+
+ en este caso   saludos/klvst3r
+                contactos
+
+
+
+Otra forma de agregar middlewares
+---------------
+
+Es la que se recomienda
+
+En el Pagescontrollers, se añade un constructor
+---
+public function __construct()
+    {
+        $this->middleware('example');
+    }
+---
+
+Accediendo al middleware que se hereda del controlador base y por parametro se pasa el nombre del middleware, aqui se debe tener en cuenta que este middleware se esta aplicando a todos los metodos de este controlador (home(), contact(), mensajes()). Por ahora no se puede acceder a ninguna ruta. Entonces como hacemos para aplicar el middleware a metodos especificos.
+
+Como segundo parametro agregamos un array con la llave only y el valor sera otro array con los metodos a los que queremos que se aplique el middleware. Para este ejemplo queremos que solo se aplique al home.
+
+---
+public function __construct()
+    {
+        $this->middleware('example', ['only' => ['home']]);
+    }
+---    
+En el home no se pude acceder.
+
+Recordando que el middleware example debe estar con el valor false para que sea Verificando
+
+---
+
+public function handle(Request $request, Closure $next)
+    {
+        
+        if (true){
+
+            return $next($request);
+        }
+
+        return response('No puedes continuar',404);
+    }
+
+---
+
+
+En el navegador se podra verificar que el metodo home es el que no se puede acceder cuando actua el middleware, en el array ['only].
+
+--------------
+
+Tambien odemos hacer lo opuesto, es decir en vez de decir only que siginifica solo, podemos decir except.
+---
+public function __construct()
+    {
+        $this->middleware('example', ['except' => ['home']]);
+    }
+---    
+
+Se aplica con esto el middleware a todos los metodos, excepto home.
+
+
+Resumiento esta sección, los midlewares son una clase dedicada a interceptar n request, verificar que se cumplan ciertas reglas.
+
+Y en consecuencia dejarlo continuar o no.
+
+Volviendo al ejemplo del mensaje. En el metodo mensaje lo unico que hacemos es gardar el request en una variable.
+
+Al final regresamos una respuesta, no se esta guardando el mensaje en ningunap parte, al final regresamos una respuesta.
+
+Pagescontroller
+---
+$data = $request->all();
+         
+         return back()
+            ->with('info', 'Tu mensaje ha sido enviado correctamente :)');
+        
+---
+
+no se esta guardando este mensaje en ninguna parte, en la siguiente sección se vera como guardar datos en una base de datos.
