@@ -16,6 +16,15 @@
 
 	 <!-- @csrf -->
 	
+
+	 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+
+	 {!! csrf_field() !!} 
+
+
+	  
+
 	<p><label for="nombre">
 		Nombre
 		<input type="text" name="nombre" value={{ old('nombre') }}>
