@@ -106,29 +106,6 @@ class VerifyCsrfToken extends Middleware
 
 
 
-
-min 2.12
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Al agregar la ahi actualiza la propiedad en:
 
  Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
@@ -268,7 +245,7 @@ Creación de un middleware propio
 En la terminal
     php artisan make:middleware <nombre-Middleware>
 
-Una buena practica es nombrar los archivos de forma que describa la acción que realizn, Por ejemplo el middleware revisado antoeriormente se traduce  VerifyCsrfToken (Verifica el token csrf)
+Una buena practica es nombrar los archivos de forma que describa la acción que realizan, Por ejemplo el middleware revisado antoeriormente se traduce  VerifyCsrfToken (Verifica el token csrf)
 
 Describe la acción que realizam; existe otro que Redirecciona si esta autorizado (RedirectIfAuthenticated)
 
@@ -383,6 +360,28 @@ protected $routeMiddleware = [
     ];
 ---
 
+
+Para la nueva version a la fecha de julio de 2023 con la nueva version de Laravel, esta seccion anterior cambia por la siguiente :
+
+
+
+protected $middlewareAliases = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'example' => \App\Http\Middleware\Example::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+
+
+
 Se le da una llave al middeware, en este caso se llama example y el nombfre de la clase creada es Example.
 
 Se tienen dos formas de aplicar el middleweare.
@@ -467,6 +466,10 @@ public function __construct()
         $this->middleware('example', ['only' => ['home']]);
     }
 ---    
+
+
+
+
 En el home no se pude acceder.
 
 Recordando que el middleware example debe estar con el valor false para que sea Verificando

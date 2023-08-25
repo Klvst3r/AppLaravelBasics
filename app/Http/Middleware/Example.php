@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class Example
 {
     /**
@@ -15,6 +16,14 @@ class Example
      */
     public function handle(Request $request, Closure $next): Response
     {
+        
+        if(false){
+
         return $next($request);
+
+        }
+
+        return response('No puedes continuar', 404);
     }
 }
+

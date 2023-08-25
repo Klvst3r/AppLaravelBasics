@@ -14,6 +14,12 @@
     {
             
         
+        //5.4. Middleware, agregando un constructor
+        public function __construct()
+        {
+            $this->middleware('example', ['only' => ['home']]);
+        }
+
 
 
         public function home()
