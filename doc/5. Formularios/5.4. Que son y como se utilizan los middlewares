@@ -494,7 +494,7 @@ En el navegador se podra verificar que el metodo home es el que no se puede acce
 
 --------------
 
-Tambien odemos hacer lo opuesto, es decir en vez de decir only que siginifica solo, podemos decir except.
+Tambien podemos hacer lo opuesto, es decir en vez de decir only que siginifica solo, podemos decir except.
 ---
 public function __construct()
     {
@@ -505,13 +505,24 @@ public function __construct()
 Se aplica con esto el middleware a todos los metodos, excepto home.
 
 
-Resumiento esta sección, los midlewares son una clase dedicada a interceptar n request, verificar que se cumplan ciertas reglas.
+
+
+
+
+Resumiento esta sección, los midlewares son una clase dedicada a interceptar un request, verificar que se cumplan ciertas reglas.
 
 Y en consecuencia dejarlo continuar o no.
 
-Volviendo al ejemplo del mensaje. En el metodo mensaje lo unico que hacemos es gardar el request en una variable.
+
+
+
+Volviendo al ejemplo del mensaje. En el metodo mensaje lo unico que hacemos es guardar el request en una variable.
+
+
 
 Al final regresamos una respuesta, no se esta guardando el mensaje en ningunap parte, al final regresamos una respuesta.
+
+
 
 Pagescontroller
 ---
