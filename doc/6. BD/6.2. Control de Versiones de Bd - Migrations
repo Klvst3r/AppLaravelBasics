@@ -1,0 +1,201 @@
+6.2. Control de Versiones de Bd - Migrations
+
+
+Archivos
+-----
+
+    Secciones:
+
+        migraciones
+            database/migrations
+                2014_10_12_000000_create_users_table.php
+                2014_10_12_100000_create_password_resets_table.php
+
+
+
+Contenido
+---------
+
+En la seecion acterior vimos como se integran las bases de datos en Laravel y como se integran las variables de entorno.
+
+En esta sección se vera que son y para que sirven las migraciones.
+
+Las migraciones son una especie de control de versiones para bases de datos, permiete modificarlas y compartirlar.
+
+La carpeta donde se guardan las migraciones se encunetra en
+
+database/migrations
+
+Existen regularmente dos migraciones de entrada que Laravel contiene por defecto.
+
+- Una para crear la tabla de usuarios y otra 
+- Para crear la tabla de password_resets
+
+Toda migracion esta compuesta por dos metodos 
+
+---
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+---
+
+En el metodo up() utilizamos la clase Schema para crear la base de datos users y dentro de esta función definimos los campos de la tabla.
+
+Primero se definen los campos de la tabla con un campo invrementable id, como llave primaria, luego un campo 'name' de tipo string, luego un campo 'email' tambien como string con una llave de valor unica, luego un string de nombre password, a continuacion haty una funcion que devuelve un campo llamado 'rememberToken'
+
+
+La definición se encunetra en el archivo
+    Blueprint.php
+
+Con un maximo de 100 caracteres, y que su valor puede ser nulo.  Es lo mismo que hacer:
+    $table->string('remember_token', 100)->nullable;
+
+Pero a Laravel le gusta las cosas limpias.
+
+el ultimo metodo son los timestamps que devuelven dos campos de fecha y hora, tambien definido en Blueprint.php
+---
+    public function timestamps()
+    {
+        $this->timestamp('created_at')->nullable;
+
+        $this->timestamp('updated_at')->nullable;
+    }
+---    
+
+Para almacenar la inforamción de cuando fue creada por el usuario y cuando fue actualizado. Es similar a agrgar lo siguiente:
+
+---
+public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email')->unique();
+            $table->string('password');
+            $table->rememberToken();
+
+            $this->timestamps('created_at')->nullable();
+            $this->timestamps('updated_at')->nullable();
+        });
+    }
+
+---
+
+Vamos a la terminal y ejecutamos, tomando en consideración que se ejecuta la migracion inicuial del usuario con: la definiciónm inicial
+
+---
+public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+---
+
+En Terminal:
+    php artisan 
+
+Existe un namespace llamado
+    migrate
+
+    Con cinco comandos:
+
+        migrate:install
+        migrate:refresh
+        migrate:reset 
+        migrate:rollback
+        migrate:status
+
+
+Ejecutar migraciones
+---------------------
+
+
+El comando a ejecutar es el siguiente para correr las migraciones de la base de datos:
+
+Lo que hara el comando es ejecutar es todas las migraciones de la carpeta migrations.
+
+Ejecutando:
+    php artisan migrate
+
+
+el resualtado sera algo como
+---
+
+php artisan migrate
+
+   WARN  The database 'db' does not exist on the 'mysql' connection.  
+
+  Would you like to create it? (yes/no) [no]
+❯ yes
+
+   INFO  Preparing database.  
+
+  Creating migration table .............................................................................................................. 20ms DONE
+
+   INFO  Running migrations.  
+
+  2014_10_12_000000_create_users_table .................................................................................................. 22ms DONE
+  2014_10_12_100000_create_password_resets_table ........................................................................................ 30ms DONE
+  2019_08_19_000000_create_failed_jobs_table ............................................................................................ 23ms DONE
+  2019_12_14_000001_create_personal_access_tokens_table ................................................................................. 31ms DONE
+---
+
+Ahora se encuentyra la tabal usuarios y password_resets.
+
+En la tabla usuarios, que el Id es de tipo entero, llave primaria autoincrementable.
+
+MariaDB [db]> desc users;
++-------------------+---------------------+------+-----+---------+----------------+
+| Field             | Type                | Null | Key | Default | Extra          |
++-------------------+---------------------+------+-----+---------+----------------+
+| id                | bigint(20) unsigned | NO   | PRI | NULL    | auto_increment |
+| name              | varchar(255)        | NO   |     | NULL    |                |
+| email             | varchar(255)        | NO   | UNI | NULL    |                |
+| email_verified_at | timestamp           | YES  |     | NULL    |                |
+| password          | varchar(255)        | NO   |     | NULL    |                |
+| remember_token    | varchar(100)        | YES  |     | NULL    |                |
+| created_at        | timestamp           | YES  |     | NULL    |                |
+| updated_at        | timestamp           | YES  |     | NULL    |                |
++-------------------+---------------------+------+-----+---------+----------------+
+8 rows in set (0.002 sec)
+
+El name es de tipo varchar, email varchar con una llave unica, pass varchar, remermber, con permisos de los campos de ser nulos, alfinal hasy dos campos de tipo timestamps.
+
+
+Deshacer las migraciones:
+----------------------
