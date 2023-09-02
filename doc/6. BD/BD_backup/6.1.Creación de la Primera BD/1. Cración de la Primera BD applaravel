@@ -1,0 +1,16 @@
+Cración de la BD
+
+
+si se reuqire una codificación UTF8 ejecutamos:
+
+        mysql -u root -e "CREATE DATABASE applaravel CHARACTER SET 'UTF8' COLLATE 'utf8_general_ci';"
+
+O alternativamente dentro de la BD creada ejecutamos
+
+    
+        CREATE DATABASE applaravel CHARACTER SET utf8 COLLATE utf8_general_ci;    
+
+
+Si necesita almacenar los resultados Unicode, especifique el mandato siguiente para crear la base de datos:
+
+        CREATE DATABASE db_name CHARACTER SET = utf8 COLLATE = utf8__ci;        

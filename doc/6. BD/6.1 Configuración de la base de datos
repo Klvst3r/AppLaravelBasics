@@ -1,0 +1,323 @@
+6.1 Configuración de la base de datos
+
+
+Archivos
+-----
+        config
+            database.php
+
+        .env
+
+Contenido
+---------
+
+Para integrar las Bd en la App, para ello si vamos a la carpeta 
+
+	config/database.php
+
+Se podra apreciar lo siguiente por la linea 18.
+    'default' => env('DB_CONNECTION', 'mysql'),
+
+Que es donde se define la Bd por defecto, que ejecuta una funcion env(), que recibe dos parametros, el primero es la llave de configuración que queremos, la funcion buscara en el archivo .env
+
+    DB_CONNECTION=mysql
+
+El valor que contienen es decir que se estaria enviando mysql, el segundo parametro es un valor por defecto, en caso de que la llave DB_CONNECTION no exista en el archivo .env.
+
+Es decir si borramos de .env 
+
+    DB_CONNECTION=mysql
+
+mysql sera el que se utilizara por defecto como se indica en el archivo 
+    config/database.php
+
+Sin embargo es buena practica definir nuestrs variables aqui, es decir en el archivo .env por seguridad ya que este archivo no se incluira en el control de versiones de producción.
+
+Para entender como funcionan las variables de entorno  ya que se utilizaran a lo largo del desarrollo.
+
+Nuevamente en el archivo 
+    database.php
+
+En la llave conections, existe entrada para varios soportes de BD.
+    sqlite, mysql, pgsql, sqlsrv, redis    
+
+Si utilizamos valet con Mac, pero si se esta enWindows con Laragon se tiene lo necesario. ahora es necesario definir las credenciales en el archivo .env para conectarnos a la Bd MySQL, se llamara para nuesro caso practico.
+
+    .env
+---
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=applaravel
+DB_USERNAME=root
+DB_PASSWORD=desarrollo
+---
+
+Para Valet en Mac o nuestro gestor de base de datos favorito vamos a conectarnos a MySQL, con las mismas credenciales.
+
+Add Database
+    applaravel
+
+
+Con esto ya estamos listos, tradicionalmente comenzariamos craando las tablas de la nueva estructura, pero esto trae algunos inconvenientes como por ejemplo.
+
+- cuando se quiere compartir el proyecto con los colaboradores, debemos exportar la base de datos a un script SQL comprimirlas, enviarlas etc.
+
+
+
+
+Laravel tiene un sistema de control de versiones de base de datos, que soluciona todos estos problemas.
+
+
+
+
+
+Crear la base de datos de resultados de proyecto mediante MySQL almacenando los rsultados en codificación UTF8
+----------------------------------------------------------------------------------------------------
+
+
+El codigo SQL para la creación de la Bd se encuentra en la carpeta de respaldos de la BD
+
+
+si se reuqire una codificación UTF8 ejecutamos:
+
+        mysql -u root -e "CREATE DATABASE applaravel CHARACTER SET 'UTF8' COLLATE 'utf8_general_ci';"
+
+O alternativamente dentro de la BD creada ejecutamos
+
+    
+        CREATE DATABASE applaravel CHARACTER SET utf8 COLLATE utf8_general_ci;        
+
+
+
+
+
+Crear la base de datos de resultados de proyecto mediante MySQL
+---------------------------------------------------------------
+
+
+Puede crear la base de datos de resultados de proyecto mediante MySQL.
+
+
+
+Procedimiento
+Conectado como usuario root, cree y utilice una base de datos.
+Nota: Si necesita almacenar los resultados Unicode, especifique el mandato siguiente para crear la base de datos:
+
+        CREATE DATABASE db_name CHARACTER SET = utf8 COLLATE = utf8__ci;
+
+Nota: Puede haber limitaciones, tal como se describe aquí: http://dev.mysql.com/doc/refman/5.0/en/charset-unicode-utf8.html
+Si utiliza Linux o si utiliza volúmenes UFS en Mac OS X, cambie el archivo de configuración MySQL (my.cnf) para almacenar nombres de tabla en minúsculas y para ignorar las mayúsculas y las minúsculas en las comparaciones. La ubicación de este archivo puede variar. En el archivo my.cnf, establezca la variable del sistema MySQL lower_case_table_names en 1. Este cambio no es necesario en Windows, donde los nombres de archivo no tienen en cuenta las mayúsculas y minúsculas.
+Para asegurarse de que MySQL utiliza la base de datos que ha creado en el paso 2, ejecute el mandato siguiente:
+
+USE nombre_base_datos;
+
+Ejecute el script ghtester_mysql.sql en la nueva base de datos especificando un mandato con el formato siguiente:
+
+SOURCE Rational_Integration_Tester_installation_directory/scripts/ghtester_mysql.sql;
+
+Nota: si está ejecutando desde una línea de mandatos en un sistema Microsoft Windows, el separador de vía de acceso debe invertirse. Por ejemplo:
+
+SOURCE C:/Archivos de programa/IBM/RationalIntegrationTester/scripts/ghtester_mysql.sql;
+
+
+
+
+
+
+
+
+
+
+
+- Mostrar los CHARSETs instalados:
+        SHOW CHARACTER SET;
+
+
+-- Mostrar COLLATIONS instalados:
+        SHOW COLLATION;        
+
+
+
+MySQL: Consultar el charset y collation
+-----------------------------------------
+
+
+El charset es un conjunto de símbolos y codificaciones, es decir, la forma en que la base de datos guarda internamente los datos. Mientras que el collation es el conjunto de reglas que se aplican para comparar caracteres en un charset, es decir, indica a la base de datos como debe comparar los datos.
+
+A continuación hago una traducción libre de un extracto de la documentación de MySQL Character Sets and Collations in General:
+
+    Suponga que tenemos un alfabeto de cuatro letras: A, B, a, b. Asignamos a cada letra un número: A = 0, B = 1, a = 2, b = 3. La letra A es el símbolo, el número 0 es el código para A y la combinación de las cuatro letras y sus códigos es el juego de caracteres (charset).
+
+    Suponga que queremos comparar dos cadenas de valores, A y B. La forma más sencilla de hacerlo es mirar sus códigos: 0 para A y 1 para B. Como 0 es menor que 1, diremos que A es menor que B. Lo que acabamos de hacer, es aplicar un collation a nuestro charset. El collation es un juego de reglas (en este caso solo una): “campara los códigos”. Llamamos a este collation, el más simple de todos los collation posible, collation binario (binary collation).
+
+    Pero, ¿qué ocurre si queremos decir que las minúsculas y las mayúsculas son equivalente? Entonces nosotros tenemos al menos dos reglas: (1) tratar la letras minúsculas a y b como equivalente de A y B; (2) compara los códigos. Llamamos a este collation insensible a mayúsculas y minúsculas (case insensitive) y es un poco más complejo que un binary collation.
+
+Consultar el charset y collation de una base de datos
+
+
+    
+
+        SELECT
+         schema_name AS 'database', 
+         default_character_set_name AS 'charset',
+         default_collation_name AS 'collation'
+        FROM
+         information_schema.SCHEMATA
+        WHERE
+         schema_name = "XXXXX";
+
+Donde XXXXX es el nombre de la base de datos sobre la cual se ejecuta la consulta. A continuación un ejemplo para la base de datos nextcloud:
+
+    
+
+        MariaDB [(none)]> SELECT
+            ->  schema_name AS 'database', 
+            ->  default_character_set_name AS 'charset',
+            ->  default_collation_name AS 'collation'
+            -> FROM
+            ->  information_schema.SCHEMATA
+            -> WHERE
+            ->  schema_name = "nextcloud";
+        +-----------+---------+--------------------+
+        | database  | charset | collation          |
+        +-----------+---------+--------------------+
+        | nextcloud | utf8mb4 | utf8mb4_general_ci |
+        +-----------+---------+--------------------+
+        1 row in set (0.00 sec)
+
+Consultar el charset y collate de todas las bases de datos
+
+
+
+    
+
+        SELECT 
+         schema_name AS 'database',
+         default_character_set_name AS 'charset',
+         default_collation_name 'collation'
+        FROM
+         information_schema.SCHEMATA;
+
+        A continuación un ejemplo:
+
+
+
+    
+
+MariaDB [(none)]> SELECT 
+    ->  schema_name AS 'database',
+    ->  default_character_set_name AS 'charset',
+    ->  default_collation_name 'collation'
+    -> FROM
+    ->  information_schema.SCHEMATA;
++--------------------+---------+--------------------+
+| database           | charset | collation          |
++--------------------+---------+--------------------+
+| amavisd            | utf8    | utf8_general_ci    |
+| information_schema | utf8    | utf8_general_ci    |
+| iredadmin          | utf8    | utf8_general_ci    |
+| iredapd            | utf8    | utf8_general_ci    |
+| itopdb             | latin1  | latin1_swedish_ci  |
+| itopdbqa           | latin1  | latin1_swedish_ci  |
+| mysql              | latin1  | latin1_swedish_ci  |
+| nextcloud          | utf8mb4 | utf8mb4_general_ci |
+| performance_schema | utf8    | utf8_general_ci    |
+| roundcubemail      | utf8    | utf8_general_ci    |
+| sa_bayes           | latin1  | latin1_swedish_ci  |
+| vmail              | utf8    | utf8_general_ci    |
++--------------------+---------+--------------------+
+12 rows in set (0.00 sec)
+
+Consultar el charset y collation de todas las tablas de una base de datos
+
+
+    
+
+        SELECT 
+         T.table_schema AS 'database',
+         T.table_name AS 'table',
+         CCSA.character_set_name AS 'charset',
+         CCSA.collation_name AS 'collation'
+        FROM
+         information_schema.TABLES T,
+         information_schema.collation_character_set_applicability CCSA
+        WHERE 
+         CCSA.collation_name = T.table_collation
+         AND T.table_schema = 'XXXXX'
+         AND T.table_name IN (SELECT table_name FROM information_schema.tables WHERE table_schema = 'XXXXX');
+
+Donde XXXXX es el nombre de la base de datos sobre la cual se ejecuta la consulta. A continuación un ejemplo para la base de datos amavisd:
+
+
+    
+
+        MariaDB [(none)]> SELECT 
+            ->  T.table_schema AS 'database',
+            ->  T.table_name AS 'table',
+            ->  CCSA.character_set_name AS 'charset',
+            ->  CCSA.collation_name AS 'collation'
+            -> FROM
+            ->  information_schema.TABLES T,
+            ->  information_schema.collation_character_set_applicability CCSA
+            -> WHERE 
+            ->  CCSA.collation_name = T.table_collation
+            ->  AND T.table_schema = 'amavisd'
+            ->  AND T.table_name IN (SELECT table_name FROM information_schema.tables WHERE table_schema = 'amavisd');
+        +----------+-----------------+---------+-----------------+
+        | database | table           | charset | collation       |
+        +----------+-----------------+---------+-----------------+
+        | amavisd  | maddr           | utf8    | utf8_general_ci |
+        | amavisd  | mailaddr        | utf8    | utf8_general_ci |
+        | amavisd  | msgrcpt         | utf8    | utf8_general_ci |
+        | amavisd  | msgs            | utf8    | utf8_general_ci |
+        | amavisd  | outbound_wblist | utf8    | utf8_general_ci |
+        | amavisd  | policy          | utf8    | utf8_general_ci |
+        | amavisd  | quarantine      | utf8    | utf8_general_ci |
+        | amavisd  | users           | utf8    | utf8_general_ci |
+        | amavisd  | wblist          | utf8    | utf8_general_ci |
+        +----------+-----------------+---------+-----------------+
+        9 rows in set (0.00 sec)
+
+
+
+
+
+
+Conclusiones
+------------
+
+Aunque parece ser un tema menor, la verdad es que hay harto que pensar y decidir detrás de los CHARSETs y COLLATIONs. Por el lado del CHARSET, aunque parezca como mejor opción utilizar siempre UTF8, hay casos en que resulta totalmente inútil: si queremos guardar una cadena cuyo valor sabemos que no contendrá valores distintos del alfabeto, es mejor ocupar ASCII y de esa forma estar seguros que no se pueden ingresar caracteres inválidos. Por otro lado, si estamos seguros de que nuestra aplicación nunca jamás tendrá otro idioma que no sea español, también podemos utilizar latin1, aunque hay que tener cuidado en hacer los ajustes necesarios en todos aquellos lados donde podría haber una influencia de otro set de caracteres.
+
+El tema del COLLATION sí es un poco más extenso ya que dependerá mucho del cómo se efectúen las búsquedas y también el idioma en que estemos trabajando. MySQL asigna utf8_general_ci como COLLATION predeterminado de UTF-8, pero éste presenta algunos problemas en hebreo y en algunas localizaciones de idiomas cirílicos; principalmente bielorruso, macedonio, serbio y ucraniano; así que para estos casos resulta mejor ocupar utf8_unicode_ci, la que tampoco está exenta de polémica ya que es más lento que utf8_general_ci.
+
+Como gran conclusión: traten de usar UTF-8 como CHARSET donde sea posible, y si quieren tener velocidad vayan por utf8_general_ci como COLLATION pero si quieren tener certeza de que todo está bien ordenado y que sea compatible con (casi) todos los idiomas del mundo ocupen utf8_unicode_ci.
+
+
+Referencias:
+    https://blog.unreal4u.com/2012/08/sobre-collation-y-charset-en-mysql/
+    https://code.openark.org/blog/mysql/mysqls-character-sets-and-collations-demystified
+    https://dev.mysql.com/doc/refman/8.0/en/charset-unicode-sets.html
+
+
+Para cambio de Collation de todas las tablas en Mysql
+    https://www.linuxowindows.com/cambiar-collation-todas-las-tablas-mysql/
+
+Creación de BD y Tablas
+    https://www.forosdelweb.com/f86/crear-conectar-database-table-campo-usando-utf8-1097313/
+    https://blog.guillen.io/2017/05/30/mysql-consultar-el-charset-y-collation/
+    https://josejuansanchez.org/bd/unidad-04-teoria/index.pdf
+    https://www.ibm.com/docs/es/rtw/9.0.1?topic=tester-creating-project-results-database-by-using-mysql
+
+
+
+Modificación de Tablas en Mysql
+    https://softwareyotrasdesvirtudes.com/2012/10/09/como-modificar-tablas-a-utf8-mysql/
+    https://docs.moodle.org/all/es/Convirtiendo_su_base_de_datos_MySQL_a_UTF8
+    https://www.factoriadigital.com/soporte/en/knowledge-base/article/change-database-encoding-and-mysql-tables-for-utf-8
+
+
+
+
+
+
