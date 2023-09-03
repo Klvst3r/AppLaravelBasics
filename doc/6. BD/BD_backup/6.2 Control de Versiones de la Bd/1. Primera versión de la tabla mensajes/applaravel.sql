@@ -65,7 +65,7 @@ INSERT INTO `messages` (`id`, `nombre`, `email`, `mensaje`, `created_at`, `updat
 (6, 'Kristy Schmmitt', 'kari.smith@email.com', 'Et sint quo reiciendis et', NULL, NULL),
 (7, 'Prof. Joaquin Ziemann', 'umuller@email.com', 'Mollitia ommis deleniti numquam ipsa consectetut similique', NULL, NULL),
 (8, 'Emma Nolan III', 'candido.graham@email.com', 'Perspicaits similique est fugit quia facere', NULL, NULL),
-(9, '', 'Katherine Schaefer', 'lakin.dayana@email.com', NULL, NULL),
+(9, 'Katherine Schaefer', 'lakin.dayana@email.com', 'Quis ducimus totam sint deserint odit', NULL, NULL),
 (10, 'Rodolfo Beier', 'irma47@morissette.org', 'Voluptatum consequatur nam aut et minima', NULL, NULL);
 
 -- --------------------------------------------------------
