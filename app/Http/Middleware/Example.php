@@ -16,7 +16,8 @@ class Example
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
+     
+     /*   
         if(false){
 
         return $next($request);
@@ -24,6 +25,12 @@ class Example
         }
 
         return response('No puedes continuar', 404);
+        */
+
+
+        return $next($request);
+
+
     }
 }
 

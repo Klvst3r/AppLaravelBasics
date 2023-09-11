@@ -1,0 +1,58 @@
+6.3. Diseño de arquitectura de software REST
+
+
+Antes de comenzar con las BD existe un concepto que es necesario conocer.
+
+Se trata de un estilo de arquitectura de software llamado REST, que significa REpresentational State Transfer, que se refiere a ciertas caracteristicas que definen el comportamiento entre clientes y servidores, en sistesis, el REST gira en torno a Recursos, un recurtso es simplemente información. Feecuentemente de una BD, se trata de definir URL de manera especifica que representes diferentes tipos de peticiones HTTP, vamos a ver lo de un ejemplo.
+
+Una representación REST para el recurso Messages en Laravel, vemos en la primera linea de Laravel que cuando se hace la petición GET, a la URL Messages, internamente la URL procesa la acción MessagesController@index, y en respuesta devuelve todos los mensajes quedando ejemplicifada REST de la siguiente manera.
+
+
+
+	REST
+
+
+Método HTTP 		URL							Acción 							Respuesta
+
+GET					/Messages 					MessagesController@index 		Todos los mensajes
+GET 				/Messages/Create 			Messagescontroller@create 		Formulario de creación
+POST 				/messages 					MessagesController@store 		Guarda mensajes y redirecciona
+GET 				/messages/{id} 				MessagesController@show 		Un mensaje específico
+GET 				/messages/{id}/edit 		MessagesController@edit 		Formulario de edición
+PUT/PATCH 			/messages/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
+DELETE 				/messages/{id} 				MessagesController@destroy 		Elimina mensaje y redirecciona
+
+
+
+Para el segundo metodo  procesa con el metodo create y da como respuesta el formulario para crear un nuevo mensaje, este formulario debe enviar los datos por POST a la URL messages, en donde se procesa con el metodo store, lo que hace es guardar mensajes y redirecciona.
+
+Se puede ver que se tiene la misma URL tanto para mostrar todos los mensajes como para guardar, pero quien determina que metodo debe utilizar en el controlador, es el verbo HTTP, se puede ver que al principio se utiliza el metodo GET para tener todos los mensajes. Luego se utiliza el metodo POST para guardar un mensaje del messagesController.
+
+Luego se tiene el Metodo GET con la URL, podemos ver que se obtiene la URL /messages/{id}, el ID se refiere al identificador del mensaje, nos servira para buscar el mensaje en la Bd un mensaje especifico, por ejemplo 
+
+Si accedemos por ejemplo al mensaje por el id 1, obteniendo el mensaje con el ID 1, y asi como los demas mensajes, Accedemos al metodo edit de Messages Controller, y respondemos con un formulario para editar el mensaje con el identificador que pasamos por URL, ahora este formulario debe enviar los datos a la misma URL messages/{id} que utiliza show, pero con el metodo PUT  o PATCH, para ser procesado con el metodo UPDATE del Messagescontroller, lo que hace es actualizar el mensaje y redireccionar.
+
+Finalemnte tenemos la URL messages/{id} pero esta vez responde al metodo HTTP Delete, en encargado sera el metodo, destroy de messagesController donde se eliminara el mensaje del identificador que pasamos por URL y finalmente redireccionara
+
+En sistesis una implementación REST son URL contruidas al rededor de un recurso que dan respuestas especificas segun el metodo HTTP, como podemos ver las URL son muy sencillas, ahora vamos a enfocarnos en estos metodos HTTP, tambien conocidos como  verbos HTTP. La mayoria sabemos lo que significan las siglas 
+
+	CRUD 				Métodos HTTP
+	------				-------------
+	CREATE 				POST
+	READ 				GET
+	UPDATE 				PUT | PATCH
+	DELETE 				DELETE
+
+
+
+Cada una de estas acciones puede corresponder a verbo o metodo HTTP, por ejemplo cuando queremos guardar un recurso, lo hacemos por POST, cuando queremos leer información ya sea para ver todos los recursos o uno en especifico, utilizamos GET, cuando queremos actualizar un recurso utilizamos PUT o PATCH, y para eliminar utilizamos DELETE, sin embargo los navegadores actuales, solo reonocen POST y GET, asi que cuando queramos utilizar PUT, PATCH, o DELETE en Laravel, seguimos utilizando POST pero le agregamos un campo oculto, que Laravel reconocera para determinar si el usuario esta trando de enviar por PUT, PATCH o DELETE. 
+
+en la siguiente lección veremos como implementar un CRUD al estilo REST, con el query builder de Laravel.
+
+
+
+
+
+
+
+
