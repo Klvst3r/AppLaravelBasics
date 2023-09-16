@@ -1,0 +1,201 @@
+6.4 Implementación REST con el constructor de consultas (QUERY BUILDER)
+
+Ahora ya teniendo conocimiento del diseño Rest, vamos a implementarlo utilizando el Query Builder de Laravel
+
+Regresando donde nos quedamos con la aplicación inicial.
+
+Si hacemos click en contactos, muestra el formulario para enviar un mensaje, Si se revisa el Diseño Rest, se puede observar que mas o menos se tiene implementada la segunda linea:
+
+
+	
+	Método HTTP 		URL							Acción 							Respuesta
+
+	GET					/Messages 					MessagesController@index 		Todos los mensajes
+*	GET 				/Messages/Create 			Messagescontroller@create 		Formulario de creación
+	POST 				/messages 					MessagesController@store 		Guarda mensajes y redirecciona
+	GET 				/messages/{id} 				MessagesController@show 		Un mensaje específico
+	GET 				/messages/{id}/edit 		MessagesController@edit 		Formulario de edición
+	PUT/PATCH 			/messages/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
+	DELETE 				/messages/{id} 				MessagesController@destroy 		Elimina mensaje y redirecciona
+
+
+Pero no esta siendo procesada por el MessageController, ni tampoco estamos utilizando la URL, entonces primero se tendra que crear el resources, en español,
+
+
+Se va a reemplazar la palabra messages, por mensajes y solo que localice coincidencias en minusculas.
+
+Se reemplaza y ahora si podemos implementar la linea:
+
+
+
+	Método HTTP 		URL							Acción 							Respuesta
+
+	GET					/mensajes 					MessagesController@index 		Todos los mensajes
+*	GET 				/mensajes/Create 			Messagescontroller@create 		Formulario de creación
+	POST 				/mensajes 					MessagesController@store 		Guarda mensajes y redirecciona
+	GET 				/mensajes/{id} 				MessagesController@show 		Un mensaje específico
+	GET 				/mensajes/{id}/edit 		MessagesController@edit 		Formulario de edición
+	PUT/PATCH 			/mensajes/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
+	DELETE 				/mensajes/{id} 				MessagesController@destroy 		Elimina mensaje y redirecciona
+
+
+
+Lo primero que haremos sera crear el controlador, 
+
+En la terminal escribimos:
+
+	php artisan make:controller MessagesController	
+
+
+
+Abrimos el controlador en Sublime 
+
+MessagesController.php
+---
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+
+	class MessagesController extends Controller
+	{
+	    //
+	}
+
+---	
+
+Se tiene el esqueleto de un controlador, dentro de las llaves se comenzarian a escribir los siete metodos que se necesitan para la implentación REST, sin embargo podemos Decirle a Laravel que haga el trabajo por nosostros, cada vez que necesitemos ver información sobre un comando, le anteponemos al comando -h, al comando que queremos investigar.
+
+	php artisan -h make:controller
+
+
+Para que se muestre la descripción del comando, tanto las opciones como los argumentos que podemos pasarle, vemos que el comando make:controller se tiene la opción llamada
+
+	--resource	o recurso que al añadirla al comando nos generara un RESTFULL controller, es decir un controlador con todos los metodos necesarios, para la implementación de un recurso. Vamos a utilizarlo de la siguiente manera:
+
+
+		 php artisan make:controller MessagesController --resource
+
+Y entonces se creara el nuevo controlador con todos los metodos necesarios:
+
+
+
+---
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+
+	class MessagesController extends Controller
+	{
+	    /**
+	     * Display a listing of the resource.
+	     */
+	    public function index()
+	    {
+	        //
+	    }
+
+	    /**
+	     * Show the form for creating a new resource.
+	     */
+	    public function create()
+	    {
+	        //
+	    }
+
+	    /**
+	     * Store a newly created resource in storage.
+	     */
+	    public function store(Request $request)
+	    {
+	        //
+	    }
+
+	    /**
+	     * Display the specified resource.
+	     */
+	    public function show(string $id)
+	    {
+	        //
+	    }
+
+	    /**
+	     * Show the form for editing the specified resource.
+	     */
+	    public function edit(string $id)
+	    {
+	        //
+	    }
+
+	    /**
+	     * Update the specified resource in storage.
+	     */
+	    public function update(Request $request, string $id)
+	    {
+	        //
+	    }
+
+	    /**
+	     * Remove the specified resource from storage.
+	     */
+	    public function destroy(string $id)
+	    {
+	        //
+	    }
+	}
+
+
+---	 
+
+Con las respectivas inyecciones de dependencias, y parametros.
+
+Ya teniendo el controlador creado, podemos ahora crear una ruta que responda a  "/mensajes/create" o tambien podemos llamarle, "mensajes/crear".  
+
+Lo que hara esto es ejecutar el metodo create desde el controlador en MessagesController@create, ahora en el archivo de rutas, al final escribimos:
+
+
+	Route::get('mensajes/create', ['as' => 'messages.create']);
+
+Daremos el nombre de messages.create, esta es una convención que vamos a utilizar a partir y utilizar de ahora en adelante, donde escribimos primero el nombre, del recurso, seguido por un punto que corresponde al metodo que se encuentra en el controlador.
+
+
+Indicamos tambien que use el controlador MessageController y  que ejecute el metodo create.
+
+routes.php
+
+
+	Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+	
+
+Para comprobar que estamos utilizando este metodo, y antes de revisar en el navegador. Vamos a nuestro archivo de plantillas, para actualizar el menu de contactos.
+
+
+
+Dentro de 
+	layout.blade.php
+
+
+Para que el link apunte a la ruta correcta, por ello copiamos de web.php y pegamos en "layout.blade.php"
+
+
+Agregando la siguiente linea en:
+
+	layout.blade.php
+
+---
+
+	<nav>
+			<a class="{{ activeMenu('/') }}" href="{{ route('home') }}">Inicio</a>
+			
+			<a class="{{ activeMenu('saludos/*') }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+			
+			<!-- <a class="{{ activeMenu('contactame') }}" href="{{ route('contactos') }}">Contactos</a> -->
+			<a class="{{ activeMenu('contactame') }}" href="{{ route('messages.create') }}">Contactos</a>  Esta es la lina modificada
+		</nav>
+---	
+
+
+3'17

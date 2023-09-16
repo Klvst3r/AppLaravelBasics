@@ -56,6 +56,10 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 
 
+//6.4. Implementación del REST"
+
+Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+
 
 
 //Route::get('contactame', ['as' => 'contactos', function(){
