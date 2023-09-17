@@ -29,7 +29,7 @@ class MessagesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return "Guardar y direccionar";
     }
 
     /**

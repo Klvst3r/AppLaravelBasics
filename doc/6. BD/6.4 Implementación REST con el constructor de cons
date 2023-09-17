@@ -198,4 +198,148 @@ Agregando la siguiente linea en:
 ---	
 
 
-3'17
+Ahora vamos al pages controller, para observar el metodo que devuelve la vista
+
+
+PagesController.php
+---
+
+	 public function contact()
+        {
+
+            return view('contactos');
+        }
+
+---
+
+Que es la vista que devuelve el formulario.
+
+Ahora vamos a crear una vista para guardar la vista y todas las que necesitemos a futuro,
+
+
+con la carpeta Messages, y dentro el archivo create.blade.php, copiando todo el codigo de la vista contacto.
+
+
+/resources/views/messages/create.blade.php
+
+
+---
+	@extends('layout')
+
+	@section('contenido')
+
+	<h1>Contactos</h1>
+
+	<h2>Escribeme</h2>
+
+	@if(session()->has('info'))
+		
+		<h3>{{ session('info') }} </h3>
+
+	@else
+
+	<form method="POST" action="contacto">
+
+		 <!-- @csrf -->
+		
+
+		 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+
+		 {!! csrf_field() !!} 
+
+
+		  
+
+		<p><label for="nombre">
+			Nombre
+			<input type="text" name="nombre" value={{ old('nombre') }}>
+			{!! $errors->first('nombre', '<span class=error>:message</span>') !!}
+		</label></p>
+		
+		<p><label for="email">
+			Email
+			<input type="text" name="email" value={{ old('email') }}>
+			{!! $errors->first('email', '<span class=error>:message</span>') !!}
+		</label></p>
+		
+		<p><label for="nombre">
+			Mensaje
+			<textarea name="mensaje"></textarea>
+			{!! $errors->first('mensaje', '<span class=error>:message</span>') !!}
+
+		</label></p>
+		
+		<input type="submit" value="Enviar">
+
+	</form>
+
+	@endif
+
+	<hr>
+
+	@stop
+---
+
+
+Eliminando el archivo o generando un respaldo.
+
+Ahora en MessagesController en el metodo create() vamos a devolver la vista create
+
+MessagesController.php
+--
+
+	   public function create()
+    {
+     
+        return view('messages.create');
+    }
+--
+
+Le decimos que en la carpeta messages utilice el archivo create y como ya sabemos no es necesario escribir la extensión blade.php
+
+Ahora actualizamos en el navegador y ya podrremos ver el formulario. Y los links siguen funcionando.
+
+Con esto ya tenemos implementado la acción "create" que devuelve un formulario dentro de suestro REST.
+
+continuamos ahora con la parte de guardar el mensaje en la base de datos.
+
+Regresamos al MessagesController en el metodo store() que es el metodo que se encargara de guardar los mensajes, por lo tanto de mometno vamos a guardar un string para asegurarnos de que estamos ejecutando este metodo cuando estamos ejecutando el formulario.
+
+
+MessagesController
+ ---
+ 	public function store(Request $request)
+ 	 {
+        return "Guardar y direccionar";
+      }
+
+ ---
+
+ Ahora vamos al formulario y cambiamos la acción, entonces en el archivo routes o en nuestro caso routes/web.php, duplicamos la ultima linea y cambiamos el metodo a post y la la url sera simplemente mensajes, el nombre de la ruta sera
+
+ ---
+ 	Route::post('mensajes/create', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+ ---
+
+Y utilizaremos el MessageController en el metodo store.
+
+Bien, ahora vamos a utilizar la ruta anterior y la vamos a colocar en la acción del formulario dentro de create.blade.php
+
+messages/create.blade.php
+
+Cambiando de
+	<form method="POST" action="contacto">
+
+a: 	
+---
+	<form method="POST" action=" {{ route('messages.store') }}">
+
+---
+
+Escribimos la función route y por parametro el nombre de la ruta.
+
+Llenamos el formualrio enviamos y efectivamante nos lleva a la ruta corrects
+
+
+Min 5.54

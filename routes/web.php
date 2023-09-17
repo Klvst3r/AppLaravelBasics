@@ -60,6 +60,9 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
 
+//6.4. Procesamiento del formulario 
+Route::post('mensajes/create', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+
 
 
 //Route::get('contactame', ['as' => 'contactos', function(){
