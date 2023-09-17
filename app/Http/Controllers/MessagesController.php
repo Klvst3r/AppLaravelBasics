@@ -19,7 +19,7 @@ class MessagesController extends Controller
      */
     public function create()
     {
-        //
+        return "Mostrar el formulario de creación de mensajes";
     }
 
     /**
