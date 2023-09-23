@@ -56,12 +56,17 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 
 
-//6.4. Implementación del REST"
 
+//6.4. Redirección a los mensajes
+Route::get('mensajes', ['as' => 'messages.index', ' uses' => 'MessagesController@index']);
+
+//6.4. Implementación del REST"
 Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
 
 //6.4. Procesamiento del formulario 
 Route::post('mensajes/create', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+
+
 
 
 

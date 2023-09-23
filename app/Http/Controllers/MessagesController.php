@@ -4,6 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use DB;
+
+use Carbon\Carbon;
+
+
+
+
+
 class MessagesController extends Controller
 {
     /**
@@ -11,7 +19,7 @@ class MessagesController extends Controller
      */
     public function index()
     {
-        //
+        //return "Listado de mensajes";
     }
 
     /**
@@ -31,7 +39,20 @@ class MessagesController extends Controller
     {
         //return "Guardar y direccionar";
         //return $request->all();
-        return $request->input("nombre");
+        //return $request->input("nombre");
+
+        DB::table('messages')->insert([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+            "created_at" => Carbon::now(),
+            "updated_at" => Carbon::now(),
+
+        ]);
+
+        //return "Hecho";
+
+        return redirect()->route('messages.index');
     }
 
     /**

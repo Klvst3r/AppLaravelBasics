@@ -415,5 +415,146 @@ Ahora escribimos esa tabla en MessageController.php, luego llamamos a la funció
 		]);
     }
 
+---
+
+
+Esto es todo lo que tenemos que hacer, no tenemos que preouparnos de la conexion de la Bd ni inyecciones SQL, ya que detras de escena estamos preparando las sentencias e insertandolas en la clase DBO, siguiendo las mejores practicas en PHP.
+
+Entonces ahora solo nos queda redireccionar, por ahora regresemos el mensaje "Hecho", Regresando al navegador llenamos el formulario, enviamos y posible error.
+
+Mensaje de error
+	Error
+							PHP 8.2.10
+							10.14.1
+	Mensaje de error:							
+		Class "App\Http\Controllers\DB" not found
+
+
+
+Esto indica que no encuentra la clase "App\Http\Controllers\DB", lo cual es obvio por que esa clase no existe, esto es por que olvidamos importar la clase al principio del archivo, esta tratando de buscar dentro del name espace siguiente, lo cual no quremos, queremos que utilice la siguiente:
+
+
+	use DB;
+
+En MessagesController.php
 
 ---
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+
+	use DB;
+
+	use App\Http\Request; //Esta linea es opcional en nuestra versión aun no la utilizamos y no fue creada con el controlador,
+---	
+
+
+Bien, reenviamos el formularió y vemos la palabra Hecho. Lo que quiere decir que si vamos al gestor de base de datos, y actualizamos podremos ver los datos que se han guardado correctamente.
+
+select * from messages;
++----+---------+---------------------+-------+----------------------+------------+------------+
+| id | nombre  | email               | phone | mensaje              | created_at | updated_at |
++----+---------+---------------------+-------+----------------------+------------+------------+
+|  1 | Klvst3r | klvst3r@outlook.com | NULL  | Aqui esta el mensaje | NULL       | NULL       |
++----+---------+---------------------+-------+----------------------+------------+------------+
+1 row in set (0.000 sec)
+
+
+
+Lo que podemos observar es que los campos 'phone', created_at' y 'updated_at'. estan nulos, estos campos son utiles para auditorias, ya que guardamos las fechas de creación y actualización de los recursos.
+
+Antes de agregarlos vamos a refrescar la BB
+
+	php artisan migrate:refresh
+
+Actualizamos y verificamos que no existen datos en la base de datos.
+
+select * from messages;
+	Empty set (0.001 sec)
+
+
+Ahora en el editor en el archivo MessagesController.php agregamos el campo "created_at" y vamos a utilizar un paquete llamado Carbon que Laravel utiliza para manejar fechas, y llamamos al metodo now() para que imprima la fecha y hora actual y lo mismo para el campo "updated_at", no olvidando la clase Carbon arriba.
+
+
+---
+
+	...
+	use Carbon\Carbon;
+	...
+	...
+	public function store(Request $request)
+    {
+
+        DB::table('messages')->insert([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+            "created_at" => Carbon::now(),
+            "updated_at" => Carbon::now(),
+
+        ]);
+
+        return "Hecho";
+    }
+
+---
+
+Reenviamos y revisamos la base de datos. y Efectivamente ya contamos con las fechas incorporadas.
+
+
+elect * from messages;
++----+---------+---------------------+-------+----------------------+---------------------+---------------------+
+| id | nombre  | email               | phone | mensaje              | created_at          | updated_at          |
++----+---------+---------------------+-------+----------------------+---------------------+---------------------+
+|  1 | Klvst3r | klvst3r@outlook.com | NULL  | Aqui esta el mensaje | 2023-09-18 16:24:55 | 2023-09-18 16:24:55 |
++----+---------+---------------------+-------+----------------------+---------------------+---------------------+
+1 row in set (0.001 sec)
+
+
+
+
+Ahora vamos a redireccionar a la vista donde se muestren todos los mensajes.
+
+	return redirect();
+
+Esta vista aun no se ha creado, asi que primero vamos a crearla, en el archivo Routes, duplicamos cambiamos la URL ahora el nombre sera messages.index y  
+
+web.php
+
+
+---
+	Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index ']);
+
+---
+
+Este sera el nombre de la ruta que vamos a utilizar, ahora en Messagecontroller vamos a aceder al metodo route
+
+
+MessageController.php
+
+---
+	public function store(Request $request)
+    {
+
+        DB::table('messages')->insert([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+            "created_at" => Carbon::now(),
+            "updated_at" => Carbon::now(),
+
+        ]);
+
+     		return redirect()->route('messages.index');
+    }
+---
+
+
+Por parametro le pasamos el nombre de la ruta, ahora vamos al navegador; llenamos el formulario, enviamos y efectivamente me redirecciona a la url mensajes, Si revisamos la Bd, tenemos el nuevo mensaje.
+
+Ahora nos toca implementar el metodo index.
+
+
+Vamos a probar que estamos 
