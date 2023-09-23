@@ -339,7 +339,81 @@ a:
 
 Escribimos la función route y por parametro el nombre de la ruta.
 
-Llenamos el formualrio enviamos y efectivamante nos lleva a la ruta corrects
+Llenamos el formualrio enviamos y efectivamante nos lleva a la ruta correcta, rentonces aqui ya tenemos acceso a los datos del formulario gracias a la clase Request, que Laravel no sinyecta automaticamente, vamos regresar todos los campos, para verificar que los estamos recibiendo.
+
+MessageController.php
+---
+
+	public function store(Request $request)
+    {
+
+        return $request->all();
+    }
+
+--
+
+Reenviamos y ahora podemos ver todos los campos que se han enviado del formulario.
 
 
-Min 5.54
+	Respuesta:
+
+		{
+		"_token": "KYyZbPKfHRcHHcqLNLjUECv6ees5SAQ8IvrJqadh",
+		"nombre": "Klvst3r",
+		"email": "klvst3r@outlook.com",
+		"mensaje": "Mensaje"
+		}
+
+
+Para cceder a un campo especifico, añadimos la función input() y por parametro le pasamos el nombre del campo.
+
+---
+
+
+public function store(Request $request)
+    {
+
+		return $request->input("nombre");
+    }
+---
+
+
+Si queremos el nombre pegamo el id nombre, recargamos y  solo veremos el nombre.
+
+salida:
+	
+	Klvst3r
+
+
+
+Entonces, primero debemos guardar el mensaje, y luego redireccionar. Ahora si vamos a utiliar el Query Builder. Para ello utilizamos la clase DB. Y accedemos al metodo table(), para especificar la tabla que queremos consultar, si recordamos en secciones anteriores, creamos la migración
+
+	2023_09_09_174616_create-messages_table.php
+
+
+Donde llamamos a la tabla messages.
+
+
+	...
+	 Schema::create('messages', function (Blueprint $table) {
+	...
+
+
+Ahora escribimos esa tabla en MessageController.php, luego llamamos a la función insert, que sirve para insertar en la tabla y por parametro le pasamos un array asociativo con los valores que queremos guardar, primero en la columna nombre de la Bd quiero guardar el nombre que viene del formulario, luego hacemos lo smismo con el email, y con el mesnaje.
+
+
+---
+
+	public function store(Request $request)
+    {
+
+		DB::table('messages')->insert([
+			"nombre" => $request->input('nombre'),
+			"email" => $request->input('email'),
+			"mensaje" => $request->input('mensaje'),
+
+		]);
+    }
+
+
+---

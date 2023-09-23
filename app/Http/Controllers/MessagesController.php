@@ -29,7 +29,9 @@ class MessagesController extends Controller
      */
     public function store(Request $request)
     {
-        return "Guardar y direccionar";
+        //return "Guardar y direccionar";
+        //return $request->all();
+        return $request->input("nombre");
     }
 
     /**
