@@ -558,3 +558,19 @@ Ahora nos toca implementar el metodo index.
 
 
 Vamos a probar que estamos 
+
+
+
+
+Soluciones al error del metodo redirect
+
+https://es.stackoverflow.com/questions/511404/reflectionexception-function-does-not-exist
+
+https://stackoverflow.com/questions/68881408/laravel-8-reflectionexception-function-does-not-exist
+
+https://laracasts.com/discuss/channels/laravel/function-does-not-exist
+
+https://laracasts.com/discuss/channels/laravel/laravel-error-reflection-exception-function-does-not-exist
+
+
+https://www.google.com/search?client=firefox-b-d&q=ReflectionException+PHP+8.1.10+10.14.1+Function+%28%29+does+not+exist
