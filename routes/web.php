@@ -57,6 +57,7 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 
 
+
 //6.4. Redirección a los mensajes
 Route::get('mensajes', ['as' => 'messages.index', ' uses' => 'MessagesController@index']);
 

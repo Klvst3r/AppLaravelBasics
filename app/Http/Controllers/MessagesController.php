@@ -41,6 +41,7 @@ class MessagesController extends Controller
         //return $request->all();
         //return $request->input("nombre");
 
+        //Uso del Query Builder con la clase DB
         DB::table('messages')->insert([
             "nombre" => $request->input('nombre'),
             "email" => $request->input('email'),
@@ -53,6 +54,8 @@ class MessagesController extends Controller
         //return "Hecho";
 
         return redirect()->route('messages.index');
+
+        //return to_route('messages.index');
     }
 
     /**
