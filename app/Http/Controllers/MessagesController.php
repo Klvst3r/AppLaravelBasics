@@ -66,7 +66,7 @@ class MessagesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return "Este es el mensaje con el id " . $id;
     }
 
     /**

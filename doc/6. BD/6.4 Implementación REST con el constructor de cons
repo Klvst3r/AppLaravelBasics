@@ -778,3 +778,48 @@ Mostrtar un mensaje
 
 Para mostrar un mensaje en el archivo web.php duplicamos nuevamente la linea del index, la llevamos al final el tipo get esta bien, y pasamos un paramtetro, con la siguiente sintaxis, no hay que confundir la sintaxis de blade de las llaves.
 
+	//6.4. Mostrar un mensaje.
+	Route::get('mensajes/{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
+
+Aca no se esta utilizando Blade, simplemente es una forma d edecirle a Laravel que es un parametro tal cual esta en la descripción del REST	
+
+
+En el MessageController
+
+En el metodo show, vemos que ya tiene una variable incluida.
+
+	public function show(string $id)
+    {
+        //
+    }
+
+Vamos a retornar el Id para asegurar de que se esta pasando correctamente
+
+
+	public function show(string $id)
+    {
+        return "Este es el mensaje con el id " . $id;
+    }
+
+En el navegador cambiamos la url por 
+
+	http://127.0.0.1:8000/mensajes/1
+
+Si cambiamos el Id a 2, muestra el mensaje. Pero antes de implementarse se debe de tener algo en cuanta, para todos los metodos get, vamos a devolver una vista. Esto no siempre es asi, ya que cuando estamos creando, una API REST solo devolvemos JSON, pero las URL siguen siendo las mismas; entonvces vamos a necesitar cuatro vistas en total.
+
+
+
+	GET					/Messages 					MessagesController@index 		Todos los mensajes
+	GET 				/Messages/Create 			Messagescontroller@create 		Formulario de creación
+	POST 				/messages 					MessagesController@store 		Guarda mensajes y redirecciona
+*	GET 				/messages/{id} 				MessagesController@show 		Un mensaje específico
+
+
+Faltando las vistas show y edit.
+
+En el editor dentro de la carpeta messages de las vistas, se crea la vista show
+
+show.blade.php
+
+	
+
