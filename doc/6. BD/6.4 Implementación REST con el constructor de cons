@@ -554,12 +554,10 @@ MessageController.php
 
 Por parametro le pasamos el nombre de la ruta, ahora vamos al navegador; llenamos el formulario, enviamos y efectivamente me redirecciona a la url mensajes, Si revisamos la Bd, tenemos el nuevo mensaje.
 
-Ahora nos toca implementar el metodo index.
 
+---------
 
 Vamos a probar que estamos 
-
-
 
 
 Soluciones al error del metodo redirect
@@ -582,4 +580,126 @@ Routing con Laravel
 
 
 Solucionado el Error de Redirect to Index
-	
+------------
+
+Ahora nos toca implementar el metodo index.
+=======================================
+
+
+
+En MessageController
+    public function index()
+    {
+        return "Listado de mensajes";
+        
+    }
+
+Vamos a probar que estamos ejecutando este metodo:    
+
+Bien, con esto Tenemos implementado hasta esta parte:
+
+	Método HTTP 		URL							Acción 							Respuesta
+
+	GET					/Messages 					MessagesController@index 		Todos los mensajes
+	GET 				/Messages/Create 			Messagescontroller@create 		Formulario de creación
+*	POST 				/messages 					MessagesController@store 		Guarda mensajes y redirecciona
+
+
+
+Ahora vamos a continuar, como ya tenemos la ruta lo que debemos hacer es devolver un avista que se llamara "index".
+
+    public function index()
+        {
+            
+            return view('messages.index');
+        }
+
+
+
+ Vamos a crear el nuevo archivo en
+
+/resources/views/messages/index.blade.php
+
+
+Dentro extendemos la plantilla layout, agregamos la sección contenido e imprimimos un mensaje que diga "Todos los mensajes".
+
+index.blade.php
+---
+	@extends('layout')
+
+@section('contenido')
+	<h1>Todos los mensajes</h1>
+
+@stop	
+
+---
+
+
+Actualizamos el titulo dentro de la plantilla.
+
+
+
+Imprimir todos los mensajes.
+--------------------------------
+
+
+Ahora para imprimir todos los mensajes, debemos pedirselos a la Bd asi que en el metodo index antes de regresar la vista utilizamos la clase DB definimos la tabla, con la que queremos interactuar y ejecutamos el metodo get que nos trae todos los registros de la tabla.
+
+
+public function index()
+        {
+            
+            DB::table('messages')->get(); 
+
+            return view('messages.index');
+        }
+
+Los guardamos en una variable y lo pasamos a la vista. Los guardamos en una variable
+
+
+
+   public function index()
+        {
+         
+            $messages = DB::table('messages')->get(); 
+
+            return view('messages.index');
+        }
+
+Y lo pasamos a la vista
+
+
+   public function index()
+        {
+         
+            $messages = DB::table('messages')->get(); 
+
+            return view('messages.index', compact('messages'));
+        }        
+
+Con esto en la vista index, ya tenemos acceso a la variable 'messages'. Vamos a crear un tabla para mostrar la información:
+
+Una cabecera de la tabla ponemos los titulos, en el cuarpo hacemos un foreach que por cada mensaje, imprimimos una fila de quien envia el mensaje, su email y el mensaje.
+
+	<table>
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			    <th>Email</th> 
+			    <th>Mensaje</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($messages as $message)
+			 <tr>
+			 	<td>{{  $message->nombre }}</td>
+			 	<td>{{  $message->email }}</td>
+			 	<td>{{  $message->mensaje }}</td>
+			 </tr>
+		</tbody>
+	</table>
+
+
+Actualizamos en el navegador
+
+

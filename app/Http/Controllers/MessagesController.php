@@ -17,11 +17,13 @@ class MessagesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //return "Listado de mensajes";
-        return view('messages.index');
-    }
+        public function index()
+        {
+            //return "Listado de mensajes";
+            $messages = DB::table('messages')->get(); 
+
+            return view('messages.index', compact('messages'));
+        }
 
     /**
      * Show the form for creating a new resource.
