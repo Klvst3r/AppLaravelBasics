@@ -3,9 +3,10 @@
 @section('contenido')
 	<h1>Todos los mensajes</h1>
 
-	<table>
+	<table width="100%" border = "1">
 		<thead>
 			<tr>
+				<th>ID</th>
 				<th>Nombre</th>
 			    <th>Email</th> 
 			    <th>Mensaje</th>
@@ -14,6 +15,7 @@
 		<tbody>
 			@foreach($messages as $message)
 			 <tr>
+			 	<td>{{  $message->id }}</td>
 			 	<td>{{  $message->nombre }}</td>
 			 	<td>{{  $message->email }}</td>
 			 	<td>{{  $message->mensaje }}</td>

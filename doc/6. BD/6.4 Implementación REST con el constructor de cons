@@ -700,6 +700,81 @@ Una cabecera de la tabla ponemos los titulos, en el cuarpo hacemos un foreach qu
 	</table>
 
 
-Actualizamos en el navegador
+Actualizamos en el navegador, efectivamente se muestran los datos de la BD. modificando la tabla tendremos:
 
+
+
+
+@extends('layout')
+
+@section('contenido')
+	<h1>Todos los mensajes</h1>
+
+	<table width="100%" border = "1">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			    <th>Email</th> 
+			    <th>Mensaje</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($messages as $message)
+			 <tr>
+			 	<td>{{  $message->nombre }}</td>
+			 	<td>{{  $message->email }}</td>
+			 	<td>{{  $message->mensaje }}</td>
+			 </tr>
+			@endforeach
+		</tbody>
+	</table>
+
+@stop	
+
+
+Teniando los mismos datos que existen en la Bd, cualquier datos que tengamos de los mensajes lo podemos extraser, por ejemplo, podremos mostrar tambien el ID, agregamos otra columna, y en el cuerpo imprimimos el Id
+
+
+@extends('layout')
+
+@section('contenido')
+	<h1>Todos los mensajes</h1>
+
+	<table width="100%" border = "1">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nombre</th>
+			    <th>Email</th> 
+			    <th>Mensaje</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($messages as $message)
+			 <tr>
+			 	<td>{{  $message->ID }}</td>
+			 	<td>{{  $message->nombre }}</td>
+			 	<td>{{  $message->email }}</td>
+			 	<td>{{  $message->mensaje }}</td>
+			 </tr>
+			@endforeach
+		</tbody>
+	</table>
+
+@stop	
+
+
+
+Con esto tenemos otro paso implementado, se esta haciendo un get a la url mensajes utilizando el metodo index, y regresando todos los mensajes.
+
+	//6.4. Redirección a los mensajes a index y regresando todos los mensajes
+	Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
+
+
+
+
+Mostrtar un mensaje
+-------------------
+
+Para mostrar un mensaje en el archivo web.php duplicamos nuevamente la linea del index, la llevamos al final el tipo get esta bien, y pasamos un paramtetro, con la siguiente sintaxis, no hay que confundir la sintaxis de blade de las llaves.
 

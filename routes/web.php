@@ -58,7 +58,7 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 
 
-//6.4. Redirección a los mensajes
+//6.4. Redirección a los mensajes a index y regresando todos los mensajes
 Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
 
 //6.4. Implementación del REST"
@@ -66,6 +66,10 @@ Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesCon
 
 //6.4. Procesamiento del formulario 
 Route::post('mensajes', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+
+
+//6.4. Mostrar un mensaje.
+Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
 
 
 
