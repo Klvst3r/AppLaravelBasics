@@ -579,4 +579,7 @@ https://www.google.com/search?client=firefox-b-d&q=ReflectionException+PHP+8.1.1
 Routing con Laravel
 
 	https://laravel.com/docs/10.x/routing
+
+
+Solucionado el Error de Redirect to Index
 	

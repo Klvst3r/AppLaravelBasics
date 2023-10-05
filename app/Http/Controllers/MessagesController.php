@@ -20,6 +20,7 @@ class MessagesController extends Controller
     public function index()
     {
         //return "Listado de mensajes";
+        return view('messages.index');
     }
 
     /**
