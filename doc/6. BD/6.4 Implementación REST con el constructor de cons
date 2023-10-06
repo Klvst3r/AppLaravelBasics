@@ -822,4 +822,102 @@ En el editor dentro de la carpeta messages de las vistas, se crea la vista show
 show.blade.php
 
 	
+Y retornamos desde MessageController
 
+	public function show(string $id)
+    {
+     
+        return view('messages.show');
+    }
+
+
+Abrimos la vista show, extendemos el layout y en la sección de contenido escribimos el titulo mensaje
+
+	@extends('layout')
+
+
+	@section('contenido')
+		<h1>Mensaje</h1>
+
+	@stop
+
+
+Ahora en el controlador, utilizamos el id para buscar el mensaje en la BD, en la clase volvemos a utilizar DB e indicamos la tabla en la que queremos consultar es 'messages' y y vamos a utilizar el metodo where para definir una condición, la condición es que el 'id' en la tabla coincida con el id que recibimos como parametro, y finalmente, obtenemos el primer resultado con el metodo first, guardamos en una variable llamada $message y se lo pasamos en la vista show, simplemente debemos imprimir los valores.
+
+
+	    public function show(string $id)
+    {
+     
+        $message = DB::table('messages')->where('id', $id)->first(); 
+
+        return view('messages.show', compact('message'));
+
+    }
+
+
+Ahora en la vista show simplemente vamos a imprimir los valores, enviado por->nombre, el correo electronico, y el mensaje.
+
+
+show.blade.php
+
+	@extends('layout')
+
+
+	@section('contenido')
+
+		<h1>Mensaje</h1>
+
+		<p>Enviado por {{ $message->nombre }} - {{ $message->email }}</p>
+
+		<p>{{ $message->mensaje }}</p>
+
+	@stop	    
+
+
+En el navegador refrescamos	y vemos el mensaje con el id 1
+
+
+	http://127.0.0.1:8000/mensajes/1
+
+		Inicio Saludo Contactos
+		
+		Mensaje
+		Enviado por Klvst3r - klvst3r@outlook.com
+
+		Aqui esta el mensaje
+
+
+Si vemos en la BD vemos que corresponde al registro solicitado.
+
+		Copyright ℗ 2023
+
+
+select * from messages where id='1';
++----+---------+---------------------+-------+----------------------+---------------------+---------------------+
+| id | nombre  | email               | phone | mensaje              | created_at          | updated_at          |
++----+---------+---------------------+-------+----------------------+---------------------+---------------------+
+|  1 | Klvst3r | klvst3r@outlook.com | NULL  | Aqui esta el mensaje | 2023-09-18 16:24:55 | 2023-09-18 16:24:55 |
++----+---------+---------------------+-------+----------------------+---------------------+---------------------+
+
+
+
+Ahora en el navegador podemos enviarle el id 1 o los que se tengan en la base de datos
+
+	http://127.0.0.1:8000/mensajes/2
+
+
+Estamos haciendo un get a la url mensajes/id, ejecutamos el metodo show del MessagesController y en respuesta recibimos un mensaje especifico.
+
+	Route::get('mensajes/{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
+
+
+Antes de continuar con las tres url faltantes:
+
+
+	GET 				/messages/{id}/edit 		MessagesController@edit 		Formulario de edición
+	PUT/PATCH 			/messages/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
+	DELETE 				/messages/{id} 				MessagesController@destroy 		Elimina mensaje y redirecciona
+
+
+
+Vamos al layout para arreglar el estado activo del link	
