@@ -34,7 +34,8 @@
 			<a class="{{ activeMenu('saludos/*') }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
 			
 			<!-- <a class="{{ activeMenu('contactame') }}" href="{{ route('contactos') }}">Contactos</a> -->
-			<a class="{{ activeMenu('contactame') }}" href="{{ route('messages.create') }}">Contactos</a>
+			<!-- <a class="{{ activeMenu('contactame') }}" href="{{ route('messages.create') }}">Contactos</a> -->
+			<a class="{{ activeMenu('mensajes/create') }}" href="{{ route('messages.create') }}">Contactos</a>
 		</nav>
 	</header>
 

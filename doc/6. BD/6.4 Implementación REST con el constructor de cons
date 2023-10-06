@@ -920,4 +920,22 @@ Antes de continuar con las tres url faltantes:
 
 
 
+
+Estilos en los links
+-------------------
+
 Vamos al layout para arreglar el estado activo del link	
+
+
+
+En el layout.blade.php
+
+
+	
+
+Le decimos que cuando una url sea mensajes/create, lo muestre como activo.
+
+
+
+
+Ahora vamos a hacer un link que nos lleve a la URL mensajes
