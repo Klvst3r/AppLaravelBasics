@@ -932,10 +932,189 @@ En el layout.blade.php
 
 
 	
+Ahora vamos a hacer un link que nos lleve a la URL mensajes
 
 Le decimos que cuando una url sea mensajes/create, lo muestre como activo.
 
 
 
 
-Ahora vamos a hacer un link que nos lleve a la URL mensajes
+Ahora vamos a hacer un link que nos lleve a la URL mensajes, para ver todos los mensajes, duplicando la ultima linea en el layout.blade.php
+
+	<a class="{{ activeMenu('mensajes') }}" href="{{ route('messages.index') }}">Mensajes</a>
+
+Ahora vamos a convertir el nombre en un link que nos lleve a ver el detalle del mensaje. Desde la tabla en index.blade.php
+
+Agregamos
+
+	<td>
+			 		<a href="{{ route('message.show', $message->id) }}"></a>
+			 		{{  $message->nombre }}
+			 	</td>
+
+Antes del nombre agregamos una etiqueta del link y para el href se utiliza la funcion router() y le pasamos dos parametros, el primero es el nombre de la ruta que es "message.index" y el seguno parametro sera el identificador $message->id.
+
+Ahora copiam os la etiqueta de cierre y la pegamos al final del nombre. Visualizamos el resultado en el navegador.
+
+Y ahora al hacer click en el nombre nos lleva al mensaje correcto.
+
+
+
+Formulario de Edicion de mensajes
+---------------------------------
+
+Para editar un mensaje, vamos de nuevo a la tabla de visualización de mensajes y agregamos un anueva columna que diga acciones, y la palabra editar que sera un link que no lleve a esa url de edición de los mensajes.
+
+Para ello primero vamos a definir la ruta en el archivo routes web.php, cambiando el nombre y metodo a edit.
+
+
+	Route::get('mensajes/{id}/edit', ['as' => 'messages.edit', 'uses' => 'MessagesController@edit']);
+
+
+Vamos al messageController para procesar esta URL en el metodo edit, aqui retornamos un formulario para editar el mensaje
+
+	 public function edit(string $id)
+    {
+        return view('messages.edit')
+    }
+
+ Creamos uns vista para crear el formulario de edición llamado edit.blade.php
+
+ Extendiendo el layout  en la sección contenido con el titulo, editar mensaje, aqui necesitamos acceso al mensaje que vamos a editar, para ello en MessageController copiamos la lineas del metodo show y se pegan en elmetodo edit, realizando las modificaciones necesarias.
+
+ 	ublic function edit(string $id)
+    {
+
+        $message = DB::table('messages')->where('id', $id)->first(); 
+
+        return view('messages.edit', compact('message'));
+    }
+
+
+ y se copia en la vista edicion
+Y luego se pasa a la vista, ahora ya tenemos acceso al mensaje que vamos a editar, vamos a imprimir el nombre para estar seguros
+
+@extends('layout')
+
+@section('contenido')
+	<h1>Editar mensaje de {{ $message->nombre }}</h1>
+
+
+@stop
+
+En la url para estar seguros visualizamos el link de edicion
+
+	http://127.0.0.1:8000/mensajes/1/edit
+
+Vamos a agrtegar el formulario.
+
+Los formularios para editar por lo general son similares a los de crear, asi que vamos a copiar el formulario de la vista create, se actualiza el formulario ahora en el de edición y ya tenemos nuestra vista de edición para agregar los campos a editar.
+
+
+Se vana  editar unas cosas, por ejemplo en lugar de poner la funcion old, vamos a agregar el valor correspondiente actual, accediendo a la variable messages que recibimos desde el controlador.Haciendo lo mismo con el email y el mensaje
+----------------
+
+	<form method="POST" action=" {{ route('messages.store') }}">
+
+		 <!-- @csrf -->
+		
+
+		 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+
+		 {!! csrf_field() !!} 
+
+
+		  
+
+		<p><label for="nombre">
+			Nombre
+			<input type="text" name="nombre" value={{ $message->nombre }}>
+			{!! $errors->first('nombre', '<span class=error>:message</span>') !!}
+		</label></p>
+		
+		<p><label for="email">
+			Email
+			<input type="text" name="email" value={{ $message->email }}>
+			{!! $errors->first('email', '<span class=error>:message</span>') !!}
+		</label></p>
+		
+		<p><label for="mensaje">
+			Mensaje
+			<textarea name="mensaje">{{  $message->mensaje }}</textarea>
+			{!! $errors->first('mensaje', '<span class=error>:message</span>') !!}
+
+		</label></p>
+		
+		<input type="submit" value="Enviar">
+
+	</form>
+
+-----------
+
+
+
+Ahora vemos los campos con la información, si cambiamos de identificador los valores cambian correctamente, ahora este formulario debe enviar los datos por el metodo put y ser procesados por el metodo update del MessageControler.
+
+Entonces la convencion seria para el tratamoento de l formulario
+
+
+	<form method="POST" action=" {{ route('messages.update', $message->id) }}">
+
+Y paamos por parametro el ide delmensaje. Vamos al archivo wev.php (routes) para crear la ruta, duplicando la ultima linea de edición cambiando el metodo a put, actualizando la url y cambiamos el nombre y el metodo a update
+
+	Route::get('mensajes/{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
+
+Ahora, recordemos en la sección anterior que se comento que en los navegadores solamente soportan los metodos post y get.
+
+
+Entonces para que Laravel sepa que queremos enviar datos por el metodo put, utilizamos una funcion llamada metod_field().
+
+Quedando:
+
+	 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+		 {!! method_field('PUT') !!}  
+
+		 {!! csrf_field() !!} 
+
+En el formulario, e inspeccionamos vemos lo que hace esta funcion es crear un campo oculto llamado 
+
+	<input type="hidden" name="_method" value="PUT">
+
+Con el valor que le pasamos por parametro.
+
+
+En este caso PUT, con esto laravel al enviar el formulario sabra que debe ejecutar el metodo update.
+
+
+Ahora, vamos con la actualización de los datos.
+
+
+	GET 				/messages/{id}/edit 		MessagesController@edit 		Formulario de edición
+	PUT/PATCH 			/messages/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
+
+
+
+En el metodo update debemos actualizar el mensaje, y luego redireccionarlo, Entonces para redireccionar el mensaje debemos, para ello lo que debemos hacer es consultar el mensaje en la base de datos, esto ya se ha hecho varias veces.
+
+
+	DB::table('messages')->where('id', $id)->update([
+            
+        ]);
+
+DB table messages, donde el id sea igual al que recibimos omo parametro, y llamados al metodo update, aqui pasamos un array asociativo similar al que pasamos en el metodo store, asi que vamos a copiarlo.
+
+
+	     DB::table('messages')->where('id', $id)->update([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+           
+            "updated_at" => Carbon::now(),
+        ]);
+
+Borramos el campo create at, ya que solo queremos la nueva fecha de actualización del mensaje, y finalmente redireccionarmos el mensaje a messages.index
+
+	return redirect()->route('messages.index');
+

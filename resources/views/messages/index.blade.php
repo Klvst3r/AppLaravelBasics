@@ -10,15 +10,22 @@
 				<th>Nombre</th>
 			    <th>Email</th> 
 			    <th>Mensaje</th>
+			    <th>Acciones</th>
 			</tr>
 		</thead>
 		<tbody>
 			@foreach($messages as $message)
 			 <tr>
 			 	<td>{{  $message->id }}</td>
-			 	<td>{{  $message->nombre }}</td>
+			 	<td>
+			 		<a href="{{ route('messages.show', $message->id) }}">
+			 			{{  $message->nombre }}
+			 		</a>
+			 	</td>
+			 	
 			 	<td>{{  $message->email }}</td>
 			 	<td>{{  $message->mensaje }}</td>
+			 	<td>Editar</td>
 			 </tr>
 			@endforeach
 		</tbody>
