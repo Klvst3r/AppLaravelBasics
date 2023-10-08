@@ -70,8 +70,11 @@ Route::post('mensajes', ['as' => 'messages.store', 'uses' => 'MessagesController
 //6.4. Mostrar un mensaje.
 Route::get('mensajes/{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
 
+//6.4. Ruta para editar los mensajes
+Route::get('mensajes/{id}/edit', ['as' => 'messages.edit', 'uses' => 'MessagesController@edit']);
 
-
+//6.4. Ruta para actualizar los mensajes
+Route::put('mensajes/{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
 
 
 //Route::get('contactame', ['as' => 'contactos', function(){
