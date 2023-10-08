@@ -1088,6 +1088,11 @@ Con el valor que le pasamos por parametro.
 En este caso PUT, con esto laravel al enviar el formulario sabra que debe ejecutar el metodo update.
 
 
+
+
+Actualización de los datos - metodo PUT/PATCH
+---------------------------------------------
+
 Ahora, vamos con la actualización de los datos.
 
 
