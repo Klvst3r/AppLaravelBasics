@@ -25,7 +25,9 @@
 			 	
 			 	<td>{{  $message->email }}</td>
 			 	<td>{{  $message->mensaje }}</td>
-			 	<td>Editar</td>
+			 	<td>
+			 		<a href="{{ route('messages.edit', $message->id) }}">Editar</a>
+			 	</td>
 			 </tr>
 			@endforeach
 		</tbody>

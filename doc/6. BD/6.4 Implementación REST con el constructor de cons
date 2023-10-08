@@ -1123,3 +1123,48 @@ Borramos el campo create at, ya que solo queremos la nueva fecha de actualizaci�
 
 	return redirect()->route('messages.index');
 
+
+Na hay que olvidarnos del boton editr, para ello vamos a la vista index.blade.php
+
+
+
+Quedando en la tabla, el link de edición
+
+	<table width="100%" border = "1">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nombre</th>
+				    <th>Email</th> 
+				    <th>Mensaje</th>
+				    <th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($messages as $message)
+				 <tr>
+				 	<td>{{  $message->id }}</td>
+				 	<td>
+				 		<a href="{{ route('messages.show', $message->id) }}">
+				 			{{  $message->nombre }}
+				 		</a>
+				 	</td>
+				 	
+				 	<td>{{  $message->email }}</td>
+				 	<td>{{  $message->mensaje }}</td>
+				 	<td>
+				 		<a href="{{ route('messages.edit', $message->id) }}">Editar</a>
+				 	</td>
+				 </tr>
+				@endforeach
+			</tbody>
+		</table>
+
+
+Actualizamos en el navegador y observamos los cambios.
+
+Hasta aca ya se tiene implementado la penulta acción del REST
+
+	PUT/PATCH 			/messages/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
+
+
