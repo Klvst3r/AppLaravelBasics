@@ -105,6 +105,11 @@ class MessagesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //return "Eliminando el mensaje con el id " . $id;
+        DB::table('messages')->where('id', $id)->delete();
+
+        //Redireccionamos a la ruta mensajes.index.
+        return redirect()->route('messages.index');
+        
     }
 }

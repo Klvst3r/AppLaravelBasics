@@ -1168,3 +1168,93 @@ Hasta aca ya se tiene implementado la penulta acción del REST
 	PUT/PATCH 			/messages/{id} 				MessagesController@update 		Actualiza mensaje y redirecciona
 
 
+Eliminar Mensajes
+------------------
+
+
+Resta la acción de eliminar mensajes, para ello se va  aa utilizar un formulario en la tabla con un boton submit con la leyenda eliminar, el moteodo en el formulario sera post
+
+				<td>
+			 		<a href="{{ route('messages.edit', $message->id) }}">Editar</a>
+			 		<form method="POST" action="{{ route('messages.destroy', $message->id) }}">
+			 			<button type="submit">Eliminar</button>
+			 		</form>
+			 	</td>
+
+
+El metodo del formulario sera post y la acción sera mensajes.destroy por parametro se pasa el parametro del id del mensaje y en el archivo de rutas web.php se va a crear la ultima ruta.
+
+	//6.4. Ruta para eliminar los mensajes
+	Route::delete('mensajes/{id}', ['as' => 'messages.destroy', 'uses' => 'MessagesController@destroy']);
+
+
+El metodo sera delete, con la misma url que el metodo de edición y el nombre sera destroy al igual que el nombre del controlador.
+Si actualizamos en la tabla de mensajes debera aparecer el boton de eliminación de registro en la misma linea
+
+
+<form style="display:inline" method="POST" action="{{ route('messages.destroy', $message->id) }}">
+
+			 			{!! csrf_field() !!}
+
+			 			{!! method_field('DELETE') !!}
+
+			 			<button type="submit">Eliminar</button>
+			 		</form>
+
+
+Agregamos el campo csrf, indicandole a Laravel que queremos enviar los datos por el metodo DELETE, para ello volvemos a utilizar el metodo method_field pero esta vez con el parametro DELETE
+
+Ahora vamos con el metodo desry en MessageController, agregamos una cadena para saber que lo estamos ejecutando
+
+	  public function destroy(string $id)
+	    {
+	        return "Eliminando el mensaje con el id " . $id;
+	    }
+
+
+Hacemos click en el boton de eliminar, y vemos que se esta ejecutando el metodo correctamente, y lo primero que tenemos que hacer es consultar el mensaje.
+Para ello utilizamos nuevamente:
+	
+	 DB::table('messages')->where('id', $id)->delete();
+
+
+Donde el id sea igual al id de mensaje a eliminar que recibimos por el boton y llamamos al metodo delete.
+
+Finalmente redireccionamos a la ruta mensajes
+	//Redireccionamos a la ruta mensajes.index.
+        return redirect()->route('messages.index');
+        
+Eliminamos un mensaje de la tabla y observamos la accion si se ejecuta correctamente.
+
+Con esto ya hemos implimentado la altima acción del diseño REST con el recurso mensajes
+
+	DELETE 				/messages/{id} 				MessagesController@destroy 		Elimina mensaje y redirecciona
+
+
+En la siguiente sección veremos que es y como utilizar ELOQUENT, que nos permite interactuar con la Base de daos de una manera aun mas sencilla con ql Query builder.
+
+Tambien se vera como reemplazar las siguientes 7 lineas con una sola 
+
+
+	//6.4. Redirección a los mensajes a index y regresando todos los mensajes
+	Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
+
+	//6.4. Implementación del REST"
+	Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+
+	//6.4. Procesamiento del formulario 
+	Route::post('mensajes', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+
+	//6.4. Mostrar un mensaje.
+	Route::get('mensajes/{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
+
+	//6.4. Ruta para editar los mensajes
+	Route::get('mensajes/{id}/edit', ['as' => 'messages.edit', 'uses' => 'MessagesController@edit']);
+
+	//6.4. Ruta para actualizar los mensajes
+	Route::put('mensajes/{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
+
+
+	//6.4. Ruta para eliminar los mensajes
+	Route::delete('mensajes/{id}', ['as' => 'messages.destroy', 'uses' => 'MessagesController@destroy']);
+

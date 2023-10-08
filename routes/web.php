@@ -77,6 +77,10 @@ Route::get('mensajes/{id}/edit', ['as' => 'messages.edit', 'uses' => 'MessagesCo
 Route::put('mensajes/{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
 
 
+//6.4. Ruta para eliminar los mensajes
+Route::delete('mensajes/{id}', ['as' => 'messages.destroy', 'uses' => 'MessagesController@destroy']);
+
+
 //Route::get('contactame', ['as' => 'contactos', function(){
     //return "Hola desde la pagina de contacto";     
   //  return view('contactos');
