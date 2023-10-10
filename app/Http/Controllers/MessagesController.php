@@ -56,7 +56,7 @@ class MessagesController extends Controller
 
         //return "Hecho";
 
-        return redirect()->route('messages.index');
+        return redirect()->route('mensajes.index');
 
         //return to_route('messages.index');
     }
@@ -97,7 +97,7 @@ class MessagesController extends Controller
             "updated_at" => Carbon::now(), 
         ]);
         //Redireccionar
-        return redirect()->route('messages.index');
+        return redirect()->route('mensajes.index');
     }
 
     /**
@@ -109,7 +109,7 @@ class MessagesController extends Controller
         DB::table('messages')->where('id', $id)->delete();
 
         //Redireccionamos a la ruta mensajes.index.
-        return redirect()->route('messages.index');
+        return redirect()->route('mensajes.index');
         
     }
 }

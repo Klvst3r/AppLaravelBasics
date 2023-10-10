@@ -1,0 +1,276 @@
+6.5 Qué es ELOQUENT y refactorización de la implementación REST
+
+
+ En la sección anterior se vio como utilizar el Query Builder de Laravel y se comento en la parte final que se puede rremplazar las sguientyes siete lineas, por una sola linea.
+
+
+
+
+	//6.4. Redirección a los mensajes a index y regresando todos los mensajes
+	Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
+
+	//6.4. Implementación del REST"
+	Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+
+	//6.4. Procesamiento del formulario 
+	Route::post('mensajes', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+
+	//6.4. Mostrar un mensaje.
+	Route::get('mensajes/{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
+
+	//6.4. Ruta para editar los mensajes
+	Route::get('mensajes/{id}/edit', ['as' => 'messages.edit', 'uses' => 'MessagesController@edit']);
+
+	//6.4. Ruta para actualizar los mensajes
+	Route::put('mensajes/{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
+
+
+	//6.4. Ruta para eliminar los mensajes
+	Route::delete('mensajes/{id}', ['as' => 'messages.destroy', 'uses' => 'MessagesController@destroy']);
+
+ Se comienza por ahi:
+
+ Vamos comentar un momento las rutas anteriores, para ver solo las de la implementación REST: 
+
+ 	/* 6.5 Se comenta para trabajar con ELOQUENT
+	//3.1
+
+	Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home'])->middleware('example');
+
+
+	Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
+
+
+	//Procesamiento del formulario
+	Route::post('contacto', 'PagesController@mensajes');
+
+	Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre', "[A-Za-z1-9]+");
+	*/
+
+
+Ahora vamos a la terminal y escribimos:
+
+	php artisan r:l
+
+Esto sirve para ver todas rutas de nuestra aplicación que es lo mismo que escribir:
+
+	php artisan route:list
+
+
+Resultado:
+	
+
+Domain      Method 		URI 								Name 												Action
+
+			  POST      _ignition/execute-solution ........ ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+			  GET|HEAD  _ignition/health-check .................... ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+			  POST      _ignition/update-config ................. ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+			  GET|HEAD  api/user ........................................................................................................ 
+			  GET|HEAD  mensajes .............................................................. messages.index › MessagesController@index
+			  POST      mensajes .............................................................. messages.store › MessagesController@store
+			  GET|HEAD  mensajes/create ..................................................... messages.create › MessagesController@create
+			  GET|HEAD  mensajes/{id} ........................................................... messages.show › MessagesController@show
+			  PUT       mensajes/{id} ....................................................... messages.update › MessagesController@update
+			  DELETE    mensajes/{id} ..................................................... messages.destroy › MessagesController@destroy
+			  GET|HEAD  mensajes/{id}/edit ...................................................... messages.edit › MessagesController@edit
+			  GET|HEAD  sanctum/csrf-cookie ........................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+
+			                                                                                                          Showing [12] routes
+
+
+Aqui podemos ver todas las rutas de nuestra aplicación, entonces, ahora vamos a comentar estas siete lineas siguientes y ahora escribimos en el archivo de rutas web.php
+
+		Route::resource('mensajes','MessagesController');
+
+Rutas y el recurso; entonces, el recurso de nosotros es "mensajes"		 y por segundo parametro le pasamos el controlador encargado llamado "MessageController".
+
+
+Si ahora volvemos a ejecutar php artisan r:l (route list) podemos ver que tenemos practicamente las mismas rutas que se tenian antes, con unas pequeñas diferencias.
+
+
+Domain      Method 				URI 								Name 												Action
+
+			  POST            _ignition/execute-solution .. ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+			  GET|HEAD        _ignition/health-check .............. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+			  POST            _ignition/update-config ........... ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+			  GET|HEAD        api/user .................................................................................................. 
+			  GET|HEAD        mensajes ........................................................ mensajes.index › MessagesController@index
+			  POST            mensajes ........................................................ mensajes.store › MessagesController@store
+			  GET|HEAD        mensajes/create ............................................... mensajes.create › MessagesController@create
+			  GET|HEAD        mensajes/{mensaje} ................................................ mensajes.show › MessagesController@show
+			  PUT|PATCH       mensajes/{mensaje} ............................................ mensajes.update › MessagesController@update
+			  DELETE          mensajes/{mensaje} .......................................... mensajes.destroy › MessagesController@destroy
+			  GET|HEAD        mensajes/{mensaje}/edit ........................................... mensajes.edit › MessagesController@edit
+			  GET|HEAD        sanctum/csrf-cookie ..................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+
+			                                                                                                          Showing [12] routes
+
+Esto no va a funcionar todavia, Ya que lo que hace Laravel es utilizar el nombre del recurso para generar las URI y los nombres de las rutas, aca podemos ver que el parametro se ha llamado diferente, pero este no es el problema por que en el controlador podemos llamarle como queramos.
+
+
+	Nombre o prfijo de rutas 		URI 				
+	messages.index 					mensajes
+
+La razon por la que no va a funcionar es por que se esta utilizando messages.index, en los nombres prefijos de las rutas, y mensajes en la URI, y en las rutas que se acaban de crear, tanto el prefijo de las rutas como el URI soniguales  
+
+	Nombre o prfijo de rutas 		URI 				
+	mensajes.index 					mensajes
+
+Ahora, si le cambiamos el nombre del recurso como sigue:
+
+		Route::resource('menssages','MessagesController');
+
+Y ejecutamos el comando de route list.
+
+
+
+
+Domain      Method 				URI 								Name 												Action
+			  POST            _ignition/execute-solution .. ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+			  GET|HEAD        _ignition/health-check .............. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+			  POST            _ignition/update-config ........... ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+			  GET|HEAD        api/user .................................................................................................. 
+			  GET|HEAD        messages ........................................................ messages.index › MessagesController@index
+			  POST            messages ........................................................ messages.store › MessagesController@store
+			  GET|HEAD        messages/create ............................................... messages.create › MessagesController@create
+			  GET|HEAD        messages/{message} ................................................ messages.show › MessagesController@show
+			  PUT|PATCH       messages/{message} ............................................ messages.update › MessagesController@update
+			  DELETE          messages/{message} .......................................... messages.destroy › MessagesController@destroy
+			  GET|HEAD        messages/{message}/edit ........................................... messages.edit › MessagesController@edit
+			  GET|HEAD        sanctum/csrf-cookie ..................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+
+			                                                                                                          Showing [12] routes
+
+Ahora vemos que tenemos messages en la URI y messages.index en el prefijo, y de esta forma tampoco nos va a servir, ya que en la svistas y en el controlador se ha hecho referencias al prefijo messages de las rutas. Esto se ha mostrado asi para que la URI, se ve en español tambien, entonces, lo que se debe de hacer es buscar y reemplazar estas referencias de rutas que se hicieron en el prefijo messages.
+
+
+Entonces, si accedemos a la ruta Contactos del menu seguramente marcara un error (es decir a la url): http://localhost:8000/mensajes/create se generar un error 404 recurso no encontrado.
+
+Internamente resultado de:
+
+	ErrorException in URlGenerator.php
+
+	Resource [messages.store] not defined. (View:
+	/Users/klvst3r/Code/laravel/resources/views/messages/create.blade.php)
+
+Indicando que la ruta messages.store no esta definida, el problema es que estamos buscando messages.store y hemos definido mensajes.store, todas las 7 rutas se escribieron manualmente para mostrar como esta contruida cada una de ellas pero por lo egeneral, si vamos a ocupar recursos al estilo REST, lo primero que se tiene que hacer es escribir la linea que sigue, y que se ha utilizando anteriormente:
+
+
+	Route::resource('mensajes','MessagesController');
+
+Y asi evitamos el inconveniente por el que estamos pasando ahora.
+
+
+Entoces, lo que debemos hacer es buscar la referencia anterior y cambiarlas, afortunadamente la solución es mas sencilla de lo que parece, en Sublime Text, podemos precionar: 	
+
+	CTRL + SHIFT + F para buscar y reenplazar
+
+		Find: La cadena que queremos buscar y en el segundo campo podemos definir en que carpeta buscar..
+
+
+Entonces, buscamos 
+
+	route('mensajes. 
+
+Reemplazarlo por 
+
+	route('mensajes. 	
+
+
+Apareciendo todas las coincidencias, en el MessagesController, en el archivo de plantillas, etc.
+
+Entonces, lo que vamos a hacer es presionar nuevamente CTRL + SHIFT + F,  y le vamos a indicar en reemplazar encontrando 15 coincidencias, indicamos que si queremos rremplazar las 27 coincidencias en 8 de nuestros archivos.
+
+	Inclusive ha actualizado el archivo laravel.log y algunas vistas ya compliladas.
+
+Que aunque no era necesario, no se ve ningun problema.
+
+Vamos al menu archivo y guardamos todo para que se guarden todos los archivos abiertos. Cerramos toso los archiso siendo estos los siguientes:
+
+	- layout.blade.phpcostal
+
+	
+	- create.blade.php
+	- edit.blade.php
+	- index.blade.php
+	- MessageController.php
+	- web.php
+
+
+Si accesamos ahora a la liga de inicio siguiente, 
+
+	http://localhost:8000/saludos/Klvst3r
+
+El menu se 
+
+Ahora si actualizamos veremos nuevamente un error que dice, refrescamos en nuestra aplicación, reempazando en las vistas de los mensajes, en el MessageController y en el archivo de ocnfiguración web.php
+
+Seran 15 las coincidencias a reemplazar, y aceptamos, incluso se puede actualizar el archivo log de algunas vistas ya compiladas que no eran necesarias, pero no existe inconveniente, ahora vamos al menu archivo y cerramos todas las pestañas abiertas y modificadas.
+
+Cerramos con CTRL + W y si actualizamos podemos ver que nuestra aplicación esta nuevamente funcional, o en algun caso puede presentar el error en la ruta home no esta definida como en nuestro caso ocurrio.
+
+Una forma de solucionar este inconveniente es descomentar las siguientes lineas en las rutas web.php
+
+	
+	Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home'])->middleware('example');
+
+
+	Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
+
+
+	//Procesamiento del formulario
+	Route::post('contacto', 'PagesController@mensajes');
+
+	Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre', "[A-Za-z1-9]+");
+
+
+
+Ahora si podremos tener nuevamente funcional nuestra aplicación
+
+
+Probamos las opciones de la aplicacion, editando, registrando, eliminando y visualizando los mensajes de nuestra aplicación.
+
+Todo esta funcionando como antes, pero nuestro archivo de rutas ahora esta mucho más limpio, entonces, ahora para entrar ya en materia.
+
+Se abre el MessageController y antes de utilizar ELOQUENT vamos a entender un poco lo que es en si ELOQUENT,
+
+
+ELOQUENT es el ORM que viene con Laravel.
+
+Un ORM se entiende por "Object-Relational Mapping" o "Mapeo Objeto-Relacional" en palabras simples es la representación de una tabla, de una base de datos en Objetos o clases de una aplicación
+
+
+Resumiendo:
+
+				ORM
+
+
+		Object-Relational Mapping
+
+		  Mapeo Objeto-Relacional
+
+
+	Tabla = messages => Clase = Message
+
+
+
+Por ejemplo en nuestro caso la tabla messages la vamos a representar como una clase heredada de ELOQUENT llamada Message	
+
+	Tabla = messages => Clase = Message
+
+Para crearla en la terminal escribimos php artisan para ver el estado de los comandos disponibles y debajo del nameespace make, tenemos este comando llamado 
+
+	make:model
+
+Que es el que necesitamos.
+
+Escribimos 
+
+	php artisan make:model <nombre_modelo>
+
+
+Aca hay otra convención que vamos a seguir, los modelos los nombramos igual que la tabla a la que sera asociada pero en singular y con la primera letra en mayusculas, es decir la tabla que queremos asociar se llama messages por lo tanto el nombre del modelo sera: Message en singular.
+
+Ejecutamos y si vamos a la carpeta App podemos ver el modelo.
+
+ 	

@@ -43,6 +43,10 @@ use Illuminate\Support\Facades\Route;
 
 //3.1
 
+/*6.5 
+*/
+
+
 Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home'])->middleware('example');
 
 
@@ -56,8 +60,9 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 
 
+Route::resource('mensajes','MessagesController');
 
-
+/* 6.5
 //6.4. Redirección a los mensajes a index y regresando todos los mensajes
 Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
 
@@ -79,7 +84,7 @@ Route::put('mensajes/{id}', ['as' => 'messages.update', 'uses' => 'MessagesContr
 
 //6.4. Ruta para eliminar los mensajes
 Route::delete('mensajes/{id}', ['as' => 'messages.destroy', 'uses' => 'MessagesController@destroy']);
-
+*/
 
 //Route::get('contactame', ['as' => 'contactos', function(){
     //return "Hola desde la pagina de contacto";     
