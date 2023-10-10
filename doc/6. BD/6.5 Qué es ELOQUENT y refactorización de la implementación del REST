@@ -273,4 +273,72 @@ Aca hay otra convención que vamos a seguir, los modelos los nombramos igual que
 
 Ejecutamos y si vamos a la carpeta App podemos ver el modelo.
 
- 	
+	php artisan make:model Message
+
+
+La ruta de nuestro nuevo modelo estara en:
+
+/app/Http/Models/Message.php
+
+Lo abrimos y observamos que no es mas que una clase heredada del modelo ELOQUENT
+
+	---
+
+	<?php
+
+	namespace App\Models;
+
+	use Illuminate\Database\Eloquent\Factories\HasFactory;
+	use Illuminate\Database\Eloquent\Model;
+
+	class Message extends Model
+	{
+	    use HasFactory;
+	}
+
+
+	---
+
+
+Ahora ya podemos comenzar a utilizar. Volvemos al MessageController, y en el metodo index, en lugar de utilizar el Query Builder vamos a utilizar Eloquent:
+
+	---
+
+
+        public function index()
+        {
+
+            $messages = DB::ta ble('messages')->get(); 
+
+            $message = Message::all();
+
+            return view('messages.index', compact('messages'));            
+
+        }
+
+	---
+
+Se crea la variable Messages, y en el modelo accedemos al metodo All, para obtener todos los mensajes de la tabla, por ultimo debemos importar la clase Message al principio del archivo.
+
+	---	
+
+		<?php
+
+		namespace App\Http\Controllers;
+
+		use Illuminate\Http\Request;
+
+		use DB;
+
+		//**Se importa la clase para emplear ELOQUENT
+		use App\Message;
+
+		use Carbon\Carbon;
+
+		use App\Http\Controllers\MessagesController;
+
+	---	
+
+Notese que aca no se especifica la tabla 'messages', entonces como sabe el modelo a que tabla consultar. Laravel automaticamente va a buscar una tabla en la Base de datos que tenga el mismo nombre que el modelo pero en minusculas y en plural, entonces Laravel va a asumir que nuestra Tabla se llama 'messages' , en este caso es correcto, nuestra tabla se llama  
+
+MIN 07
