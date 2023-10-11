@@ -107,6 +107,19 @@ class MessagesController extends Controller
 
 
         //6.5.4 Almacenamiento con Eloquent segunda forma
+
+        //Opcion uno
+        /*Message::create([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+
+        ]);
+        */
+
+
+        //Opcion dos
+        Message::create($request->all());
         
 
 

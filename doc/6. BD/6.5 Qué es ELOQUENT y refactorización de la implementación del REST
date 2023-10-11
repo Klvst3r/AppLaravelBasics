@@ -477,7 +477,18 @@ Probamos y verificamos que sigue funcionando, si se revisa en la base de datos s
 
 
 
-Min. 09'20
+Segunda forma de almacenamiento con Eloquent
+--------------------------------------------
+
+La segunda forma de almacenamiento que es la que puede utilizarse con mayor frecuencia, comentando dentro de MessageController la primera forma de almacenamiento
 
 
+Ahora vamos a utilizar el metodo create directamente el el modelo, y por parametro podriamos pasarle un array similar al que sigue sin las fechas:
 
+
+	        Message::create([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+
+        	]);
