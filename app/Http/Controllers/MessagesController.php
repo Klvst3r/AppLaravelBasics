@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 
 //**Se importa la clase para emplear ELOQUENT
-use App\Message;
+use App\Models\Message;
 
 use Carbon\Carbon;
 
@@ -23,40 +23,30 @@ class MessagesController extends Controller
         public function index()
         {
             //return "Listado de mensajes";
-<<<<<<< HEAD
+
             //
-            //Uso del Query Builder 6.4
+             //Uso con la implementación con el QUERY BUILDER 6.4
             /*$messages = DB::table('messages')->get(); 
 
             return view('messages.index', compact('messages'));
             */
-           //6.5 uso de ELOQUENT
-            //$messages = DB::table('messages')->get(); 
-
-            $messages = Message::all();
-
-            return view('messages.index', compact('messages'));        
-=======
-            
-            //Uso con la implementación con el QUERY BUILDER
-            /*
-            $messages = DB::table('messages')->get(); 
-
-            return view('messages.index', compact('messages'));
-
-            */
-
             //6.5. Uso de ELOQUENT
-            $messages = DB::ta ble('messages')->get(); 
+            //$messages = DB::table('messages')->get(); 
             
             //Se crea la variable y en el modelo accedemos al metodo all para obtener todos los mensajes de la tabla 
-            $message = Message::all();
+            //$messages = Message::all();
+
+            //Visualización Formato JSON
+            return Message::all();
             //**
             //Es importante importar la clase "Message" al principio del archivo
 
-            return view('messages.index', compact('messages'));            
+            return view('messages.index', compact('messages'));              
 
->>>>>>> main
+            
+           
+
+          
         }
 
     /**
