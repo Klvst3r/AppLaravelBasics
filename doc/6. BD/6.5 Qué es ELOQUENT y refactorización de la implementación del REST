@@ -447,3 +447,28 @@ Si queremos ver el formato JSON como este tendremos que utilizar una exten´sió
 Entonces ahora ya podemos eliminar la linea de JSON y dejarla tal cual estaba 
 
 
+Bajando un poco en el MessageController, no estamos utilizando el Query Builder, en el metodo create. Nos detenemos en el metodo store, ya que existen varias forma de guardar datos con Eloquent:
+
+- Vamos a revisar dos formas
+Comentamos las lineas siguientes del Query Builder
+
+1. La primera forma es creando una nueva instancia de la clase message o el modelo Message y guardarla en una variable, esta variable, esta variable es ahora un objeto llamado mensaje pero en blanco, asi que accedemos a la pripiedad nombre y le asignamos el nombre que viene del formulario:
+
+
+	$message = new Message;
+
+    $message->nombre = $request->input('nombre');
+
+Hacemos lo mismo con el email
+       $message->email = $request->input('email');     
+
+Y el mensaje  
+        $message->mensaje = $request->input('mensaje');     
+
+Por ultimo con el metodo save, guardamos el mensaje en la Bd
+		$message->save();        
+
+Probamos, en la pagina del formulario de contactos, llenamos el formulario y antes de enviar debemos notar algo, del segmento de codigo anterior, ya que no se le estan pasando las fechas que se hacia con el Query Builder, con Eloquent no es necesario especificarlas, ya que son añadidas automaticamente.
+
+Probamos y verificamos que sigue funcionando.
+

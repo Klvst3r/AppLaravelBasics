@@ -37,7 +37,11 @@ class MessagesController extends Controller
             //$messages = Message::all();
 
             //Visualización Formato JSON
-            return Message::all();
+            //return Message::all();
+            
+            //6.5.3 Se regresa a visualización normal 
+            $messages = Message::all();
+            
             //**
             //Es importante importar la clase "Message" al principio del archivo
 
@@ -69,6 +73,7 @@ class MessagesController extends Controller
         //return $request->input("nombre");
 
         //Uso del Query Builder con la clase DB
+        /*6.5.2 Se comenta para dar paso al guardado de datos con Eloquent
         DB::table('messages')->insert([
             "nombre" => $request->input('nombre'),
             "email" => $request->input('email'),
@@ -77,6 +82,26 @@ class MessagesController extends Controller
             "updated_at" => Carbon::now(),
 
         ]);
+        */
+       
+       //6.5.3 Almacenamiento con Eloquent
+       //La primera forma es creando una nueva instancia de la clase message o el modelo Message y guardarla en una variable, 
+       $message = new Message;
+
+       //esta variable, esta variable es ahora un objeto llamado mensaje pero en blanco, 
+       //asi que accedemos a la pripiedad nombre y le asignamos el nombre que viene del formulario
+       $message->nombre = $request->input('nombre');
+
+       //Hacemos lo mismo con el email
+       $message->email = $request->input('email');     
+
+        //Y el mensaje  
+        $message->mensaje = $request->input('mensaje');     
+
+        //Guardamos con el metodo save
+        $message->save();
+
+
 
         //return "Hecho";
 
