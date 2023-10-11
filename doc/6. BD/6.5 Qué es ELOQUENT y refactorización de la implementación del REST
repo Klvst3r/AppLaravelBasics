@@ -339,6 +339,7 @@ Se crea la variable Messages, y en el modelo accedemos al metodo All, para obten
 
 	---	
 
+<<<<<<< HEAD
 Notese que aca no se especifica la tabla 'messages', entonces como sabe el modelo a que tabla consultar. Laravel automaticamente va a buscar una tabla en la Base de datos que tenga el mismo nombre que el modelo pero en minusculas y en plural, entonces Laravel va a asumir que nuestra Tabla se llama 'messages' , en este caso es correcto, nuestra tabla se llama 'messages' 
 
 ---
@@ -390,3 +391,8 @@ Vamos a borrarlo ya que nuestro valor por defecto nos sirve. Entonces en el Mess
 Y la variable es $messages, en plural ya que estamos recibiendo todos los mensajes de la tabla. Actualizamos el navegador y verificamos el istado de los mensajes en la vista index.
 
 	
+=======
+Notese que aca no se especifica la tabla 'messages', entonces como sabe el modelo a que tabla consultar. Laravel automaticamente va a buscar una tabla en la Base de datos que tenga el mismo nombre que el modelo pero en minusculas y en plural, entonces Laravel va a asumir que nuestra Tabla se llama 'messages' , en este caso es correcto, nuestra tabla se llama  
+
+MIN 07
+>>>>>>> main

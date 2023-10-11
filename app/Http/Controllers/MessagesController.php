@@ -23,6 +23,7 @@ class MessagesController extends Controller
         public function index()
         {
             //return "Listado de mensajes";
+<<<<<<< HEAD
             //
             //Uso del Query Builder 6.4
             /*$messages = DB::table('messages')->get(); 
@@ -35,11 +36,32 @@ class MessagesController extends Controller
             $messages = Message::all();
 
             return view('messages.index', compact('messages'));        
+=======
+            
+            //Uso con la implementación con el QUERY BUILDER
+            /*
+            $messages = DB::table('messages')->get(); 
+
+            return view('messages.index', compact('messages'));
+
+            */
+
+            //6.5. Uso de ELOQUENT
+            $messages = DB::ta ble('messages')->get(); 
+            
+            //Se crea la variable y en el modelo accedemos al metodo all para obtener todos los mensajes de la tabla 
+            $message = Message::all();
+            //**
+            //Es importante importar la clase "Message" al principio del archivo
+
+            return view('messages.index', compact('messages'));            
+
+>>>>>>> main
         }
 
     /**
      * Show the form for creating a new resource.
-     */
+     */ 
     public function create()
     {
         //return "Mostrar el formulario de creación de mensajes";
@@ -68,7 +90,7 @@ class MessagesController extends Controller
 
         //return "Hecho";
 
-        return redirect()->route('messages.index');
+        return redirect()->route('mensajes.index');
 
         //return to_route('messages.index');
     }
@@ -109,7 +131,7 @@ class MessagesController extends Controller
             "updated_at" => Carbon::now(), 
         ]);
         //Redireccionar
-        return redirect()->route('messages.index');
+        return redirect()->route('mensajes.index');
     }
 
     /**
@@ -121,7 +143,7 @@ class MessagesController extends Controller
         DB::table('messages')->where('id', $id)->delete();
 
         //Redireccionamos a la ruta mensajes.index.
-        return redirect()->route('messages.index');
+        return redirect()->route('mensajes.index');
         
     }
 }

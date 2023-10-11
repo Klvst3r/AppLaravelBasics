@@ -1257,4 +1257,3 @@ Tambien se vera como reemplazar las siguientes 7 lineas con una sola
 
 	//6.4. Ruta para eliminar los mensajes
 	Route::delete('mensajes/{id}', ['as' => 'messages.destroy', 'uses' => 'MessagesController@destroy']);
-

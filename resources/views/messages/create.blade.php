@@ -12,7 +12,7 @@
 
 @else
 
-<form method="POST" action=" {{ route('messages.store') }}">
+<form method="POST" action=" {{ route('mensajes.store') }}">
 
 	 <!-- @csrf -->
 	
