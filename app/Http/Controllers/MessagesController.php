@@ -86,6 +86,8 @@ class MessagesController extends Controller
        
        //6.5.3 Almacenamiento con Eloquent
        //La primera forma es creando una nueva instancia de la clase message o el modelo Message y guardarla en una variable, 
+
+       /* 
        $message = new Message;
 
        //esta variable, esta variable es ahora un objeto llamado mensaje pero en blanco, 
@@ -100,6 +102,13 @@ class MessagesController extends Controller
 
         //Guardamos con el metodo save
         $message->save();
+        */
+
+
+
+        //6.5.4 Almacenamiento con Eloquent segunda forma
+        
+
 
 
 
