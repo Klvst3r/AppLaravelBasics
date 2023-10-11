@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use DB;
 
+//**Se importa la clase para emplear ELOQUENT
+use App\Message;
+
 use Carbon\Carbon;
 
 use App\Http\Controllers\MessagesController;
@@ -20,9 +23,18 @@ class MessagesController extends Controller
         public function index()
         {
             //return "Listado de mensajes";
-            $messages = DB::table('messages')->get(); 
+            //
+            //Uso del Query Builder 6.4
+            /*$messages = DB::table('messages')->get(); 
 
             return view('messages.index', compact('messages'));
+            */
+           //6.5 uso de ELOQUENT
+            //$messages = DB::table('messages')->get(); 
+
+            $messages = Message::all();
+
+            return view('messages.index', compact('messages'));        
         }
 
     /**
