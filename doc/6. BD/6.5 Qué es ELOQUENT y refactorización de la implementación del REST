@@ -470,5 +470,14 @@ Por ultimo con el metodo save, guardamos el mensaje en la Bd
 
 Probamos, en la pagina del formulario de contactos, llenamos el formulario y antes de enviar debemos notar algo, del segmento de codigo anterior, ya que no se le estan pasando las fechas que se hacia con el Query Builder, con Eloquent no es necesario especificarlas, ya que son añadidas automaticamente.
 
-Probamos y verificamos que sigue funcionando.
+Probamos y verificamos que sigue funcionando, si se revisa en la base de datos se observa que los datos de las fechas fueron agregados correctamente
+	
+	Registro almacenado en la Base de datos
+	17 	Eloquent 	eloquent@laravel.com 	NULL 	Almacenemiento con Eloquent 1ra forma 	2023-10-11 04:44:25 	2023-10-11 04:44:25
+
+
+
+Min. 09'20
+
+
 
