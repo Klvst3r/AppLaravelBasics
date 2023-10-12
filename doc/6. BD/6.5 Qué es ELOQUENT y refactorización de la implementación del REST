@@ -492,3 +492,327 @@ Ahora vamos a utilizar el metodo create directamente el el modelo, y por paramet
             "mensaje" => $request->input('mensaje'),
 
         	]);
+
+O podemos pasarle todo el reuqest que viene del formulario de la siguiente forma:
+
+	Message::create($request->all());
+
+
+Pero esto no va a funcionar	aun, si intentamos guardar otro mensaje, se desplegara el siguiente error 
+
+	MassAssignmentException in Model.php : 	__token
+
+
+Esta es una protección que viene con Laravel por defecto y que nos protege de una posible asignación masiva de datos.
+
+
+
+Que significa Asignación Masiva de Datos	
+
+
+Cuando utilizamos el metodo create y tambien el metodo update pasamos un array:
+
+	Ej.
+		Message::create($request->all( ));
+
+Laravel lo que hace es utilizar las llaves de este array y buscar una columna en la tabla para asignarle el valor de la misma.
+
+
+Veamos como esta formado el array que estamos pasando:
+
+	hacemos un dump and die que permite inspeccionar la variable e inmediatamente terminar la petición.
+
+		dd()
+
+
+	dd($request->all());
+
+Es decir que cualquier linea de codigo que venga despues des esta funcion no se ejecutara.
+
+Ahora si reenviamos el formulario podemos ver el array que le estamos pasando al metodo  create. 
+
+		
+        //Opcion dos
+
+        dd($request->all());
+
+        Message::create($request->all());
+        
+
+Resultado:
+
+Podemos ver el array:
+
+	array:4 [▼ // app/Http/Controllers/MessagesController.php:123
+	  "_token" => "41iN0joxjtZ4TR4BJnaXVeJGndcoISxgXDbbG3rH"
+	  "nombre" => "Token"
+	  "email" => "token@segunda.forma"
+	  "mensaje" => "Se envia información en un array"
+	]
+
+
+Entonces lo que hace Eloquent es buscar en la tabla una columna con el nombre _token. 
+
+
+en la base de datos no existe un acolumna con el nombre _token
+
+
+	MariaDB [applaravel]> select * from messages;
++----+---------+---------------------+-------+--------------------------------------------------------------------+---------------------+---------------------+
+| id | nombre  | email               | phone | mensaje                                                            | created_at          | updated_at          |
++----+---------+---------------------+-------+--------------------------------------------------------------------+---------------------+---------------------+
+|  1 | Klvst3r | klvst3r@outlook.com | NULL  | Aqui esta el mensaje                                               | 2023-09-18 16:24:55 | 2023-09-18 16:24:55 |
+|  2 | Klvst3r | klvst3r@outlook.com | NULL  | Aqui esta el mensaje                                               | 2023-09-18 17:00:17 | 2023-09-18 17:00:17 |
+|  3 | Klvst3r | klvst3r@outlook.com | NULL  | Mensaje por redirección                                            | 2023-09-18 17:01:29 | 2023-09-18 17:01:29 |
+|  4 | Klvst3r | klvst3r@outlook.com | NULL  | Redirección a Index                                                | 2023-09-18 17:03:34 | 2023-09-18 17:03:34 |
+|  5 | Klvst3r | klvst3r@outlook.com | NULL  | Nueva redirección de listado de mensajes                           | 2023-09-18 17:15:12 | 2023-09-18 17:15:12 |
+|  6 | Klvst3r | klvst3r@outlook.com | NULL  | Envio con redirección a index                                      | 2023-09-18 17:19:26 | 2023-09-18 17:19:26 |
+|  7 | Klvst3r | klvst3r@outlook.com | NULL  | Envio con redirección a index                                      | 2023-09-18 17:19:34 | 2023-09-18 17:19:34 |
+|  8 | Klvst3r | klvst3r@outlook.com | NULL  | Envio con redirección a index                                      | 2023-09-18 17:21:30 | 2023-09-18 17:21:30 |
+|  9 | Klvst3r | klvst3r@outlook.com | NULL  | Envio con redirección a index                                      | 2023-09-18 17:25:48 | 2023-09-18 17:25:48 |
+| 10 | Klvst3r | klvst3r@outlook.com | NULL  | Mensaje para antes de redireccionar a index antes de la nueva ruta | 2023-09-18 18:05:33 | 2023-10-10 20:04:31 |
+| 13 | Kozlov  | kozlov@gmail.com    | NULL  | Aplicación con nueva ruta                                          | 2023-10-10 20:03:24 | 2023-10-10 20:03:24 |
++----+---------+---------------------+-------+--------------------------------------------------------------------+---------------------+---------------------+
+11 rows in set (0.000 sec)
+
+
+
+
+Lo que se hara antonces temporalmente es quitar el token del formulario:
+
+Eliminando de create.blade.php la siguiente linea 
+
+
+	 {!! csrf_field() !!} 
+
+Y deshabilitar la protección  CSRF para la ruta mensajes dentro del archivo VerifyCsrfToken.php
+
+En app/Http/middleware/VerifyCsrfToken.php
+
+
+		class VerifyCsrfToken extends Middleware
+{
+    /**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        
+        'mensajes'
+    ];
+}
+
+
+
+
+
+Ahora volvemos a llenar el formulario enviamos y verificamos nuevamente el array recibido.
+
+	array:3 [▼ // app/Http/Controllers/MessagesController.php:123
+	  "nombre" => "Token"
+	  "email" => "quitar@token.formulario"
+	  "mensaje" => "Se envia información en un array sin token"
+	]
+
+
+Ahora si tenemos solamente los tres campos que necesitamos (nombre, email y mensaje).Y aun asi si quitamos la siguiente linea, y se reenvia el mensaje
+
+	 dd($request->all());
+
+
+Vuelve a aparecer el error de MassAssignmentException de Error de asignación masiva, pero esta vez esta tratando de ingresar el nombre, en la BD, vemos que si tenemos una columna llamada nombre, 
+
+
+PHP 8.2.11
+10.14.1
+
+		Illuminate\Database\Eloquent\MassAssignmentException
+
+		Add [nombre] to fillable property to allow mass assignment on [App\Models\Message].
+
+
+
+Cual es el problema entonces. Eloquent necesita que seamos especificos con los datos que queremos asignar, vamos a asignar temporalmente esta protección para entender por que es importante que no permitamos la asignación masiva, escribimos en MessagesController
+
+Deshabilitamos la protección de asignación masiva
+
+	
+		Model::unguard(); 
+
+
+E importamos la clase model al principio del archivo.
+
+	use Illuminate\Database\Eloquent\Model;
+
+Con la linea que se agrego, estamos deshabilitando la protección de asignación masiva. Volviendo al navegador parece que ahora esta funcionando.
+
+Si podemos guardar los datos correctamente, cual es el problema con la asignación masiva, en la gran mayoria de los casos, en las tablas utilizamos identificadores unicos, autoincrementables. Que se añaden automaticamente cuando ingresamos datos, por regla general no debemos permitir que nadie, agregue o cambie este identificador, ya que puede causar mucho desorden, en nuestra aplicación. Sin embrago, cualquier usuario mal intencinado pudiera  manipular el formulario y agregar un campo de id directamente en el navegador y al no estar protegido contra esta asignación masiva, el usuario malintencionado lograra su cometido, para demostrar esto; inspeccionamos los elementos del formulario en el navegador. Buscamos cualquier fragmento dentro del formulario y hacemos click en editar HTML dupliao y cambiamos el label y el nombre del input quedando:
+
+	
+Editar como HTML
+
+---
+	<p><label for="id">
+		Id
+		<input type="text" name="id" value="">
+		
+	</label></p>
+    <p><label for="nombre">
+		Nombre
+		<input type="text" name="nombre" value="">
+		
+	</label></p>
+---	
+
+
+Luego llenamos el formulario, y trataremos de que el mensaje se agregue en la base de datos con un id igual a 3, al enviar vemos que efectivamente el nuevo campo tine un identificador numero 3, esto se torna aun más peligroso, cuando actualizamos datos de la base de datos, ya que facimente podriamos cambiar el identificador del mensaje y hacerlo pasar por otro mensahe, incluso Si agregamos el campo "phone" y lleamos el formulario, Al enviar vemos que  tambien lo agrega.
+
+
+Definitivamente no queremos esto, estamos permitiendo que se agreguen campos adicionales a los que definimos en el formulario, sin nuestra autorización. Imaginamos que el campo phone sea para varificar si un usuario es administrador del sitio. Seria un error fatal permitir que el usuario lo cambie, por lo tanto  para termiunar el tema de la asignación masiva.
+
+
+En el modelo Message.php debemos agregar una propiedad llamada $fillable con un array de los campos que permitiremos al usuario masivamente, en este caso solo caso solo queremos que el usuario solo ingresar masivamente, en este caso queremos que el usuario ingrese el nombre, el email y el mensaje.
+
+Message.php
+
+	<?php
+
+	namespace App\Models;
+
+	use Illuminate\Database\Eloquent\Factories\HasFactory;
+	use Illuminate\Database\Eloquent\Model;
+
+	class Message extends Model
+	{
+	    use HasFactory;
+
+	    //messages
+	    protected $fillable = ['nombre','email','mensaje'];
+
+	}
+
+
+
+No permitiremos que envien mas que esto, 
+
+	
+
+Entonces auitamos la siguiente linea en MessagesController.php
+
+	        //Model::unguard();
+
+Para volver a tener la protección, agregamos un campo id	        
+
+
+---
+	<p><label for="id">
+		Id
+		<input type="text" name="id" value="">
+		
+	</label></p>
+    <p><label for="nombre">
+		Nombre
+		<input type="text" name="nombre" value="">
+		
+	</label></p>
+---	
+
+
+Agregamos un campo phone
+
+
+---
+	<form method="POST" action=" http://localhost:8000/mensajes">
+
+	 <!-- <input type="hidden" name="_token" value="41iN0joxjtZ4TR4BJnaXVeJGndcoISxgXDbbG3rH"> -->
+	
+
+<!-- 	 <input type="hidden" name="_token" value="41iN0joxjtZ4TR4BJnaXVeJGndcoISxgXDbbG3rH"> -->
+
+
+	 <!-- <input type="hidden" name="_token" value="41iN0joxjtZ4TR4BJnaXVeJGndcoISxgXDbbG3rH">  -->
+
+
+	  
+
+	<p><label for="id">
+		Id
+		<input type="text" name="id" value="">
+		
+	</label></p>
+ <p><label for="phone">
+		Phone
+		<input type="text" name="phone" value="">
+		
+	</label></p>
+    <p><label for="nombre">
+		Nombre
+		<input type="text" name="nombre" value="">
+		
+	</label></p>
+	
+	<p><label for="email">
+		Email
+		<input type="text" name="email" value="">
+		
+	</label></p>
+	
+	<p><label for="mensaje">
+		Mensaje
+		<textarea name="mensaje"></textarea>
+		
+
+	</label></p>
+	
+	<input type="submit" value="Enviar">
+
+</form>
+
+---
+
+Llenamos el formulario, enviamos y  verificamos en la base de datos y que aunque enviamos el id y phone por el formulario Eloquent los ha ingnorado y solo ha guardado el nombre, el email y el mensaje. Que fueron los que se definieron en la propiedad $filable.
+
+Esta es la razon por lq que Laravel nos protege automaticamente de este problema de asignación masiva de datos.
+
+
+ select * from messages;
++----+-------------+-------------------------+-------+----------------------------------------------+---------------------+---------------------+
+| id | nombre      | email                   | phone | mensaje                                      | created_at          | updated_at          |
++----+-------------+-------------------------+-------+----------------------------------------------+---------------------+---------------------+
+|  1 | Klvst3r     | klvst3r@outlook.com     | NULL  | Aqui esta el mensaje                         | 2023-09-18 16:24:55 | 2023-09-18 16:24:55 |
+|  2 | Klvst3r     | klvst3r@outlook.com     | NULL  | Aqui esta el mensaje                         | 2023-09-18 17:00:17 | 2023-09-18 17:00:17 |
+|  3 | Klvst3r     | klvst3r@outlook.com     | NULL  | Mensaje por redirección                      | 2023-09-18 17:01:29 | 2023-09-18 17:01:29 |
+|  4 | Klvst3r     | klvst3r@outlook.com     | NULL  | Redirección a Index                          | 2023-09-18 17:03:34 | 2023-09-18 17:03:34 |
+|  5 | Klvst3r     | klvst3r@outlook.com     | NULL  | Nueva redirección de listado de mensajes     | 2023-09-18 17:15:12 | 2023-09-18 17:15:12 |
+|  6 | Klvst3r     | klvst3r@outlook.com     | NULL  | Envio con redirección a index                | 2023-09-18 17:19:26 | 2023-09-18 17:19:26 |
+|  7 | Klvst3r     | klvst3r@outlook.com     | NULL  | Envio con redirección a index                | 2023-09-18 17:19:34 | 2023-09-18 17:19:34 |
+|  8 | Klvst3r     | klvst3r@outlook.com     | NULL  | Envio con redirección a index                | 2023-09-18 17:21:30 | 2023-09-18 17:21:30 |
+|  9 | Klvst3r     | klvst3r@outlook.com     | NULL  | Envio con redirección a index                | 2023-09-18 17:25:48 | 2023-09-18 17:25:48 |
+| 10 | Klvst3r     | klvst3r@outlook.com     | NULL  | Redireccionar a index antes de la nueva ruta | 2023-09-18 18:05:33 | 2023-10-12 21:10:50 |
+| 13 | Kozlov      | kozlov@gmail.com        | NULL  | Aplicación con nueva ruta                    | 2023-10-10 20:03:24 | 2023-10-10 20:03:24 |
+| 14 | Asignación  | asignacion@masiva.datos | NULL  | Asignación masiva de datos                   | 2023-10-12 21:08:53 | 2023-10-12 21:08:53 |
++----+-------------+-------------------------+-------+----------------------------------------------+---------------------+---------------------+
+12 rows in set (0.000 sec)
+
+
+
+
+Ahora podemos ya no utilizar todas las lineas comentadas, en mi caso se quedan para el seguimiendo y documentación del codigo.
+
+El mathodo ahora queda con apenas dos lineas de codigo en nuestro Message Controller
+
+
+---
+	public function store(Request $request)
+    {
+
+    	Message::create($request->all());
+    
+
+        return redirect()->route('mensajes.index');
+
+        
+    }
+
+---    

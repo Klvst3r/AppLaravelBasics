@@ -14,6 +14,9 @@ use Carbon\Carbon;
 use App\Http\Controllers\MessagesController;
 
 
+use Illuminate\Database\Eloquent\Model;
+
+
 
 class MessagesController extends Controller
 {
@@ -119,6 +122,11 @@ class MessagesController extends Controller
 
 
         //Opcion dos
+
+        //dd($request->all());
+
+        //Model::unguard();
+
         Message::create($request->all());
         
 
