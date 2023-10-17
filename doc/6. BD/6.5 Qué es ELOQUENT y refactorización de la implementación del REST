@@ -816,3 +816,101 @@ El mathodo ahora queda con apenas dos lineas de codigo en nuestro Message Contro
     }
 
 ---    
+
+
+
+Metodo Show
+-----------
+
+
+
+Ahora escribimos la variables y sera igual al modelo Message con el metodo fine que por parametro recibe el id
+
+	$message = Message::find($id);
+
+Esto es todo lo que tenemos que hacer
+
+Se comenta la linea anterior y queda:
+
+	//6.5 Mostrar Mensajes con Eloquent
+
+        $message = Message::find($id);
+
+        return view('messages.show', compact('message'));
+
+En el navegador ahora hacemos click sobre uno de los mensajes para ver el detalle del mismo, vemos que funciona.
+
+
+Que pasa si trato encontrar un mensaje con un identificador que no existe, por ejemplo en la url utilizamos
+
+	http://localhost:8000/mensajes/2288
+
+Accedemos y veremos el siguiente error:
+
+
+	ErrorException
+
+	Trying to get property of non-object (View:  .../laravel/resources/views/messages/show.blade.php)	
+
+	Attempt to read property "nombre" on null
+
+	Illuminate\Foundation\Bootstrap\HandleExceptions:8 handleError
+
+
+Me dice que esta tratando de acceder a una propiedad que no es un objeto. Si vamos al metodo show, podemos ver que estamos tratando de acceder a
+
+
+	@extends('layout')
+
+	@section('contenido')
+
+	<h1>Mensaje</h1>
+
+	<p>Enviado por {{ $message->nombre }} - {{ $message->email }}</p>
+
+	<p>{{ $message->mensaje }}</p>
+	
+	@stop
+
+En esta linea:
+
+	<p>Enviado por {{ $message->nombre }} - {{ $message->email }}</p>
+
+
+Veremos que estamos tratando de acceder a la propiedad nombre, pero como no encontro ningun mensaje, con ese Id esta variable estaria NULL, y es como si estuvieramos haciendo lo siguiente:
+
+	<p>Enviado por {{ null->nombre }} - {{ $message->email }}</p>	
+
+Estariamos accediendo a una propiedad que no es un objeto. Pero entonces como hacemos para evitar esto.
+
+
+Hay algunas formas recomendando la más sencilla, y que se utilizan comuinmente que es utilizando el metodo:
+
+	findOrFail()
+
+Encuantra o falla, si actualiza la pagina lo que hace es enviar dos errores:
+
+	$message = Message::findOrFail($id);
+
+
+Ahora no enviara un error 404 Pagina no encontrada.
+
+	Sorry, the page you are looking for could not be found
+
+	Not foundHttpException in Handler 
+	
+	No query results for model [App\Message]
+
+Y como segundo error es del modelo no encontrado:
+
+	ModelNotFoundException in Builder.php
+
+
+Si se abre un pestaña, 
+
+
+
+16:40
+
+
+

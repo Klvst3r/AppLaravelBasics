@@ -146,10 +146,18 @@ class MessagesController extends Controller
     public function show(string $id)
     {
         //return "Este es el mensaje con el id " . $id;
+        //&.4 Mostrar mensajes con el query Builder
+        /*
         $message = DB::table('messages')->where('id', $id)->first(); 
 
         return view('messages.show', compact('message'));
+        */
 
+        //6.5 Mostrar Mensajes con Eloquent
+
+        $message = Message::findOrFail($id);
+
+        return view('messages.show', compact('message'));
 
     }
 
