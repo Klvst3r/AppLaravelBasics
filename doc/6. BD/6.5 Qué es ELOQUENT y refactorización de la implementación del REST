@@ -906,11 +906,73 @@ Y como segundo error es del modelo no encontrado:
 	ModelNotFoundException in Builder.php
 
 
-Si se abre un pestaña, 
+Si se abre un pestaña network, veremos el estatus code es 404, de esta forma podemos personalizar el error que mostramos al usuario final, 
+
+Asi en MessageController.php
+
+
+Simplemente creando una vista dentro de la carpeta
+/resources/views/errors 
 
 
 
-16:40
+New File
+	Con estatus Code en el nombre, en nuestro caso
+		404.blade.php
+
+Agregamos un poco de HTML
+
+---
+
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Error</title>
+	</head>
+	<body>
+		<h1>No pudimos encontrar esta página</h1>
+		<a href="{{ route('home') }}">Regresar al home</a>
+	</body>
+	</html>
+---
+
+Si actualizamos nuevamente 
+
+En la salida HTMl nos genera algo como:
+
+	http://127.0.0.1:8000/mensajes/2288
+	---	
+
+	No pudimos encontrar esta página
+		>>Regresar al home<<
+
+
+Funcionando todo correctamente
+
+Efectivamente vemos esta vista con el HTML personalizado, con el link para regresar al home, por eso es util este metodo
+
+	findOrFail()
+
+Ya que si solo usamos find, el error es más dificil de capturar, quedando entonces en el Metodo controler en el metdodo show:
+
+---
+
+	    public function show(string $id)
+    {
+       
+        $message = Message::findOrFail($id);
+
+        return view('messages.show', compact('message'));
+     }
+
+
+
+
+     
+
+
 
 
 
