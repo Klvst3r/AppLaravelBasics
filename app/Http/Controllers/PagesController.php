@@ -32,14 +32,17 @@
         }
 
 
-        public function contact()
+        //Limpiado condigo en el tema 7.1 ya no se utilizan mas estos metodos
+        /*public function contact()
         {
 
             return view('contactos');
-        }
+        }*/
 
-        public function mensajes(\App\Http\Requests\CreateMessageRequest $request)
-        {
+
+        /*Tambien ya no se esta utilizando el siguiente metodo en el tema 7.1*/
+        /*public function mensajes(\App\Http\Requests\CreateMessageRequest $request)
+        {*/
             
             //return 'Procesando el mensaje';
                         
@@ -69,8 +72,10 @@
 
             //5.3. Manejo de responses
 
+
+            /* Se elimina la siguiente linea en el tema 7.1
             $data = $request->all();
-            
+            */
             //Primer response de prueba
             /*return response()->json(['data' => $data], 202)
             -> header('TOKEN', 'secret');*/
@@ -87,11 +92,13 @@
                 ->with('info', 'Tu mensaje ha sido enviado correctamente :)');*/
 
            //Helper back
+
+               /* Ultima parte del tema 7.1 eliminando seccion del metodo 
              return back()
                 ->with('info', 'Tu mensaje ha sido enviado correctamente :)');
 
 
-        }
+        }*/
 
         public function saludo($nombre = "Invitado...")
         {

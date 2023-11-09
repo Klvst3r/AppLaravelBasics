@@ -49,12 +49,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home'])->middleware('example');
 
-
-Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
+//Limpieza de las rutas en el tema 7.1 Auth de usuarios
+//Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
 
 
 //Procesamiento del formulario
-Route::post('contacto', 'PagesController@mensajes');
+//Route::post('contacto', 'PagesController@mensajes');//Esta linea se encuenytra duplicada
 
 Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre', "[A-Za-z1-9]+");
 

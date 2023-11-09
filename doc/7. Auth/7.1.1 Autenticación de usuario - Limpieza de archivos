@@ -1,0 +1,166 @@
+7.1. Autenticación de usuario
+
+En la sección anterior se reviso como utilizar lo basico de eloquent, en esta sección vamos a ver como ucultar esta sección, (listado de mensajes), para que solo los usuarios autorizados puedan verla.
+
+antes que nada vamos a limpiar el archivo web.php.  
+
+Hay dos ruta de mas ya que contactame se dirige a  
+		
+		Route::get('contactame', ['as' => 'contactos', 'uses' => 'PagesController@contact']);
+
+
+
+La que se encuenyra repetida en mesageController es la siguiente
+
+		Route::post('contacto', 'PagesController@mensajes');
+
+Quedando finalmente las rutas:
+
+---
+	Route::get("/", ['as' => 'home', 'uses' => 'PagesController@home'])->middleware('example');
+
+
+	Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@saludo'])->where('nombre', "[A-Za-z1-9]+");
+
+
+	Route::resource('mensajes','MessagesController');
+
+---
+
+Ahora en el controlador PagesController.php, vamos a eliminar los dos metodos
+
+Elimnando:
+
+---
+	public function contact(){
+	...
+	}
+
+	y el sifguiente metodo
+
+	public function mensajes(\App\Http\Requests\CreateMessageRequest $request)
+        {
+        ...
+        }
+---
+
+
+
+ahora si, primero vamos a revisar dos archivos que vienen con Laravel que utilizaremos para la autenticación de usuarios.
+
+Lo primero es la migración de la tabla de usuarios que viene 
+
+	2014_10_12_000000_create_users_table.php
+
+Vemos que se crea el esquema de la tabla usuarios con un identificador incremental único, una columna de tipo barcher para el nombre del usuario, otra columna de tipo barcher para el email del usuario con llave única para que no puedan existir 2 usuarios con el mismo email. Y otro va a echar para la contraseña. Aquí tenemos un remember talking que es simplemente un barcher con un máximo de 100 caracteres y que puede ser nulo. Este campo es importante para la autenticación y sirve para recordar la sesión si el usuario así lo desea. Y, por supuesto, están los timestamps para guardar la fecha de creación y modificación del usuario.
+
+---
+	
+	Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+	
+---
+
+En una de las secciones anteriores cuando se ejecutaba 
+
+	php artisan migrate 
+
+Esta migración de usuario también se ejecutó.
+
+
+El segundo archivo que vamos a revisar es el AuthController, que se encuentra en la carpeta APP/HTTP/controllers/Auth.
+
+
+Este archivo viene con unos trades que nos facilitan la labor para autenticar y registrar usuarios. Así que vamos a utilizarlo, abrimos el archivo de rutas (web.php) y vamos a definir una ruta para hacer login 
+
+
+	Route::get('login', 'Auth\AuthController@showLoginForm');
+
+
+
+
+De tipo get. La URI va a ser login y el controlador of controller con el método show login form. Este método no está definido directamente en este controlador. 
+
+
+
+Sin embargo, tenemos acceso a este método gracias a este trade que está aquí, 
+
+	Authcontroller.php
+
+
+
+
+que si lo revisamos, vemos que a su vez importa 2 Trades. 
+
+	AuthenticatesUsers, RegistersUsers
+
+
+Uno para manejar el login de usuarios y otro para registrar usuarios. Vamos a revisar el del Login. Si bajamos un poco. Podemos ver el método 
+
+
+showLoggingForm, que es el que estamos utilizando. 
+
+
+
+
+Lo que hace este método es verificar si existe una propiedad en el controlador llamada Log Inview. Si esta propiedad existe, va a asignar el valor de esa propiedad en AuthController.php. 
+
+
+
+Es decir, que si creamos esta propiedad. Y le ponemos el nombre de la. Login, por ejemplo. En este punto, la variable view va a ser igual al login. 
+
+Si no está definida esta propiedad va a utilizar el valor por defecto authauthenticate en cualquiera de los 2 casos va a verificar si esta vista existe. En este caso va a revisar si la. Login existe. Vemos que no tenemos ninguna vista auth.login. Y por eso esta condición devolverá falso, lo que significa que finalmente me regresará esta vista de aquí of punto login 
+
+
+Vamos al navegador y si vamos a la ruta login me dice que no encuentra la vista. Os punto login. Aunque esté definiendo esta propiedad, no se la está utilizando porque la vista no existe y trata de utilizar la vista por defecto que es Authlogin, pero si creamos una vista llamada login y le damos el título para reconocerla, actualizamos y efectivamente vemos que me ha cargado la ruta correctamente. Vamos a eliminar esta vista y vamos a utilizar los valores por defecto. 
+
+Devolvemos esta clase a su estado original, ya que esta clase es del framework. Y por regla general, no deberíamos modificar estos archivos, ya que forman parte del código fuente de Laravel y se borrarían al momento de hacer una actualización del mismo. 
+
+
+
+~Code/laravel/app/Controllers/Auth/AuthController.php
+
+
+Sin embargo, este controlador sí es parte de nuestra aplicación, así que podemos modificarlo a nuestra conveniencia. ¿Entonces vamos a crear una vista 
+
+
+auth.login
+
+
+ En la carpeta
+
+  resources/views/auth
+
+Creamos una carpeta llamada Auth y la vista se va a llamar 
+
+	resources/views/auth/auth.blade.php
+
+
+Extendemos a la plantilla base y en la sección contenido le damos un título. 
+
+---
+	@extends('layout')
+
+
+	@section('contenido')
+		<h1>Login</h1>
+
+
+	@stop
+
+---
+
+
+
+Revisamos en el navegador listo, 
+
+	05'19
+
+Ahora vamos a crear el formulario. Abrimos la etiqueta dentro escribimos el input de tipo email con nombre email y le damos un placeholder con el valor email. Duplicamos esta línea y cambiamos a password. Si revisamos aquí tenemos los 2 campos, vamos a darle un poco de espacio aquí debajo y también vamos a necesitar un. Input de tipo submit. Y el valor será entrar. Entonces este formulario va a enviar los datos por el método post y la acción será la misma orden de login, pero. El tipo post entonces vamos a crear esta ruta routs post Login y el controlador será el mismo.
