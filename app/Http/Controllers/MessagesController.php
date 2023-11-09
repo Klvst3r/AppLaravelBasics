@@ -178,13 +178,19 @@ class MessagesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //Actualizar
+        /*//Actualizar
         DB::table('messages')->where('id', $id)->update([
             "nombre" => $request->input('nombre'),
             "email" => $request->input('email'),
             "mensaje" => $request->input('mensaje'),
             "updated_at" => Carbon::now(), 
         ]);
+*/
+        //6.5.6 actualizar
+        $message = Message::findOrFail($id);
+
+        $message->update($request->all());
+
         //Redireccionar
         return redirect()->route('mensajes.index');
     }

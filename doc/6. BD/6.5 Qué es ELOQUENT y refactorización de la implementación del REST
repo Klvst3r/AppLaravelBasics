@@ -997,3 +997,71 @@ Vamos al navegador y en el listado de mensajes hacemos click sobre el enlace de 
 
 
 
+Metodo Update
+------------
+
+
+En el metodo Update debemos realizar dos acciones:
+
+- La primera es encontrar el mensaje con el Id que recibimos com oparametro.
+
+- La segunda es actualizazrlo
+
+Para encontrar el mensaje volvemos a copiar la linea:
+
+	$message = Message::findOrFail($id);
+
+Quedando:
+
+	---
+
+		   public function update(Request $request, string $id)
+    {
+        //Actualizar
+        DB::table('messages')->where('id', $id)->update([
+            "nombre" => $request->input('nombre'),
+            "email" => $request->input('email'),
+            "mensaje" => $request->input('mensaje'),
+            "updated_at" => Carbon::now(), 
+        ]);
+
+   
+        $message = Message::findOrFail($id);
+
+        //Redireccionar
+        return redirect()->route('mensajes.index');
+    }
+	---	
+
+Ahora para actualizar llamamos al metodo update y le pasamos el Request de la misma forma que hicimos en el metodo create, comentando las lineas anteriores:
+
+---
+	  public function update(Request $request, string $id)
+    {
+       
+        $message = Message::findOrFail($id);
+
+        $message->update($request->all());
+
+        //Redireccionar
+        return redirect()->route('mensajes.index');
+    }
+---	
+
+Probamos y verificamos que sigue funcionando.
+
+
+Incluso se podrian hacer ambas acciones en una sola linea de la siguiente forma.
+
+---
+	  public function update(Request $request, string $id)
+    {
+       
+        $message = Message::findOrFail($id);
+
+        $message->update($request->all());
+
+        //Redireccionar
+        return redirect()->route('mensajes.index');
+    }
+---	
