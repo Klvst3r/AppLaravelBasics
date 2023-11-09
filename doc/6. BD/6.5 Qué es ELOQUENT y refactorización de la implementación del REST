@@ -1057,11 +1057,80 @@ Incluso se podrian hacer ambas acciones en una sola linea de la siguiente forma.
 	  public function update(Request $request, string $id)
     {
        
-        $message = Message::findOrFail($id);
-
-        $message->update($request->all());
+        Message::findOrFail($id)->update($request->all());
 
         //Redireccionar
         return redirect()->route('mensajes.index');
     }
 ---	
+
+Revisamos en el navegador.
+
+Cabe recalcar que estamos protegidos contra la asignación masiva, y estamos actualizando los campos que se definen en elModelo Message.php
+
+---
+	class Message extends Model
+	{
+	    use HasFactory;
+
+	    //messages
+	    protected $fillable = ['nombre','email','mensaje'];
+
+	}
+
+--
+
+
+Metodo Destroy
+---------------
+
+Por ultimo tenemos el metodo destroy que es similar al metodo update, asi que vamos a copiarlo.
+
+---
+	public function destroy(string $id)
+    {
+               
+        //6.5. Metodo destroy con Eloquent
+        Message::findOrFail($id)->delete();
+        
+
+        //Redireccionamos a la ruta mensajes.index.
+        return redirect()->route('mensajes.index');
+        
+    }
+
+---
+
+Don de primero buscamos el mensaje con el id mediante el metodo findOrFail($id), y si no lo encunetra marca el error 404 No Found y si lo encuentra llama al metodo delete
+
+Vamos al listado de los mensajes y hacemos click en el botod de eliminar y vemos si sigue funcionando como antes, pero ahora utilizando Eloquent y nuestro controlador esta funcionando mucho mas limpio que antes.
+
+Antes de finalizar esta sección vamos al archivo 
+
+VerifyCsrfToken.php
+
+Para habilitar la protección CSRF, quitamos la ruta del midleware y en el formulario  
+
+--
+	class VerifyCsrfToken extends Middleware
+{
+    /**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+       
+    ];
+}
+--
+
+Y en el formulario agregamos nuevamente el campo CSRF
+
+create.blae.php
+
+	{!! csrf_field() !!} 
+
+
+Por lo general el usuario normal que accede a nuestro sitio no deberia tener a nuestra lista de mensajes, solo deberia poder enviar mensajes, en la siguiente sección veremos como proteger estas rutas; para que solo los usuarios registrados puedan acceder con su email y contraseña.
+

@@ -187,9 +187,15 @@ class MessagesController extends Controller
         ]);
 */
         //6.5.6 actualizar
-        $message = Message::findOrFail($id);
+        
+        //Primera forma del Update con Eloquent
+        /*$message = Message::findOrFail($id);
 
         $message->update($request->all());
+        */
+       
+       //Segnda forma de Update con Eloquent dos acciones al mismo tiempo
+        Message::findOrFail($id)->update($request->all());
 
         //Redireccionar
         return redirect()->route('mensajes.index');
@@ -201,7 +207,11 @@ class MessagesController extends Controller
     public function destroy(string $id)
     {
         //return "Eliminando el mensaje con el id " . $id;
-        DB::table('messages')->where('id', $id)->delete();
+        //DB::table('messages')->where('id', $id)->delete();
+        
+        //6.5. Metodo destroy con Eloquent
+        Message::findOrFail($id)->delete();
+        
 
         //Redireccionamos a la ruta mensajes.index.
         return redirect()->route('mensajes.index');
