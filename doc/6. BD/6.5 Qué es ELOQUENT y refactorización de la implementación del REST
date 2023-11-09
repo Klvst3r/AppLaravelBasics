@@ -972,6 +972,27 @@ Ya que si solo usamos find, el error es más dificil de capturar, quedando enton
 
      
 
+Metodo Edit
+-------------
+
+en el metodo edit, hacemos la misma consulta que teniamos en el metodo show, copiamos y eliminamos la de arriba, quedando en
+
+MessagesController
+
+---
+	public function edit(string $id)
+    {
+     
+         $message = Message::findOrFail($id);
+
+        return view('messages.edit', compact('message'));
+    }
+
+---
+
+
+
+Vamos al navegador y en el listado de mensajes hacemos click sobre el enlace de etición y listo sigue funcionando.
 
 
 

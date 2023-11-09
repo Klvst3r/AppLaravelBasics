@@ -166,7 +166,9 @@ class MessagesController extends Controller
      */
     public function edit(string $id)
     {
-        $message = DB::table('messages')->where('id', $id)->first(); 
+        //$message = DB::table('messages')->where('id', $id)->first(); 
+        //6.5. Metodo edit
+         $message = Message::findOrFail($id);
 
         return view('messages.edit', compact('message'));
     }
