@@ -99,6 +99,26 @@ Sin embargo, tenemos acceso a este método gracias a este trade que está aquí,
 
 que si lo revisamos, vemos que a su vez importa 2 Trades. 
 
+
+AutenticatesUsers
+---
+	<?php
+
+	namespace Illuminate\Fundation\Auth;
+
+	trait AuthenticatesAndRegistersUsers
+	{
+
+		use AuthenticatesUsers, RegistersUsers {
+			AuthenticatesUsers::redirectPath insteadof RegisterUsers;
+
+			AuthenticatesUsers::getGuard insteadof RegistersUsers;
+		}
+	}
+
+---
+
+
 	AuthenticatesUsers, RegistersUsers
 
 
@@ -113,19 +133,39 @@ showLoggingForm, que es el que estamos utilizando.
 Lo que hace este método es verificar si existe una propiedad en el controlador llamada Log Inview. Si esta propiedad existe, va a asignar el valor de esa propiedad en AuthController.php. 
 
 
+---
+public function showLoginForm()
+{
+	$view = property_exist($this,'loginView')
+				? $this->loginView : 'auth.authenticate';
+
+	if(view()->exists($view)) {
+		return view($view);
+	}
+
+	return view('auth.login');
+
+}
+
+---
+
 
 Es decir, que si creamos esta propiedad. Y le ponemos el nombre de la. Login, por ejemplo. En este punto, la variable view va a ser igual al login. 
 
-Si no está definida esta propiedad va a utilizar el valor por defecto authauthenticate en cualquiera de los 2 casos va a verificar si esta vista existe. En este caso va a revisar si la. Login existe. Vemos que no tenemos ninguna vista auth.login. Y por eso esta condición devolverá falso, lo que significa que finalmente me regresará esta vista de aquí of punto login 
+Si no está definida esta propiedad va a utilizar el valor por defecto authauthenticate en cualquiera de los 2 casos va a verificar si esta vista existe. En este caso va a revisar si la. Login existe. Vemos que no tenemos ninguna vista auth.login. Y por eso esta condición devolverá falso, lo que significa que finalmente me regresará esta vista de aquí auth.login 
+
+El codigo esta en el archivo del codigo fuente de laravel:
+
+	~laravel/vender/laravel/framework/src/Illuminate/Foundation/auth/AuthenticatesUsers.php
 
 
-Vamos al navegador y si vamos a la ruta login me dice que no encuentra la vista. Os punto login. Aunque esté definiendo esta propiedad, no se la está utilizando porque la vista no existe y trata de utilizar la vista por defecto que es Authlogin, pero si creamos una vista llamada login y le damos el título para reconocerla, actualizamos y efectivamente vemos que me ha cargado la ruta correctamente. Vamos a eliminar esta vista y vamos a utilizar los valores por defecto. 
+Vamos al navegador y si vamos a la ruta login me dice que no encuentra la vista auth.login. Aunque esté definiendo esta propiedad, no se la está utilizando porque la vista no existe y trata de utilizar la vista por defecto que es Authlogin, pero si creamos una vista llamada login y le damos el título para reconocerla, actualizamos y efectivamente vemos que me ha cargado la ruta correctamente. Vamos a eliminar esta vista y vamos a utilizar los valores por defecto. 
 
 Devolvemos esta clase a su estado original, ya que esta clase es del framework. Y por regla general, no deberíamos modificar estos archivos, ya que forman parte del código fuente de Laravel y se borrarían al momento de hacer una actualización del mismo. 
 
 
-
-~Code/laravel/app/Controllers/Auth/AuthController.php
+El siguiente archivo si podemos modificarloa  nuestra conveniencia.
+	~Code/laravel/app/Controllers/Auth/AuthController.php
 
 
 Sin embargo, este controlador sí es parte de nuestra aplicación, así que podemos modificarlo a nuestra conveniencia. ¿Entonces vamos a crear una vista 
@@ -142,6 +182,7 @@ Creamos una carpeta llamada Auth y la vista se va a llamar
 
 	resources/views/auth/auth.blade.php
 
+--REVIEWED
 
 Extendemos a la plantilla base y en la sección contenido le damos un título. 
 

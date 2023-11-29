@@ -33,8 +33,13 @@
 			
 			<a class="{{ activeMenu('saludos/*') }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
 			
-			<!-- <a class="{{ activeMenu('contactame') }}" href="{{ route('contactos') }}">Contactos</a> -->
-			<!-- <a class="{{ activeMenu('contactame') }}" href="{{ route('mensajes.create') }}">Contactos</a> -->
+			<?php
+			/*
+			 <a class="{{ activeMenu('contactame') }}" href="{{ route('contactos') }}">Contactos</a> 
+			 <a class="{{ activeMenu('contactame') }}" href="{{ route('mensajes.create') }}">Contactos</a> 
+			*/
+			 ?>
+
 			<a class="{{ activeMenu('mensajes/create') }}" href="{{ route('mensajes.create') }}">Contactos</a>
 			<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
 		</nav>
