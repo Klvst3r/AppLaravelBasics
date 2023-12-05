@@ -62,6 +62,9 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 Route::resource('mensajes','MessagesController');
 
+/* authenticación - Login*/
+Route::get('login', 'Auth\AuthController@showLoginForm')
+
 /* 6.5
 //6.4. Redirección a los mensajes a index y regresando todos los mensajes
 Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
