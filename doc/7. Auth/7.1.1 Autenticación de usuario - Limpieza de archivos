@@ -483,7 +483,7 @@ layout.blade.php
 
 			<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
 
-			<a href="/logout">Cerrar sesión de {{  auth()->user() ->email}} </a>
+			<a href="/logout">Cerrar sesión de {{  auth()->user()->email }} </a>
 
 
 			@if(auth()->guess())
@@ -497,4 +497,299 @@ layout.blade.php
 
 
 
- Y tal vez podemos ponerle cerrar sesión de y para obtener el usuario autenticado. Actualmente utilizamos od user que nos devuelve un objeto usuario y a través de él accedemos al email, actualizamos el navegador y podemos ver el email del usuario autenticado. Podemos utilizar el nombre también si queremos. Perfecto, ahora vamos a implementar el Logout si revisamos nuevamente el trade authenticates user, también tenemos un método llamado logout, lo que hace es cerrar la sesión y redireccionar a esta ruta, pero si queremos modificar la u. Redirección. Podemos agregar al controlador una propiedad llamada redirect after logout. Redirecciona después de cerrar sesión, OK, entonces lo único que debemos hacer es crear una ruta de tipo get con la URL logout y que ejecute el controlador os controller con el método logout, que es este de aquí y luego de cerrar la sesión, me redireccionará al home. Vamos a probarlo, le doy Clic en cerrar sesión y me aparece este error, trend to get up property of non upjed. Tratando de acceder a una propiedad de un no objeto. Lo que sucede es que una vez que hemos cerrado sesión. Esto deja de devolver un objeto usuario porque ya no hay un usuario autenticado. Por eso me dice que estamos tratando de acceder a. Propiedad en. Este caso, la propiedad name de algo que no es un objeto. Entonces para solucionarlo hacemos otra verificación, esta vez utilizando la función check que me devuelve verdadero si existe un usuario autenticado actualmente en caso de ser verdadero, mostramos el link lock out, actualizamos y listo si hago lo mismo nuevamente. Vemos el link de logout y el login desaparece perfecto. Ahora creo que inmediatamente después de hacer login me redireccione a esta página de mensajes. Lo único que tengo que hacer en el controlador es actualizar esta propiedad con la URL que queremos, en este caso mensajes. Vamos a probarlo. Cerramos sesión, volvemos a ingresar. Y vemos que nos lleva a la URL mensajes. Ahora a manera de ejemplo, supongamos que queremos que al hacer logout me redireccione a la URL. Para ello debemos añadir esta propiedad protected redirect after logout. Y el valor será en nuestro caso, saludos. Si accedemos. Luego de cerrar la sesión, me redireccionará a la URL, saludo. ¿Vemos que no me está activando el link de saludos, vamos a revisar por qué? ¿Aquí vemos que tenemos un slash, debemos quitarlo para que funcione? Ahora si actualizamos y listo. Entonces ya hemos implementado el locking y logout, pero aún no hemos protegido la ruta mensajes que es nuestro objetivo principal. Lo primero que haremos será mostrar este link solo si estamos autenticados actualizamos y efectivamente ya no vemos el link mensajes. Pero si accedemos ahora sí me aparece. Sin embargo, si no estamos autenticados aún podemos acceder a esta URL si le ingresamos directamente en el navegador. Para solucionarlo vamos a utilizar un middleware que viene con Laravel vamos a cerrar estos archivos. Y en el Message Controller es donde vamos a agregar este buyerward. ¿Vemos que hace algo parecido a lo que hicimos en el menú, me dice que si es un invitado y si es una petición AJAX devuelva una respuesta con un mensaje de no autorizado y si la petición no es AJAX, Qué me redireccione al login? En el caso de que el usuario no sea un invitado, es decir, que existe autenticado me deja continuar con la petición. Entonces aquí en el kernel, como vimos en la lección de Middlewords, es donde se registran los middlewords en los rock middlewords vemos que se le asigna la llave of al middleware que. De revisar. Entonces para utilizarlo, abrimos nuevamente el Messages Controller y Agregamos un constructor, le decimos this middleware y por parámetro le pasamos el middleware que queremos agregar que es o. ¿Ahora sí actualizamos la URL mensajes y efectivamente, me redirecciona al login intento de nuevo y no me lo permite, pero si hacemos login, vemos que sí podemos acceder, OK? Pero tenemos un problema aquí. Si cerramos sesión y trato de ir a la página de contactos, vemos que tampoco me lo permite a esta página de contactos debería poder acceder cualquier persona, pero me está redireccionando al login. Esto es porque al agregar este netware en el controlador, este se aplica a todos los métodos que contenga. Pero no queremos que se aplique al método create, que es el que se ejecuta cuando damos Clic en contactos. Para ello, aquí como segundo parámetro, le pasamos un array con la llave only para especificar los métodos a los que sí queremos que se aplique el middleware, o también podemos pasarle la llave except para definir los métodos a los que no queremos que se aplique el middleware, es decir, Agrégame el middleware of a todos los métodos de este controlador, excepto al método create. Nota que esto es un array también. Volvemos al navegador y vemos que ya podemos acceder a contactos. Pero no vamos a poder enviar mensajes, vemos que me redirecciona al Login. Recuerda que al enviar el mensaje ejecutamos este método y actualmente también está protegido. Entonces lo que debemos hacer es agregar este método a la red de excepciones. Intentamos enviar un mensaje y listo, pareciera que no funcionara, pero sí lo está. Lo que sucede es que luego de guardar el mensaje me redirecciona a la ruta mensajes, es decir, que me ejecuta este método, índex, que también está protegido, pero este sí queremos que esté protegido, así que no lo vamos a agregar al except, lo que haremos será que después de guardar el mensaje me redireccione a la misma URL contacto. OK, vamos a enviarlo nuevamente y vemos que me redirecciona aquí mismo, vamos a pasarle un mensaje de sesión, hemos recibido tu mensaje. Una vez más llenamos el formulario, lo enviamos y listo. Hemos recibido tu mensaje ahora si quiero ver los mensajes no me lo va a permitir, pero si soy un usuario de confianza, es decir, un usuario autenticado, ahora sí puedo verlos y puedo acceder a todas las rutas. También puede eliminar mensajes sin ningún problema perfecto. Hemos protegido correctamente la ruta mensajes. En la siguiente lección, vamos a trabajar un poco en el Front end para mejorar la apariencia del sitio y también para aprender a optimizar y compilar CSSY javascript con elixir, así que nos vemos en la siguiente lección.
+ Y tal vez podemos ponerle cerrar sesión de y para obtener el usuario autenticado. Actualmente utilizamos od user que nos devuelve un objeto usuario y a través de él accedemos al email, actualizamos el navegador y podemos ver el email del usuario autenticado. Podemos utilizar el nombre también si queremos. Perfecto, ahora vamos a implementar el Logout si revisamos nuevamente el trade authenticates user, también tenemos un método llamado logout, lo que hace es cerrar la sesión y redireccionar a esta ruta, pero si queremos modificar la u. Redirección. Podemos agregar al controlador una propiedad llamada redirect after logout. 
+
+
+
+---
+			<a href="/logout">Cerrar sesión de {{  auth()->user()->name }} </a>
+
+
+			@if(auth()->guess())
+
+				<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+			@endif
+
+		</nav>
+---
+
+---
+
+
+ Redirecciona después de cerrar sesión, OK, entonces lo único que debemos hacer es crear una ruta de tipo get con la URL logout y que ejecute el controlador os controller con el método logout(), que es este de aquí y luego de cerrar la sesión, me redireccionará al home. 
+
+Trait
+---
+	public function logout()
+	{
+
+		Auth::guard($this->getGuard())->logout();
+
+		return redirect(property_exists($this, 'redirectAfterLogout')) ? $this->redirectAfterLogout : '/');
+	}
+---
+
+ Vamos a probarlo, le doy Clic en cerrar sesión y me aparece este error, trend to get up property of non upjed. Tratando de acceder a una propiedad de un no objeto. Lo que sucede es que una vez que hemos cerrado sesión. Esto deja de devolver un objeto usuario porque ya no hay un usuario autenticado. Por eso me dice que estamos tratando de acceder a. Propiedad en. 
+
+
+layout.blade.php
+---
+
+<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
+
+			@if(auth()->check())
+
+				<a href="/logout">Cerrar sesión de {{  auth()->user()->email }} </a>
+			@endif
+
+
+			@if(auth()->guess())
+
+				<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+			@endif
+
+		</nav>
+
+---
+
+
+web.php
+---
+	
+	Route::get('logout','AuthController@logout');
+
+---
+
+
+ Este caso, la propiedad name de algo que no es un objeto. Entonces para solucionarlo hacemos otra verificación, esta vez utilizando la función check que me devuelve verdadero si existe un usuario autenticado actualmente en caso de ser verdadero, mostramos el link lock out, actualizamos y listo si hago lo mismo nuevamente. Vemos el link de logout y el login desaparece perfecto. Ahora creo que inmediatamente después de hacer login me redireccione a esta página de mensajes. 
+
+
+
+
+ Lo único que tengo que hacer en el controlador es actualizar esta propiedad con la URL que queremos, en este caso mensajes. 
+
+AuthController.php
+---
+	AuthController con el método login. 
+
+---
+		<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\User;
+
+use Validator;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
+
+class AuthController extends Controller
+
+{
+
+	/*
+		Registration & Login controller
+		-------------------------------
+
+
+		This controller handles the registration of new users, as well as the authenticathion of existing users.
+		By default, this controller uses a simple trait to add the behaviors. Why don't you explorer it?
+
+	*/
+
+
+		use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
+
+	/*
+	 * Where to redirect usersafter login / registration.
+	 *
+	 * @var string
+	*/	
+	protected $redirectTo = '/';
+
+
+
+/*Se agrega esta linea para redireccioinar a la URL especifica*/
+	protected $redirectTo = '/mensajes';  ///Liena agregada
+
+---
+
+
+
+ Vamos a probarlo. Cerramos sesión, volvemos a ingresar. Y vemos que nos lleva a la URL mensajes. Ahora a manera de ejemplo, supongamos que queremos que al hacer logout me redireccione a la URL. Para ello debemos añadir esta propiedad protected redirect after logout. Y el valor será en nuestro caso, saludos. Si accedemos. Luego de cerrar la sesión, me redireccionará a la URL, saludo. ¿Vemos que no me está activando el link de saludos, vamos a revisar por qué? ¿Aquí vemos que tenemos un slash, debemos quitarlo para que funcione? Ahora si actualizamos y listo. 
+
+
+
+---
+
+
+-/*Se agrega esta linea para redireccioinar a la URL especifica*/
+	protected $redirectTo = '/mensajes';  ///Liena agregada
+
+ //Redirección posterior a la salida de la sesión
+ 	protected $redirectAfterLogout = '/saludos';
+
+---
+
+
+
+
+
+ Entonces ya hemos implementado el loging y logout, pero aún no hemos protegido la ruta mensajes que es nuestro objetivo principal. Lo primero que haremos será mostrar este link solo si estamos autenticados actualizamos y efectivamente ya no vemos el link mensajes. Pero si accedemos ahora sí me aparece. Sin embargo, si no estamos autenticados aún podemos acceder a esta URL si le ingresamos directamente en el navegador. Para solucionarlo vamos a utilizar un middleware que viene con Laravel vamos a cerrar estos archivos. Y en el Message Controller es donde vamos a agregar este buyerward. ¿Vemos que hace algo parecido a lo que hicimos en el menú, me dice que si es un invitado y si es una petición AJAX devuelva una respuesta con un mensaje de no autorizado y si la petición no es AJAX, Qué me redireccione al login? En el caso de que el usuario no sea un invitado, es decir, que existe autenticado me deja continuar con la petición. 
+
+
+
+
+Este contenido siguiente no aparece ya en la verison 10 de Laravel, pero se integra para documentación
+app/Http/Middleware/Authenticate.php
+---
+
+protected function handl($request, clousure $next, $guard = null)
+    {
+        if (Auth::guard($guard)->guest()){
+        	if ($request->ajax() || $request->wantsJson()){
+        		return response('Unauthorized', 401);
+        	} else {
+        		return redirect()->guest('login');
+        	}
+        }
+
+        return $next($request);
+    }
+
+---
+ Entonces aquí en el kernel, como vimos en la lección de Middlewords, es donde se registran los middlewords en los rock middlewords vemos que se le asigna la llave of al middleware que. 
+
+
+kerner.php
+---
+
+	protected $middlewareAliases = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'example' => \App\Http\Middleware\Example::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+
+---
+
+
+
+
+
+ De revisar. Entonces para utilizarlo, abrimos nuevamente el Messages Controller y Agregamos un constructor, le decimos this middleware y por parámetro le pasamos el middleware que queremos agregar que es o. 
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth');
+	}
+
+---
+
+
+
+
+ ¿Ahora sí actualizamos la URL mensajes y efectivamente, me redirecciona al login intento de nuevo y no me lo permite, pero si hacemos login, vemos que sí podemos acceder, OK? Pero tenemos un problema aquí. Si cerramos sesión y trato de ir a la página de contactos, vemos que tampoco me lo permite a esta página de contactos debería poder acceder cualquier persona, pero me está redireccionando al login. Esto es porque al agregar este netware en el controlador, este se aplica a todos los métodos que contenga. Pero no queremos que se aplique al método create, que es el que se ejecuta cuando damos Clic en contactos. 
+
+
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth',['only']);
+	}
+
+---
+
+
+
+ Para ello, aquí como segundo parámetro, le pasamos un array con la llave only para especificar los métodos a los que sí queremos que se aplique el middleware, o también podemos pasarle la llave except para definir los métodos a los que no queremos que se aplique el middleware, es decir, Agrégame el middleware of a todos los métodos de este controlador, excepto al método create. Nota que esto es un array también. Volvemos al navegador y vemos que ya podemos acceder a contactos. 
+
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth',['except' => ['create']]);
+	}
+
+---
+
+
+ Pero no vamos a poder enviar mensajes, vemos que me redirecciona al Login. Recuerda que al enviar el mensaje ejecutamos este método y actualmente también está protegido. Entonces lo que debemos hacer es agregar este método a la red de excepciones. Intentamos enviar un mensaje y listo, pareciera que no funcionara, pero sí lo está. Lo que sucede es que luego de guardar el mensaje me redirecciona a la ruta mensajes, es decir, que me ejecuta este método, índex, que también está protegido, pero este sí queremos que esté protegido, así que no lo vamos a agregar al except, lo que haremos será que después de guardar el mensaje me redireccione a la misma URL contacto. OK, vamos a enviarlo nuevamente y vemos que me redirecciona aquí mismo, vamos a pasarle un mensaje de sesión, hemos recibido tu mensaje. 
+
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth',['except' => ['create','store']]);
+	}
+
+---
+
+
+
+ Una vez más llenamos el formulario, lo enviamos y listo. Hemos recibido tu mensaje ahora si quiero ver los mensajes no me lo va a permitir, pero si soy un usuario de confianza, es decir, un usuario autenticado, ahora sí puedo verlos y puedo acceder a todas las rutas. También puede eliminar mensajes sin ningún problema perfecto. Hemos protegido correctamente la ruta mensajes. 
+
+
+
+
+MessageController.php
+
+---
+
+public function store(Request $request)
+    {
+     Message::create($request->all());
+        
+
+        return redirect()->route('mensajes.index');
+
+    }
+
+---
+
+
+ En la siguiente lección, vamos a trabajar un poco en el Front end para mejorar la apariencia del sitio y también para aprender a optimizar y compilar CSSY javascript con elixir, así que nos vemos en la siguiente lección.
