@@ -202,6 +202,594 @@ Extendemos a la plantilla base y en la sección contenido le damos un título.
 
 Revisamos en el navegador listo, 
 
-	05'19
+
 
 Ahora vamos a crear el formulario. Abrimos la etiqueta dentro escribimos el input de tipo email con nombre email y le damos un placeholder con el valor email. Duplicamos esta línea y cambiamos a password. Si revisamos aquí tenemos los 2 campos, vamos a darle un poco de espacio aquí debajo y también vamos a necesitar un. Input de tipo submit. Y el valor será entrar. Entonces este formulario va a enviar los datos por el método post y la acción será la misma orden de login, pero. El tipo post entonces vamos a crear esta ruta routs post Login y el controlador será el mismo.
+
+
+views/auth/login.blade.php
+---
+	@extends('layout')
+
+	@section('contenido')
+		<h1>Login</h1>
+		<form class="form-inline" method="POST" action="/login">
+			{!! csrf_field() !!}
+			<input class="form-control" type="email" name="email" placeholder="Email">
+			<input class="form-control" type="password" name="password" placeholder="Password">
+			<input class="btn btn-primary" id="entrar" type="submit" value="Entrar">
+		</form>
+		<br>
+	@stop
+
+---
+
+
+AuthController con el método login. 
+
+---
+		<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\User;
+
+use Validator;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
+
+class AuthController extends Controller
+
+{
+
+	/*
+		Registration & Login controller
+		-------------------------------
+
+
+		This controller handles the registration of new users, as well as the authenticathion of existing users.
+		By default, this controller uses a simple trait to add the behaviors. Why don't you explorer it?
+
+	*/
+
+
+		use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
+
+	/*
+	 * Where to redirect usersafter login / registration.
+	 *
+	 * @var string
+	*/	
+	protected $redirectTo = '/';
+
+	//protected $loginView = 'login';
+
+	//protected $username = 'username';
+
+	/**
+	 * Create a new authentication controller instance
+	 * 
+	 * 
+	 * @return void
+	 * */
+
+	public function __construct()
+	{
+		
+		$this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+
+	}
+
+
+	/*
+	 * Get a validator for an incomming registration request
+	 *
+	 * @param array $data 
+	 * 
+	 * @return \Illuminate\Contracts\Validation\Validator
+	 *
+	*/
+
+	protected function validator(array $data)	
+	{
+
+		return Validator::make($data, [
+			'name' => 'required|max:255', 
+			'email' => 'required|email|max:255|unique:users', 
+			'password' => 'required|min:6|confirmed',
+		]);
+	}
+
+
+	/*
+	 * Create a nuew user instance after a valid registration
+	 *
+	 * @param array $data 
+	 * 
+	 * @return User
+	 *
+	*/
+
+	protected function create(array $data)
+	{
+
+		return User::create([
+			'name' => $data['name'], 
+			'email' => $data['email'], 
+			'password' => bcrypt($data['password']),
+		]);
+	}
+
+
+
+
+}
+
+---
+
+
+En el Archivo
+	Controllers/AuthenticatesUsers.php
+
+Este método también lo obtenemos gracias al Trade Authenticate Users. Si lo revisamos, es este de aquí lo que hace primero es validar el formulario. Veamos qué hace este método. Aquí se validan los datos en base a estas reglas me dice que el login user name es requerido. En este caso está buscando una propiedad en el controlador llamada username. Pero por defecto es email, así que estamos bien, pero si queremos autenticar con el nombre de usuario, por ejemplo, basta con agregar en el controlador una propiedad llamada user name con el valor name. O cualquiera que sea el campo que quieres utilizar para autenticar. Bien, entonces me dice que el email en nuestro caso es requerido y que el password también. Luego me verifica si estamos utilizando el trade de los trozos, que básicamente lo que hace es llevar un conteo de cuántos intentos de login fallidos realiza determinado usuario y evitar que siga intentando después de fallar varias veces, luego verifica que si ha realizado demasiados intentos de login, lo que va a hacer es bloquearnos y devolver una respuesta diciendo que ya no podemos seguir intentando hasta después de cierto tiempo. Luego se guardan las credenciales en una variable y finalmente este es el método que se utiliza para verificar que coincida en el email y la contraseña en la base de datos si la verificación es correcta, llamamos al método handle user wassen típica. En caso de que en Lokin falle, se incrementa el conteo del thrill y finalmente se devuelve una respuesta de que login ha fallado. OK, vamos a intentarlo. 
+
+Llenamos el formulario, enviamos, nos olvidamos del token. 
+
+
+views/auth/login.blade.php
+---
+	@extends('layout')
+
+	@section('contenido')
+		<h1>Login</h1>
+		<form class="form-inline" method="POST" action="/login">
+			{!! csrf_field() !!}
+			<input class="form-control" type="email" name="email" placeholder="Email">
+			<input class="form-control" type="password" name="password" placeholder="Password">
+			<input class="btn btn-primary" id="entrar" type="submit" value="Entrar">
+		</form>
+		<br>
+	@stop
+
+---
+
+
+
+ Vamos al formulario y agregamos aquí el token, este token debemos agregarlo a todos los formularios que creemos con laravel bien actualizamos reenviamos y vemos que me redirecciona al mismo login porque en la base de datos no tenemos ningún usuario con estos datos vamos a crear uno rápidamente. 
+
+
+ Como aún hemos visto, los seeds ni hemos utilizado tinker, vamos a agregar temporalmente una ruta de tipo GET que diga test, por ejemplo, y le pasamos una función por aquí y aquí creamos un nuevo usuario. Creamos una nueva instancia del modelo usuario. Asignamos la propiedad nombre igual a Klvst3r Email klvst3@aprendible.com y la contraseña será 123123. Luego guardamos el usuario y finalmente retornamos el usuario recién creado. 
+
+web.php
+
+---
+
+Route::get('test', function(){
+	
+	$user = new App\User;
+	$user->name = 'Jorge';
+	$user->email = 'klvst3r@aprendible.com';
+	$user->password = '123123';
+	$user->save();
+
+	return $user;
+});
+
+
+---
+
+
+
+
+
+ Antes de probarlo, quiero que notes algo. En esta línea hay un problema de seguridad, ya que no estamos encriptando la contraseña. Vamos a intentarlo, vamos a la ruta test, ejecutamos y efectivamente vemos el usuario en respuesta si revisamos la base de datos, actualizamos, vemos que la contraseña está en texto plano. 
+
+laravel.dev/test
+---
+{
+	"name" : "Klvst3r",
+	"email" : "klvst3r@aprendible.com",
+	"updated_at" : "2023-12:05 06:05:37",
+	"created_at" : "2023-12:05 06:05:37",
+	"id" : 1
+}
+--
+
+
+
+ Nunca debemos hacer esto, primero por ética profesional y segundo, para evitar problemas de seguridad. Vamos a eliminar este usuario y lo que haremos será pasar el password por una función llamada bigcript para encriptar el password si ejecutamos la URL, nuevamente vemos un resultado similar, pero si revisamos en la base de datos, podemos ver que el password ahora sí está encriptado y lo mejor de todo es que al momento de hacer login laravel automáticamente encriptará el password que enviemos. Y lo comparará con el password ya encriptado en la base de datos. 
+
+
+
+---
+
+Route::get('test', function(){
+	
+	$user = new App\User;
+	$user->name = 'Jorge';
+	$user->email = 'klvst3r@aprendible.com';
+	$user->password = bcrypt('123123');
+	$user->save();
+
+	return $user;
+});
+
+
+---
+
+
+
+ Otro problema de seguridad del que no debemos preocuparnos bien borramos esta ruta, ya que no la necesitamos. Vamos al navegador y vamos a tratar de hacer login como el usuario que acabamos de crear. 123123. Y listo, ya hemos hecho login exitosamente, vemos que me ha redireccionado al home. ¿Pero cómo sabemos que hemos sido autenticados? Vamos a la plantilla, layout para agregar un link que nos lleve. En este caso no estamos utilizando rutas con nombre y le decimos que active el link. 
+
+layout.blade.php
+
+---
+  <nav>
+			<a class="{{ activeMenu('/') }}" href="{{ route('home') }}">Inicio</a>
+			
+			<a class="{{ activeMenu('saludos/*') }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+			
+			<a class="{{ activeMenu('mensajes/create') }}" href="{{ route('mensajes.create') }}">Contactos</a>
+
+			<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
+
+			<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+
+
+		</nav>
+---
+
+
+ Cuando estemos en la URL Login, bien vamos al navegador y en este caso no quiero que me muestre el link del Login porque ya estoy autenticado. Para ello debemos hacer una verificación if off guest. Esta función devuelve un bulian de verdadero o falso, entonces sólo si es un usuario invitado, le mostramos el link para hacer login. 
+
+
+layout.blade.php
+
+---
+  <nav>
+			<a class="{{ activeMenu('/') }}" href="{{ route('home') }}">Inicio</a>
+			
+			<a class="{{ activeMenu('saludos/*') }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+			
+			<a class="{{ activeMenu('mensajes/create') }}" href="{{ route('mensajes.create') }}">Contactos</a>
+
+			<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
+
+			@if(auth()->guess())
+
+				<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+			@endif
+
+		</nav>
+---
+
+
+
+ Actualizamos el navegador y ya no vemos el link. Ahora, como ya estoy autenticado, quiero que me muestre un link para cerrar la sesión. 
+
+---
+  <nav>
+			<a class="{{ activeMenu('/') }}" href="{{ route('home') }}">Inicio</a>
+			
+			<a class="{{ activeMenu('saludos/*') }}" href="{{ route('saludos','Klvst3r') }}">Saludo</a>
+			
+			<a class="{{ activeMenu('mensajes/create') }}" href="{{ route('mensajes.create') }}">Contactos</a>
+
+			<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
+
+			<a href="/logout">Cerrar sesión de {{  auth()->user()->email }} </a>
+
+
+			@if(auth()->guess())
+
+				<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+			@endif
+
+		</nav>
+---
+
+
+
+
+ Y tal vez podemos ponerle cerrar sesión de y para obtener el usuario autenticado. Actualmente utilizamos od user que nos devuelve un objeto usuario y a través de él accedemos al email, actualizamos el navegador y podemos ver el email del usuario autenticado. Podemos utilizar el nombre también si queremos. Perfecto, ahora vamos a implementar el Logout si revisamos nuevamente el trade authenticates user, también tenemos un método llamado logout, lo que hace es cerrar la sesión y redireccionar a esta ruta, pero si queremos modificar la u. Redirección. Podemos agregar al controlador una propiedad llamada redirect after logout. 
+
+
+
+---
+			<a href="/logout">Cerrar sesión de {{  auth()->user()->name }} </a>
+
+
+			@if(auth()->guess())
+
+				<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+			@endif
+
+		</nav>
+---
+
+---
+
+
+ Redirecciona después de cerrar sesión, OK, entonces lo único que debemos hacer es crear una ruta de tipo get con la URL logout y que ejecute el controlador os controller con el método logout(), que es este de aquí y luego de cerrar la sesión, me redireccionará al home. 
+
+Trait
+---
+	public function logout()
+	{
+
+		Auth::guard($this->getGuard())->logout();
+
+		return redirect(property_exists($this, 'redirectAfterLogout')) ? $this->redirectAfterLogout : '/');
+	}
+---
+
+ Vamos a probarlo, le doy Clic en cerrar sesión y me aparece este error, trend to get up property of non upjed. Tratando de acceder a una propiedad de un no objeto. Lo que sucede es que una vez que hemos cerrado sesión. Esto deja de devolver un objeto usuario porque ya no hay un usuario autenticado. Por eso me dice que estamos tratando de acceder a. Propiedad en. 
+
+
+layout.blade.php
+---
+
+<a class="{{ activeMenu('mensajes') }}" href="{{ route('mensajes.index') }}">Mensajes</a>
+
+			@if(auth()->check())
+
+				<a href="/logout">Cerrar sesión de {{  auth()->user()->email }} </a>
+			@endif
+
+
+			@if(auth()->guess())
+
+				<a class="{{ activeMenu('login') }}" href="{{ route('/login') }}">Login</a>
+			@endif
+
+		</nav>
+
+---
+
+
+web.php
+---
+	
+	Route::get('logout','AuthController@logout');
+
+---
+
+
+ Este caso, la propiedad name de algo que no es un objeto. Entonces para solucionarlo hacemos otra verificación, esta vez utilizando la función check que me devuelve verdadero si existe un usuario autenticado actualmente en caso de ser verdadero, mostramos el link lock out, actualizamos y listo si hago lo mismo nuevamente. Vemos el link de logout y el login desaparece perfecto. Ahora creo que inmediatamente después de hacer login me redireccione a esta página de mensajes. 
+
+
+
+
+ Lo único que tengo que hacer en el controlador es actualizar esta propiedad con la URL que queremos, en este caso mensajes. 
+
+AuthController.php
+---
+	AuthController con el método login. 
+
+---
+		<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\User;
+
+use Validator;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
+
+class AuthController extends Controller
+
+{
+
+	/*
+		Registration & Login controller
+		-------------------------------
+
+
+		This controller handles the registration of new users, as well as the authenticathion of existing users.
+		By default, this controller uses a simple trait to add the behaviors. Why don't you explorer it?
+
+	*/
+
+
+		use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
+
+	/*
+	 * Where to redirect usersafter login / registration.
+	 *
+	 * @var string
+	*/	
+	protected $redirectTo = '/';
+
+
+
+/*Se agrega esta linea para redireccioinar a la URL especifica*/
+	protected $redirectTo = '/mensajes';  ///Liena agregada
+
+---
+
+
+
+ Vamos a probarlo. Cerramos sesión, volvemos a ingresar. Y vemos que nos lleva a la URL mensajes. Ahora a manera de ejemplo, supongamos que queremos que al hacer logout me redireccione a la URL. Para ello debemos añadir esta propiedad protected redirect after logout. Y el valor será en nuestro caso, saludos. Si accedemos. Luego de cerrar la sesión, me redireccionará a la URL, saludo. ¿Vemos que no me está activando el link de saludos, vamos a revisar por qué? ¿Aquí vemos que tenemos un slash, debemos quitarlo para que funcione? Ahora si actualizamos y listo. 
+
+
+
+---
+
+
+-/*Se agrega esta linea para redireccioinar a la URL especifica*/
+	protected $redirectTo = '/mensajes';  ///Liena agregada
+
+ //Redirección posterior a la salida de la sesión
+ 	protected $redirectAfterLogout = '/saludos';
+
+---
+
+
+
+
+
+ Entonces ya hemos implementado el loging y logout, pero aún no hemos protegido la ruta mensajes que es nuestro objetivo principal. Lo primero que haremos será mostrar este link solo si estamos autenticados actualizamos y efectivamente ya no vemos el link mensajes. Pero si accedemos ahora sí me aparece. Sin embargo, si no estamos autenticados aún podemos acceder a esta URL si le ingresamos directamente en el navegador. Para solucionarlo vamos a utilizar un middleware que viene con Laravel vamos a cerrar estos archivos. Y en el Message Controller es donde vamos a agregar este buyerward. ¿Vemos que hace algo parecido a lo que hicimos en el menú, me dice que si es un invitado y si es una petición AJAX devuelva una respuesta con un mensaje de no autorizado y si la petición no es AJAX, Qué me redireccione al login? En el caso de que el usuario no sea un invitado, es decir, que existe autenticado me deja continuar con la petición. 
+
+
+
+
+Este contenido siguiente no aparece ya en la verison 10 de Laravel, pero se integra para documentación
+app/Http/Middleware/Authenticate.php
+---
+
+protected function handl($request, clousure $next, $guard = null)
+    {
+        if (Auth::guard($guard)->guest()){
+        	if ($request->ajax() || $request->wantsJson()){
+        		return response('Unauthorized', 401);
+        	} else {
+        		return redirect()->guest('login');
+        	}
+        }
+
+        return $next($request);
+    }
+
+---
+ Entonces aquí en el kernel, como vimos en la lección de Middlewords, es donde se registran los middlewords en los rock middlewords vemos que se le asigna la llave of al middleware que. 
+
+
+kerner.php
+---
+
+	protected $middlewareAliases = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'example' => \App\Http\Middleware\Example::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+
+---
+
+
+
+
+
+ De revisar. Entonces para utilizarlo, abrimos nuevamente el Messages Controller y Agregamos un constructor, le decimos this middleware y por parámetro le pasamos el middleware que queremos agregar que es o. 
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth');
+	}
+
+---
+
+
+
+
+ ¿Ahora sí actualizamos la URL mensajes y efectivamente, me redirecciona al login intento de nuevo y no me lo permite, pero si hacemos login, vemos que sí podemos acceder, OK? Pero tenemos un problema aquí. Si cerramos sesión y trato de ir a la página de contactos, vemos que tampoco me lo permite a esta página de contactos debería poder acceder cualquier persona, pero me está redireccionando al login. Esto es porque al agregar este netware en el controlador, este se aplica a todos los métodos que contenga. Pero no queremos que se aplique al método create, que es el que se ejecuta cuando damos Clic en contactos. 
+
+
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth',['only']);
+	}
+
+---
+
+
+
+ Para ello, aquí como segundo parámetro, le pasamos un array con la llave only para especificar los métodos a los que sí queremos que se aplique el middleware, o también podemos pasarle la llave except para definir los métodos a los que no queremos que se aplique el middleware, es decir, Agrégame el middleware of a todos los métodos de este controlador, excepto al método create. Nota que esto es un array también. Volvemos al navegador y vemos que ya podemos acceder a contactos. 
+
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth',['except' => ['create']]);
+	}
+
+---
+
+
+ Pero no vamos a poder enviar mensajes, vemos que me redirecciona al Login. Recuerda que al enviar el mensaje ejecutamos este método y actualmente también está protegido. Entonces lo que debemos hacer es agregar este método a la red de excepciones. Intentamos enviar un mensaje y listo, pareciera que no funcionara, pero sí lo está. Lo que sucede es que luego de guardar el mensaje me redirecciona a la ruta mensajes, es decir, que me ejecuta este método, índex, que también está protegido, pero este sí queremos que esté protegido, así que no lo vamos a agregar al except, lo que haremos será que después de guardar el mensaje me redireccione a la misma URL contacto. OK, vamos a enviarlo nuevamente y vemos que me redirecciona aquí mismo, vamos a pasarle un mensaje de sesión, hemos recibido tu mensaje. 
+
+
+MessageController.php
+---
+
+class MessagesController extends Controller
+{
+	//Se agrega el cnstructor 
+
+	function __construct()
+	{
+
+		$this->middleware('auth',['except' => ['create','store']]);
+	}
+
+---
+
+
+
+ Una vez más llenamos el formulario, lo enviamos y listo. Hemos recibido tu mensaje ahora si quiero ver los mensajes no me lo va a permitir, pero si soy un usuario de confianza, es decir, un usuario autenticado, ahora sí puedo verlos y puedo acceder a todas las rutas. También puede eliminar mensajes sin ningún problema perfecto. Hemos protegido correctamente la ruta mensajes. 
+
+
+
+
+MessageController.php
+
+---
+
+public function store(Request $request)
+    {
+     Message::create($request->all());
+        
+
+        return redirect()->route('mensajes.index');
+
+    }
+
+---
+
+
+ En la siguiente lección, vamos a trabajar un poco en el Front end para mejorar la apariencia del sitio y también para aprender a optimizar y compilar CSSY javascript con elixir, así que nos vemos en la siguiente lección.

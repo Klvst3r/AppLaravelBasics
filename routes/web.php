@@ -62,17 +62,26 @@ Route::get('saludos/{nombre?}', ['as' => 'saludos', 'uses' => 'PagesController@s
 
 Route::resource('mensajes','MessagesController');
 
+<<<<<<< HEAD
 /*Auth*/
 Route::get('login', 'Auth\LoginController@showLoginForm');
 /*Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout');*/
 
+||||||| ee6b624
+=======
+/* authenticación - Login*/
+/*Route::get('login', 'Auth\AuthController@showLoginForm');
+
+Route::post('login', 'Auth\AuthController@login');
+*/
+>>>>>>> 7_auth
 /* 6.5
 //6.4. Redirección a los mensajes a index y regresando todos los mensajes
 Route::get('mensajes', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
 
 //6.4. Implementación del REST"
-Route::get('mensajes/create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+Route::get('mensajes/create', ['as' => 'messages.create', 'uses' =>  'MessagesController@create']);
 
 //6.4. Procesamiento del formulario 
 Route::post('mensajes', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
