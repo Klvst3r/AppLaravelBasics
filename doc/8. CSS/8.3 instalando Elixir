@@ -1,0 +1,226 @@
+8.3 instalando Elixir
+
+Elixir de Laravel
+Introducción
+Instalación y configuración
+Elixir para correr
+Trabajar con hojas de estilo
+Menos
+Hablar con descaro a
+CSS simple
+Mapas fuente
+Trabajar con guiones
+CaféScript
+Navegar
+Babel
+Guiones
+Copiar archivos y directorios
+Control de versiones/eliminación de caché
+Sincronización del navegador
+Llamar a tareas Gulp existentes
+Escribir extensiones de Elixir
+
+Introducción
+------------
+Laravel Elixir proporciona una API limpia y fluida para definir tareas básicas de Gulp para su aplicación Laravel. Elixir admite varios preprocesadores CSS y JavaScript comunes, e incluso herramientas de prueba. Al utilizar el encadenamiento de métodos, Elixir le permite definir con fluidez su cartera de activos. Por ejemplo:
+
+elixir(function(mix) {
+    mix.sass('app.scss')
+       .coffee('app.coffee');
+});
+
+Si alguna vez ha estado confundido acerca de cómo comenzar con Gulp y la compilación de activos, le encantará Laravel Elixir. Sin embargo, no es necesario que lo utilice mientras desarrolla su aplicación. Eres libre de utilizar cualquier herramienta de canalización de activos que desees, o incluso ninguna.
+
+Instalación y configuración
+--------------------------
+
+Instalación de nodo
+Antes de activar Elixir, primero debe asegurarse de que Node.js esté instalado en su máquina.
+
+node -v
+
+De forma predeterminada, Laravel Homestead incluye todo lo que necesitas; sin embargo, si no estás utilizando Vagrant, puedes instalar Node fácilmente visitando su página de descarga .
+
+Gulp
+-----
+A continuación, querrás incorporar Gulp como un paquete NPM global:
+
+npm install --global gulp-cli
+
+Si utiliza un sistema de control de versiones, es posible que desee ejecutar npm shrinkwrappara bloquear sus requisitos de NPM:
+
+npm shrinkwrap
+
+Una vez que haya ejecutado este comando, no dude en enviar npm-shrinkwrap.json al control de código fuente.
+
+Elixir de Laravel
+-------------------
+
+¡El único paso que queda es instalar Elixir! Dentro de una instalación nueva de Laravel, encontrará un package.jsonarchivo en la raíz. Piense en esto como su composer.jsonarchivo, excepto que define las dependencias de Node en lugar de PHP. Puede instalar las dependencias a las que hace referencia ejecutando:
+
+npm install
+
+Si está desarrollando en un sistema Windows o está ejecutando su VM en un sistema host de Windows, es posible que necesite ejecutar el npm installcomando con el --no-bin-linksinterruptor habilitado:
+
+npm install --no-bin-links
+
+Elixir para correr
+-------------------
+Elixir está construido sobre Gulp , por lo que para ejecutar tus tareas de Elixir solo necesitas ejecutar el gulpcomando en tu terminal. Agregar la bandera --production al comando le indicará a Elixir que minimice sus archivos CSS y JavaScript:
+
+// Run all tasks...
+gulp
+
+
+
+Verificación de Instalación
+--------------------------
+
+En este punto no se pueden ejecutar el comando gulp en windows arrojando el siguiente resultado con el comando anterior:
+$ gulp
+[22:25:54] Local gulp not found in C:\laragon\www\dev\AppLaravelBasics
+[22:25:54] Try running: npm install gulp
+
+
+Por lo que se intenta lo siguiente:
+
+	$ npm install gulp
+	npm WARN deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+	npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+	npm WARN deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+	npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+	npm WARN deprecated chokidar@2.1.8: Chokidar 2 does not receive security updates since 2019. Upgrade to chokidar 3 with 15x fewer dependencies
+
+	added 332 packages, and audited 353 packages in 12s
+
+	21 packages are looking for funding
+	  run `npm fund` for details
+
+	6 high severity vulnerabilities
+
+	To address all issues, run:
+	  npm audit fix
+
+	Run `npm audit` for details.
+
+
+
+Revisón de la auditoria
+------------------------
+
+# npm audit report
+
+glob-parent  <5.1.2
+Severity: high
+glob-parent vulnerable to Regular Expression Denial of Service in enclosure regex - https://github.com/advisories/GHSA-ww39-953v-wcq6
+fix available via `npm audit fix --force`
+Will install gulp@3.9.1, which is a breaking change
+node_modules/glob-parent
+  chokidar  1.0.0-rc1 - 2.1.8
+  Depends on vulnerable versions of glob-parent
+  node_modules/chokidar
+    glob-watcher  3.0.0 - 5.0.5
+    Depends on vulnerable versions of chokidar
+    node_modules/glob-watcher
+  glob-stream  5.3.0 - 6.1.0
+  Depends on vulnerable versions of glob-parent
+  node_modules/glob-stream
+    vinyl-fs  2.4.2 - 3.0.3
+    Depends on vulnerable versions of glob-stream
+    node_modules/vinyl-fs
+      gulp  >=4.0.0
+      Depends on vulnerable versions of glob-watcher
+      Depends on vulnerable versions of vinyl-fs
+      node_modules/gulp
+
+6 high severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+
+
+Forzamos a las correcciones disponibles
+---------------------------------------
+
+
+fix available via `npm audit fix --force`
+Will install gulp@4.0.2, which is a breaking change
+node_modules/semver
+
+10 vulnerabilities (1 moderate, 7 high, 2 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+
+Probamos nuevamente el comando
+-----------------------------
+
+
+Genera un error
+
+	$ gulp
+	ReferenceError: require is not defined in ES module scope, you can use import instead
+	This file is being treated as an ES module because it has a '.js' file extension and 'C:\laragon\www\dev\AppLaravelBasics\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+	    at file:///C:/laragon/www/dev/AppLaravelBasics/gulpfile.js:1:14
+	    at ModuleJob.run (node:internal/modules/esm/module_job:218:25)
+	    at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)
+	    at async importModuleDynamicallyWrapper (node:internal/vm/module:431:15)
+
+
+Referencia
+https://isotropic.co/how-to-fix-referenceerror-require-is-not-defined-in-javascript/
+
+
+
+
+ 
+// Run all tasks and minify all CSS and JavaScript...
+gulp --production
+
+Observando los activos para detectar cambios
+-------------------------------------------
+Dado que es inconveniente ejecutar el comando  gulp en su terminal después de cada cambio en sus activos, puede usar el comando gulp watch. Este comando continuará ejecutándose en su terminal y observará sus activos para detectar cualquier cambio. Cuando se produzcan cambios, se compilarán automáticamente nuevos archivos:
+
+gulp watch
+
+Trabajar con hojas de estilo
+----------------------------
+El archivo gulpfile.js en el directorio raíz de su proyecto contiene todas sus tareas de Elixir. Las tareas de Elixir se pueden encadenar para definir exactamente cómo se deben compilar sus activos.
+
+Menos
+Para compilar Less en CSS, puedes usar el lessmétodo. El lessmétodo supone que sus archivos Less están almacenados en formato resources/assets/less. De forma predeterminada, la tarea colocará el CSS compilado para este ejemplo en public/css/app.css:
+
+elixir(function(mix) {
+    mix.less('app.less');
+});
+
+También puede combinar varios archivos Less en un solo archivo CSS. Nuevamente, el CSS resultante se colocará en public/css/app.css:
+
+elixir(function(mix) {
+    mix.less([
+        'app.less',
+        'controllers.less'
+    ]);
+});
+
+Si desea personalizar la ubicación de salida del CSS compilado, puede pasar un segundo argumento al lessmétodo:
+
+elixir(function(mix) {
+    mix.less('app.less', 'public/stylesheets');
+});
+ 
+// Specifying a specific output filename...
+elixir(function(mix) {
+    mix.less('app.less', 'public/stylesheets/style.css');
+})
+
+
+
