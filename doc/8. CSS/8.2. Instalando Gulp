@@ -1,0 +1,114 @@
+8.2. Instalando Gulp
+
+
+Luego de haber instalado todas las dependencias con
+
+npm install vamos a revisar el archivo en la raiz del proyecto
+
+
+gulpfile.js
+---
+
+---
+
+
+Como en nuestro proyecto no existe el paquete golp procedemos a instalar.
+
+https://laravel.com/docs/5.2/elixir
+
+
+Elixir de Laravel
+Introducción
+Instalación y configuración
+Elixir para correr
+Trabajar con hojas de estilo
+Menos
+Hablar con descaro a
+CSS simple
+Mapas fuente
+Trabajar con guiones
+CaféScript
+Navegar
+Babel
+Guiones
+Copiar archivos y directorios
+Control de versiones/eliminación de caché
+Sincronización del navegador
+Llamar a tareas Gulp existentes
+Escribir extensiones de Elixir
+
+
+Introducción
+Laravel Elixir proporciona una API limpia y fluida para definir tareas básicas de Gulp para su aplicación Laravel. Elixir admite varios preprocesadores CSS y JavaScript comunes, e incluso herramientas de prueba. Al utilizar el encadenamiento de métodos, Elixir le permite definir con fluidez su cartera de activos. Por ejemplo:
+
+elixir(function(mix) {
+    mix.sass('app.scss')
+       .coffee('app.coffee');
+});
+
+Si alguna vez ha estado confundido acerca de cómo comenzar con Gulp y la compilación de activos, le encantará Laravel Elixir. Sin embargo, no es necesario que lo utilice mientras desarrolla su aplicación. Eres libre de utilizar cualquier herramienta de canalización de activos que desees, o incluso ninguna.
+
+Instalación y configuración
+
+Instalación de node
+Antes de activar Elixir, primero debe asegurarse de que Node.js esté instalado en su máquina.
+
+node -v
+
+De forma predeterminada, Laravel Homestead incluye todo lo que necesitas; sin embargo, si no estás utilizando Vagrant, puedes instalar Node fácilmente visitando su página de descarga .
+
+Gulp
+-------
+A continuación, querrás incorporar Gulp como un paquete NPM global:
+
+npm install --global gulp-cli
+
+
+Resultado de la instalación
+-------------------------
+
+$ npm install --global gulp-cli
+npm WARN deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+
+added 249 packages in 14s
+
+13 packages are looking for funding
+  run `npm fund` for details
+
+
+
+
+
+Si utiliza un sistema de control de versiones, es posible que desee ejecutar npm shrinkwrappara bloquear sus requisitos de NPM:
+
+npm shrinkwrap
+
+Una vez que haya ejecutado este comando, no dude en enviar npm-shrinkwrap.json al control de código fuente.
+
+Elixir de Laravel
+¡El único paso que queda es instalar Elixir! Dentro de una instalación nueva de Laravel, encontrará un package.jsonarchivo en la raíz. Piense en esto como su archivo composer.json, excepto que define las dependencias de Node en lugar de PHP. Puede instalar las dependencias a las que hace referencia ejecutando:
+
+npm install
+
+Si está desarrollando en un sistema Windows o está ejecutando su VM en un sistema host de Windows, es posible que necesite ejecutar el npm installcomando con el --no-bin-linksinterruptor habilitado:
+
+npm install --no-bin-links
+
+
+Instalando elixir
+$ npm install --no-bin-links
+
+up to date, audited 21 packages in 1s
+
+5 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+
+
+
