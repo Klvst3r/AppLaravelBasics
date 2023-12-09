@@ -1,4 +1,7 @@
-//var elixir = require('laravel-elixir'); 
+/*import { createRequire } from 'module';
+const require = createRequire(import.meta.url);*/
+
+var elixir = require('laravel-elixir'); 
 
 /*
 /--------------------------------
@@ -10,6 +13,6 @@
 / file for our application, as well as publishing vendor resources.
 /
  */
-/*elixir(function(mix){
+elixir(function(mix){
 	mix.sass('app.scss');
-});*/
+});
