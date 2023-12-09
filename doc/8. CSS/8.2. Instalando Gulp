@@ -89,6 +89,8 @@ npm shrinkwrap
 Una vez que haya ejecutado este comando, no dude en enviar npm-shrinkwrap.json al control de código fuente.
 
 Elixir de Laravel
+------------------
+
 ¡El único paso que queda es instalar Elixir! Dentro de una instalación nueva de Laravel, encontrará un package.jsonarchivo en la raíz. Piense en esto como su archivo composer.json, excepto que define las dependencias de Node en lugar de PHP. Puede instalar las dependencias a las que hace referencia ejecutando:
 
 npm install
