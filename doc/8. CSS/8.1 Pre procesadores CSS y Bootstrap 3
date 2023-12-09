@@ -1,0 +1,146 @@
+8.1 Pre procesadores CSS y Bootstrap 3
+
+En esta lección veremos cómo utilizar preprocesadores de CSS y mejoraremos la apariencia del sitio con bootstrap 3. En la sección anterior se vio como autenticar usuarios en la aplicación, en esta sección se va a descansar un poco del Backend y nos enfocaremos a ver ocmo se manejan los CSS y los JavaScript al Estilo de Laravel y en el proceso se va a mejorar un poco la apariencia del sitio.
+
+Si se revisa el archivo de plantillas layout.blade.php, se puede observarque se tienen estilos en en linea.
+
+layout.blade.php
+---
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Home</title>
+
+	 <style>
+		.active{
+			text-decoration: none;
+			color: green;
+		}
+
+		.error{
+			color: red;
+			font-size: 12px;
+		}
+	</style>
+
+
+</head>
+---
+
+Algo que no es muy recomendable como ya se debe saber, por eso vamos a crear un archivo CSS aparte que luego se va a importar en esta plantilla, primero observemos el archivo package.json
+
+package.json
+---
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.7.5",
+        "vite": "^4.0.0"
+    }
+}
+
+---
+
+
+Aca es en donde se definen las dependencias o modulos de Node.js.
+
+si no se conoce node.js, en palabras simples es JavaScript pero del lado del servidor y viene con un manejador de paquetes llamado npm, que es el que se utilizara para instalar las dependencias que se encuentran en este archivo, si se esta en Windows y se siguieron los pasos de la introducción con Laragon sabremos que entonces ya se tiene node instalado, si se esta en mac simplemente debemos ir a https://nodejs.org/es/
+
+Descargamos el archivo, siguiendo los pasos de instalación y listo en cualquiera de los dos casos, ya podemos instalar node desde la terminal.
+
+
+Terminal:
+
+$ node -v
+v18.12.1
+
+
+Asi tambien npm
+
+$ npm -v
+8.19.2
+
+
+Lo primero que debemos hacer es instalar las dependencias marcadas en el archivo package.json.
+
+Lo hacemos con el comando
+
+npm install, en mac si se genera algun error debemos hacerlo ejecutando sudo
+
+sudo npm install 
+
+Para ejecutarse como administrador, presionamos enter y respondiendo como administrador, esperamos a que se instalen las dependencias.
+
+Si volvemos a sublime veremos que nos ha creado una nueva ccarpeta llamada "node_submodules"
+
+---
+$ npm install
+
+added 20 packages, and audited 21 packages in 6s
+
+5 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm notice
+npm notice New major version of npm available! 8.19.2 -> 10.2.5
+npm notice Changelog: <https://github.com/npm/cli/releases/tag/v10.2.5>
+npm notice Run `npm install -g npm@10.2.5` to update!
+npm notice
+---
+
+
+Marcando un error descrito a continuación desde la terminal:
+
+$ npm install -g npm@10.2.5
+npm ERR! code EBADENGINE
+npm ERR! engine Unsupported engine
+npm ERR! engine Not compatible with your version of node/npm: npm@10.2.5
+npm ERR! notsup Not compatible with your version of node/npm: npm@10.2.5
+npm ERR! notsup Required: {"node":"^18.17.0 || >=20.5.0"}
+npm ERR! notsup Actual:   {"npm":"8.19.2","node":"v18.12.1"}
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     C:\Users\Informatica\AppData\Local\npm-cache\_logs\2023-12-08T23_39_08_062Z-debug-0.log
+
+
+
+
+Actualizamos la version actual con
+
+$ npm update -g npm
+
+up to date, audited 1 package in 243ms
+
+found 0 vulnerabilities
+
+
+Revisamos la version de npm
+$ npm -v
+10.2.3
+
+
+Y la version de node.js
+$ node -v
+v20.10.0
+
+
+
+Para mac instalamos con:
+sudo npm install
+
+Esperamos que se instalen las dependencas, ahora si volvemos a sublime revisemos si se ha generado una nueva carpeta llamada:
+
+laravel/node_modules
+
+
+En esta carpeta es donde se instalaran las dependencias, muy similar a la carpeta vendor donde se guardan las dependencias de composer, ambas carpetas por regla general no se deben agregar al control de veriones, para asi hacer mas ligero el repositorio.
+
+
+
