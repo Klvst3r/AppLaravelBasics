@@ -1,0 +1,54 @@
+8.4. compilar SASS de gulp
+
+Ahora vamos a llevarnos el codigo de css de layout.blade.php que son los estilos y pegarlos en el archivo app.scss.
+
+
+---
+
+	 <style>
+		.active{
+			text-decoration: none;
+			color: green;
+		}
+
+		.error{
+			color: red;
+			font-size: 12px;
+		}
+	</style>
+
+---
+
+
+En la carpeta public es donde se guardaran los csss compilados 
+
+app/public
+
+
+Ahora en la terminar para terminar de compilar, en este caso sass debemos ejecutar
+
+gulp sass y al precionar enter, se puede veruna ventana de notificación indicando que se ha compulado y en la carpeta public ahora existe una nueva carpeta llamada cssy dentro tenemos el archivo compilado.
+
+revisando los links, vemos que ya no cambian a verde cuando estan inactivos, inspeccionando se puede ver que la clase active se esta agregando correctamente.
+
+
+Referncias
+
+Instalacion 
+
+https://laracasts.com/discuss/channels/elixir/gulp-not-working-with-new-install-of-laravel
+
+Elixir
+https://laravel.com/docs/5.3/elixir
+
+
+Errores en Gulp
+https://repost.aws/questions/QU9hDBbz8OTSWY53n5rdL7Wg/referenceerror-require-is-not-defined-in-es-module-scope-you-can-use-import-instead
+
+https://bobbyhadz.com/blog/javascript-referenceerror-require-is-not-defined
+
+https://learn.coderslang.com/0021-nodejs-require-is-not-defined-error/
+
+https://codedamn.com/news/javascript/fix-require-is-not-defined
+
+
