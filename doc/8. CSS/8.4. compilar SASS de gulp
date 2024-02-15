@@ -20,7 +20,7 @@ Ahora vamos a llevarnos el codigo de css de layout.blade.php que son los estilos
 ---
 
 
-En la carpeta public es donde se guardaran los csss compilados 
+En la carpeta public es donde se guardaran los css compilados 
 
 app/public
 
@@ -32,7 +32,621 @@ gulp sass y al precionar enter, se puede veruna ventana de notificación indican
 revisando los links, vemos que ya no cambian a verde cuando estan inactivos, inspeccionando se puede ver que la clase active se esta agregando correctamente.
 
 
-Referncias
+
+
+¿Pero dónde buscamos este archivo? 
+
+Pues la configuración por defecto de Laravel elixir nos dice que para los archivos de SAS el directorio por defecto es Resources Assets SAS y aquí dentro buscará el archivo APP SCSS.
+
+
+
+app.scss
+
+//@import "node_module/bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+Vamos a revisarlo resources assets SAS y este es el archivo que estamos referenciando. Vemos que tiene una línea comentada en donde se importa bootstrap, la vamos a dejar ahí, ya que la vamos a utilizar más adelante, por ahora lo que vamos a hacer será llevarnos estos estilos. 
+
+
+layoutblade.php
+--------------
+<!DOCTYOE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+
+  ---- Se llevan estos estilos
+    .active{
+      text-decoration: none;
+      color: green;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+    ------
+  </style>
+  <title> Mi sitio</title>
+</head>
+<body>
+  <header>
+    <?php function activeMenu($url){
+          return request()->is($url) ? 'active' : '';
+    }
+--------------
+
+
+Y pegarlos en 
+
+app.scss
+-------------
+.active{
+      text-decoration: none;
+      color: green;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+------------
+
+Aqui en carpeta public es donde se guardarán los archivos CSS compilados. 
+
+
+laravel
+  |
+  ---...
+  |_public
+      |__*.htaccess
+      favicon.ico
+      index.php
+      robots.txt
+      web.config
+
+
+Vamos a intentarlo 
+
+
+
+En la terminal para compilar, en este caso SAS debemos ejecutar 
+
+
+$ gulp sass   presionamos enter. 
+
+
+
+
+Y podemos ver una notificación de laravel diciendo que Sass ha sido compilado y en la carpeta public ahora vemos una nueva carpeta llamada CSS. 
+
+
+laravel
+  |
+  ---...
+  |_public
+      |__ css/
+          |_app.css
+      |__*.htaccess
+      |__favicon.ico
+      |__index.php
+      |__robots.txt
+      |__web.config
+
+
+
+
+
+
+Dentro tenemos el archivo compilado. 
+
+
+
+
+Si revisamos los links, vemos que ya no cambian a verde cuando están activos. 
+
+
+  laraverl.dev/mensajes/create
+
+  Inicio  Saludo   Contactos  Login
+  ------  ------  ----------  -----
+
+  Contactos
+
+  Escribeme
+
+  Nombre:_______
+  Email:________
+
+  Mensaje:_______
+
+  <Enviar>
+
+
+
+
+
+Si inspeccionamos vemos que la clase active se está agregando correctamente, lo que sucede es que compilamos los estilos, pero aún los hemos agregado al layout. Para ello vamos a la plantilla. 
+
+layoutblade.php
+--------------
+<!DOCTYOE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+ 
+  
+  <title> Mi sitio</title>
+</head>
+<body>
+  <header>
+    <?php function activeMenu($url){
+          return request()->is($url) ? 'active' : '';
+    }
+--------------
+
+
+Borramos esto y agregamos el archivo que acabamos de compilar. Que se encuentra en la carpeta CSS. Recuerda que la raíz del proyecto o la raíz cúbica de nuestra aplicación es la carpeta public. 
+
+
+Así que no debemos escribir public aquí. También es importante añadir este slash al principio 
+
+
+  href="/css/app.css"
+
+  para que siempre comience a buscar desde la raíz, ya que si no agregamos este slash, cuando estemos por ejemplo en la URL contactos, el navegador va a intentar buscar una carpeta llamada contactos y dentro una carpeta CSS.  Por eso es necesario comenzar con el Slash para evitarnos este problema. 
+
+
+
+
+  Ahora sí actualizamos y vemos que ya están aplicados los estilos. Entonces, si conoces Sass, sabes de las ventajas de utilizarlo y si no, pues zas te permite programar para CSS. Ya que pone a tu disposición variables, funciones, etc. Por ejemplo, supongamos que tenemos un color que se repite mucho en nuestra aplicación 
+
+
+  app.scss
+
+
+  $color: #005400;
+
+
+
+
+  y queremos guardarlo en una variable para poder hacer referencia más adelante. Simplemente declaramos la variable con un signo dolar similar AP. PY. Utilizamos 2 puntos para asignarle un valor de ahora en adelante. ¿Puedo hacer uso de esta variable donde quiera, por ejemplo, aquí? 
+
+
+
+
+
+
+  Ahora debo ejecutar, 
+
+  gulp sass
+
+
+   para que compile el archivo y vemos que me convierte ACSS que el. ¿Puede entender? 
+
+
+
+app.css
+
+---------
+.active{
+      text-decoration: none;
+      color: #005400;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+
+
+---------
+
+
+Verificamos en el navegador y vemos un verde más oscuro. También tenemos el lujo de olvidarnos de los prefijos de los navegadores.
+
+app.scss
+--------
+
+$color: #005400;
+
+nav{
+  width: 100%;
+}
+--------
+
+
+Por ejemplo, vamos a decirle a la navegación. Que tenga un ancho de 100% vamos a la terminal 
+
+
+gulp sass
+
+
+y es un poco tedioso estar ejecutando golpesas a cada momento. Para evitar eso tenemos el Comando Watch, que supervisa los archivos y ejecuta todas las tareas definidas aquí cada vez que detecta algún cambio en los archivos.
+
+
+
+
+
+ Entonces ejecutamos golpe watch y vemos que se mantiene en sentido para ejecutarse cuando realicemos algún cambio. 
+
+
+$gulp watch
+
+
+Entonces vamos a decirle Display FLEX
+
+
+
+app.scss
+--------
+
+$color: #005400;
+
+nav{
+  width: 100%;
+  display: flex;
+}
+--------
+
+
+ Guardo con control. S vemos en la esquina superior derecha que me aparece el mensaje Sass A sido compilado y si revisamos el archivo compilado, vemos que automáticamente me ha añadido los prefijos necesarios. 
+
+
+app.css
+
+---------
+
+nav{
+  widht: 100%;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.active{
+      text-decoration: none;
+      color: #005400;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+
+
+De esta forma puedo mantener mi archivo SAS con una sola línea y elixir se encargará de añadir los prefijos necesarios. 
+
+Ahora vamos a darle un espaciado entre los links. A manera de ejemplo, para ello utilizamos justified content. Con el valor Space around, 
+
+
+app.scss
+---------
+
+nav{
+  widht: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.active{
+      text-decoration: none;
+      color: #005400;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+
+
+
+
+guardamos, se compila automáticamente, actualizamos el navegador y vemos los links distribuidos equitativamente. 
+
+
+
+
+Si vamos al archivo compilado, vemos que tiene los prefijos del Justified Content. 
+
+
+app.css
+---------
+
+nav{
+  widht: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+.active{
+      text-decoration: none;
+      color: #005400;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+
+
+
+
+
+También. ¿OK, pero qué pasa si quiero utilizar less en lugar de SAS? 
+
+
+
+
+
+Vamos a apagar el observador con control + C. Y para utilizar leds lo único que debemos hacer es, en el gulp file, cambiar de SAS a Less 
+
+
+
+
+
+gulpfile.js
+---
+
+var elixir = require('laravel-elixir');
+
+elixir(finction(mix){
+  mix.less('styles.less');
+});
+
+---
+
+
+y la extensión debe cambiar a les también ahora los archivos de leds por Convención deben guardarse en una carpeta llamada lees. 
+
+//resources/assets/less
+
+
+Entonces vamos a crearla resources assets less y el nombre que le quiero dar al archivo. 
+
+
+  resources/assets/less/styles.less
+
+Para validar, vamos a ponerle styles punto les. Vamos a copiar todo esto que está aquí, ya que la sintaxis es muy similar, pero las variables se declaran como un arroba en lugar de un signo dolar ahora 
+
+
+
+styles.less
+-----------
+nav{
+  widht: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.active{
+      text-decoration: none;
+      color: @color;
+    }
+
+    .error{
+      color: red;
+      font-size: 12px
+    }
+
+-----------
+
+en la terminal EJECUTAMOS gulp less 
+
+
+Ah, olvidamos cambiar el nombre del archivo no es APP punto les sino styles punto les OK, volvemos a ejecutar. Y ahora sí, vemos que ha compilado leds en el Archivo Styles CSS y con los mismos prefijos necesarios. Bien, voy a eliminarlos ya que no los voy a utilizar. Borramos esta carpeta también  (less)listo, incluso podremos utilizar la extensión SAS. Si queremos le cambiamos la extensión a SAS. Y modificamos a la sintaxis de SAS, Borramos los puntos y coma y las llaves. Y le podemos decir a sublime para que cambie el lenguaje a SAS para que agregue los colores a la sintaxis compilamos con gulp SAS. Y obtenemos exactamente el mismo resultado que da tu elección. 
+
+
+Qué procesador CSS utilizar
+
+ Vamos a dejarlo como estaba y con la extensión SCSS. Bien, vamos a encender el observador otra vez gulp watch. Y como dije antes, vamos a utilizar bootstrap para mejorar un poco la apariencia del sitio. 
+
+
+
+Primero eliminemos este CSS. Y desconectamos esta línea para agregar bootstrap es todo lo que debemos hacer:
+
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+
+
+ puesto que bootstrap lo instalamos al ejecutar 
+
+
+ $np  install 
+
+
+
+ y se encuentra en la carpeta not node.js. Recuerda que aquí es donde se guardan todos los paquetes que instalamos con note. Luego buscamos la carpeta bootstrap SAS. 
+
+
+node_modules
+    |_bootstrap-sass
+          !_ assets
+                |_ stylesheets
+                      |_bootstrap
+
+                            _bootstrap.scss
+
+
+ Luego entra en assets, luego style sheets. Y finalmente importa este archivo que a su vez hace todas estas importaciones, no es necesario agregarle el subguión.
+
+
+
+
+  Entonces, al momento de compilar este archivo, 
+
+
+
+
+  automáticamente tendremos acceso a bootstrap. 
+
+
+  Si actualizamos vemos que la apariencia cambia un poco, entonces vamos a agregar algunos componentes. 
+
+  Vamos a la plantilla, layout 
+
+
+layout.blade.php
+-----------------
+
+
+bs3-
+
+-----------------
+
+
+
+
+  y déjame eliminar esto que no necesitamos. 
+
+
+  Bien, yo tengo un paquete en sublime text que se llama Bootstrap 3 Snippet que me permite escribir BS 3 guión y seleccionar el componente de Bootstrap que quiero. 
+
+
+
+  En este caso voy a utilizar un nap bar, presiono enter y automáticamente me escribe toda la estructura de un navar. Si actualizamos vemos que tenemos la navegación al estilo de Bootstrap. Entonces vamos a colocar estos links en el. 
+
+bs3-navbar
+
+
+
+
+Bajamos un poco y copiamos todos los links que se encuentran dentro de la etiqueta nav. ¿Eliminamos la etiqueta? Y los. A pegar aquí dentro del Nav. Bar. Y vemos que los links deben estar dentro de una etiqueta Li y aquí el link, entonces lo que debemos hacer es cortar todo esto, crear una etiqueta li y dentro pegar el link. 
+
+Luego esta clase se la pasamos a la etiqueta Li OK. Hacemos lo mismo con estos 2 links Y ponemos cada etiqueta en su propia línea para poder verlas mejor. 
+
+Actualizamos y vemos nuestros links. Y estos 2 extras de aquí Son estos, vamos a borrarlos, listo. Ahora solo nos queda el link del Login. 
+
+Qué tal si lo ponemos aquí a la derecha 
+
+Copiamos el link con el check. Y pegamos aquí. Eliminamos el link anterior y encerramos el link en una etiqueta link como lo hicimos anteriormente, actualizamos y listo, ya tenemos los links funcionando y con los Estados también. Aquí a la derecha tenemos un drop down, pero esto no va a funcionar, ya que aún no hemos agregado el archivo de Javascript de Bootstrap, tampoco hemos agregado JQuery la haremos mas adelante.
+
+
+
+
+Lo haremos más adelante. Volvemos a sublime y buscamos el link del lock out para agregarlo en el mismo lugar del login. Lo colocamos aquí debajo y en lugar de hacer otro check vamos a utilizar un else. Si el usuario es un invitado, mostramos el login, caso contrario els mostramos el logout en dif encerramos el link en un link y ponemos 2 etiquetas cada una en su línea. No vemos ningún cambio todavía, pero ya lo veremos cuando estemos autenticados. 
+
+
+
+Este campo de búsqueda lo vamos a eliminar. ¿Es este formulario de aquí? Y este drop Down lo voy a comentar.
+
+
+
+Ahora vamos a centrar el contenido del menú, para ello buscamos aquí arriba donde dice Container Fluid y le quitamos el fluid. Encerramos el contenido y el footer en esta misma clase container. Actualizamos y listo, ahora vamos con el formulario de contacto. 
+
+
+
+
+
+Abrimos la vista messages create.
+
+
+create.blade.php
+------------
+
+
+
+------------
+
+
+Y a los campos de entrada le vamos a dar la clase fome control, actualizamos y vemos que mejora un poco. Hacemos lo mismo con el email. Y el text área. Por último, al botón de enviar le damos una clase BTNYBTN Primary. Se ve mucho mejor que antes. Ahora vamos al Login y vamos a hacer lo mismo. Abrimos la vista login. Le damos la misma clase font control.
+
+
+
+Luego tengo la clase BTNBTN primary actualizamos y vemos que cada campo está en su propia línea para ponerlos todos en una sola línea. Vamos al formulario y le agregamos la clase fund inline listo. Ahora vamos a intentar hacer login entrar y nos lleva a la página de mensajes. Vemos que el link de mensajes no se ve como los demás. Vamos al layout y aquí está, lo metemos en un link y la clase se la pasamos al li actualizamos y ahora sí continuamos con la tabla. Vamos a la vista messages Index, le quitamos estas propiedades a la tabla y le agregamos la clase table actualizamos y listo, mucho mejor. 
+
+
+
+
+
+Ahora vamos con estos 2 botones, al botón eliminar le agregamos la clase BTNYBTN danger actualizamos y para hacerlo más pequeño le damos la clase BTNXS Y Al editar le damos la clase BTNBTN info. YBTNXS para hacerlo más pequeño. 
+
+
+
+Excelente, vamos a enviar un mensaje. Listo para finalizar, vamos a mejorar la vista. Edit. Agregamos la clase font control a los campos de entrada y al botón le damos la clase BTNBTN Primary. Listo, aquí debería estar activo el link de mensajes, vamos al Layout. Y agregamos un asterisco, aquí actualizamos y listo, editamos un mensaje para ver qué funciona. Y por supuesto, podemos cerrar sesión. Bien, una vez que hemos terminado de trabajar en los estilos y los script y estamos listos para mandar a producción, apagamos el watcher y debemos ejecutar este comando que se llama 
+
+
+gulp --production
+
+
+De esta forma se optimizan los archivos, es decir, Semiifican, para que pesen menos y así mejorar la carga de la página. 
+
+
+
+Aquí podemos ver el archivo CSS compilado sin optimizar 
+
+
+app.css
+-------------
+@charset "UTF-8";
+
+
+html{
+	font-family: sans-serif;
+	-ms-text-size-adjust: 100%:
+	-webkit-text-size-adjust: 100;
+}
+
+body{
+	margin; 0;
+}
+
+
+
+article,
+aside,
+details,
+figcaption,
+figure,
+...
+
+-------------
+
+
+
+y luego de ejecutar 
+
+
+
+gulp --production
+
+
+
+vemos que el archivo ha sido comprimido. 
+
+
+Excelente en la siguiente lección veremos algunas otras características delixir, como concatenar archivos, live reload entro otros.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Referencias
+
+
+
+
 
 Instalacion 
 

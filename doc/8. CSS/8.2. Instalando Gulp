@@ -3,13 +3,76 @@
 
 Luego de haber instalado todas las dependencias con
 
-npm install vamos a revisar el archivo en la raiz del proyecto
+npm install 
 
+
+Vamos a revisar este archivo llamado gulpfile.js. 
 
 gulpfile.js
 ---
 
+var elixir = require('laravel-elixir');
+
+
+/*
+/-----------------------------------
+/ Elixir Asset Management
+/-----------------------------------
+/
+/ Elixir proovides a clean, fluen API for defining some basic Gulp tasks
+/ for your Laravel application. By default, we are compiling the Sass
+/ file for our application, as well as publishing vendor resources.
+*/
+*/
+
+elixir(finction(mix){
+  mix.sass('app.scss');
+});
+
 ---
+
+
+
+Aquí es donde se ejecutarán todas las tareas de compilación concatenación. Etc. Todo. Esto con la ayuda de gulp.js. Que es un manejador de tareas automatizadas escrito en Javascript. Pero no te preocupes mucho por npm o gulp, vamos a enfocarnos en elixir. 
+
+
+
+
+Ok, vemos en la primera línea que hace una importación de Laravel elixir laravel elixir encapsula a golpe y nos permite crear tareas de una manera mucho más sencilla. 
+
+
+
+vamos a revisar el archivo en la raiz del proyecto
+
+
+Entonces comencemos borrando esto bien, aquí dentro es donde vamos a crear nuestras tareas 
+
+gulpfile.js
+---
+
+var elixir = require('laravel-elixir');
+
+//Directorio por defecto
+// resources/assets/sass
+
+elixir(finction(mix){
+  mix.sass('app.scss');
+});
+
+---
+
+
+y Larevel viene con una tarea por defecto que dice mix Sass y por parámetro le pasa un archivo que es el archivo SAS que se va a compilar. En este caso es APP Scs. 
+
+
+
+
+
+
+
+
+
+
 
 
 Como en nuestro proyecto no existe el paquete golp procedemos a instalar.
