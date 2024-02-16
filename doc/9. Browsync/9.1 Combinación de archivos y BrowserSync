@@ -1,0 +1,503 @@
+18. Combinación de archivos y BrowserSync
+
+
+En la versión anterior vimos cómo utilizar Preprocesadores CSS y también mejoramos la apariencia del sitio con bootstrap. En esta lección veremos cómo concatenar o combinar múltiples archivos en uno solo, y también cómo podemos utilizar browser sync para que el navegador se actualice instantáneamente cada vez que realizamos un cambio. Bien, ya sabemos cómo importar archivos con Sass.
+
+
+resources/assets/sass/
+	app.scss
+	--------
+
+	@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+	--------
+
+
+
+Esto es una buena forma de organizar nuestros estilos, ya que podemos por ejemplo, crear una carpeta aquí llamada Components. 
+
+
+resources/assets/sass/components
+
+
+Tal vez y dentro podemos crear un archivo napa que contendrá solamente los estilos para el navbar.scss. Supongamos que queremos que el navar o el menú tenga un fondo verde. 
+
+
+navbar.scss
+------
+.navbar{
+	background-color: green; 
+}
+
+--
+
+
+Luego en el archivo principal lo que hacemos es importarlo.
+
+	app.scss
+	--------
+
+	@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+	@import "componentes/navbar";
+	--------
+
+
+
+
+Como estamos en el archivo APP Scs, podemos entrar directamente a la carpeta contones y traer el archivo navarro. Entonces escribimos components, slash naval y no es necesario escribir la extensión SCSS.
+
+
+
+Ahora ejecutamos 
+
+	gulp sass
+
+
+
+Actualizamos el navegador y vemos el Fondo Verde.
+
+
+
+Vamos a dejar encendido el watcher.
+
+gulp watch
+
+
+
+Y si cambiamos el color, voy a utilizar esta función de SAS lightning que lo que hace es aclarar el color que le pasamos por parámetro. 
+
+
+navbar.scss
+-----------
+.navbar{
+	backgound-color: lighten(green, 20%);
+}
+
+-----------
+
+
+
+Este color puede ser con un nombre, puede ser en RGBO en Hexadecimal y como segundo parámetro le damos el porcentaje en que va a aclarar el color. Guardamos, vemos que se compila automáticamente y si actualizamos el navegador vemos el verde más Claro.
+
+
+
+
+
+Si revisamos el archivo CSS compilado, vemos que al final nos ha agregado los estilos del navarro. Otra opción para combinar archivos es hacerlo directamente desde el gulpfile. Supongamos que tenemos un archivo de estilos llamado blog.
+
+
+resources/assets/sass/components/
+
+	blog.scss
+	---------
+
+
+	---------
+
+
+
+Vamos a apagar el watcher.
+
+
+
+Bien y este blog quiero combinarlo con el archivo APP. En el gulp File podemos pasar un array y pasar los archivos a combinar. 
+
+
+gulpfile.js
+-----------
+var elixir = require('laravel-elixir');
+
+elixir(function(mix)){
+	//resources/assets/sass/
+
+	mix.sass(['app,scss','blog.scss']);
+}
+
+
+---------
+
+
+
+
+
+Hay que tener cuidado con esto, ya que no queremos tener decenas de archivos a combinar aquí. OK, vamos a agregar algo al blog para demostrarlo.
+
+
+
+Ejecutamos 
+
+gulp sass
+
+
+
+¿Y si revisamos el archivo compilado, vemos que al final tenemos los estilos del blog ahora qué pasa si no utilizo preprocesadores? 
+
+
+app.css
+----
+...
+.blog {
+	color: blue;
+}
+
+----
+
+
+Pero aún así quiero combinar mis estilos en uno solo para demostrarlo. Vamos a crear unos cuantos archivos CSS. 
+
+
+
+
+La ubicación por defecto es Resources Assets, CSS, 
+
+/resources/assets/css
+
+pero vamos a ubicarlos en otra carpeta distinta para ver cómo podemos cambiar los parámetros por defecto.
+
+Creamos el archivo a.CSS.
+public/css
+a.css
+----
+a{
+	color:green;
+}
+----
+
+
+b.css
+----
+b{
+	color: blue;
+}
+
+----
+
+c.css
+----
+cite{
+	color: orange;
+}
+
+----
+
+
+vamos a agregarle una regla a cada uno para diferenciarnos.
+
+
+
+Entonces, para combinarse ese ese puro, tenemos la tarea Styles, que recibe por parámetro un array de archivos a punto CSS.
+
+
+gulpfile.js
+-----------
+
+var elixir = require('laravel-elixir');
+
+elixir(function(mix)){
+	//resources/assets/sass/
+
+	mix.sass(['app,scss','blog.scss']);
+
+	mix.styles([
+		'a.css',
+		'b.css',
+		'c.css',
+	],'public/css/d.css','public.scss');
+}
+
+----------
+
+
+
+
+
+BYC.
+
+
+
+Luego como segundo parámetro le pasamos la ubicación de destino. Queremos que vaya a la carpeta public slash CSS slash y el archivo se llamará d punto CSS. Si no colocamos este valor por defecto, lo ubicará en la carpeta public CSSY. El archivo se llamará all punto CSS.
+
+public/css/all.css
+
+
+
+Y por tercer parámetro, le pasamos la ubicación de origen de los archivos.
+
+public/css
+
+De nuevo por defecto es resources Assets CSS, pero en este caso queremos que sea public CSS.
+resources/assets/css
+
+Ahora ejecutamos 
+
+	gulp styles 
+
+y vemos que ha combinado estos 3 archivos en este de aquí, si lo revisamos, aquí lo tenemos.
+
+Fetching Styles Source Files...
+- public/css/a.css
+- public/css/b.css
+- public/css/c.css
+
+
+Saving To...
+- public/css/d.css
+
+
+Al igual que con cualquier tarea, lo podemos agregar la opción production para que optimice los archivos.
+
+
+Entonces, ya sabemos cómo combinar y procesar estilos.
+
+
+
+Vamos a eliminar esto. quedando
+
+gulpfile.js
+-----------
+
+var elixir = require('laravel-elixir');
+
+elixir(function(mix)){
+
+	mix.sass(['app,scss','blog.scss']);
+
+
+----------
+
+
+
+Y a borrar estos archivos de ejemplo.
+
+Y vamos a compilar nuevamente para dejar todo como estaba.
+gulp sass
+
+Listo, continuemos. ¿Recuerdas que teníamos un dropdown? Aquí vamos al Layout para descomentar el dropdown.
+
+Listo, aquí lo tenemos, pero no está funcionando, ya que necesita del archivo Javascript de Bootstrap. Si vamos a la carpeta note modules y buscamos la carpeta bootstrap SAS dentro de Assets Javascripts, este es el archivo que necesitamos.
+
+
+
+Entonces, vamos al gulpfile.js
+
+
+
+Y vamos a utilizar la tarea scripts, que es muy similar. A Styles le pasamos un array y le pasamos la ubicación del archivo, node_models, bootstrap, SAS, Assets, javascript, bootstrap, punto, JS. 
+
+gulpfile.js
+-----------
+
+var elixir = require('laravel-elixir');
+
+elixir(function(mix)){
+
+	mix.sass(['app,scss');
+
+	mix.scripts([
+		'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js'
+	], 'public/js/all.js', 'node_modules');
+
+});
+----------
+
+
+
+
+
+
+El siguiente parámetro es el destino. Voy a decirle que me compile en un archivo llamado all punto JSY. En el tercer parámetro le pasamos la carpeta de origen. Podemos decirle que sea desde la raíz.O puedo decirle que sea desde la carpeta node_modules.
+
+
+Y eliminamos esta referencia, OK, vamos a ejecutar esta tarea, 
+
+gulp scripts 
+
+
+y vemos la notificación.
+
+
+Y ahora lo que debemos hacer es referenciar este archivo desde el Layout.
+
+
+Bajamos y antes de cerrar el body añadimos el script. Igual que con los CSS, debemos comenzar con el slash para que comience desde la raíz pública y el archivo se llama all punto JS. 
+
+
+layout.blade.php
+-----
+
+<footer>Copyright {{ date('Y') }}</footer>
+</div>
+
+<script src="/js/all.js"></script>
+
+----
+
+
+Si actualizamos y damos Clic al Drop Down, vemos que todavía no funciona en la consola podemos ver que bootstrap necesita de Jquery.
+
+
+
+OK, vemos en el archivo package Json que tenemos la dependencia de Bootstrap SAS y por supuesto de laravel elixir. 
+
+
+package.json
+----------
+{
+	"private : true",
+	"devDependencies" : {
+		"gulp" : "^3.9.1"
+	},
+	"dependencies":{
+	 "laravel-elixir": "^5.0.0",
+	 "laravel-elixir": "^3.0.0",
+	}
+}
+
+--------
+
+
+Ahora debemos agregar Jquery. Para ello, en la terminal escribimos 
+
+npm install jquery --save
+
+
+ y le pasamos la opción SAVE para que registre esta dependencia en el archivo package punto JS.
+
+
+Ejecutamos y esperamos. Una vez terminado, vemos que es añadido a las dependencias y el paquete ya se encuentra disponible en la carpeta node_modules. Ahora vamos al gulpfile, hacemos un espacio antes del script de Bootstrap y escribimos la dirección. Nnode_modules ya está especificado luego en la carpeta J query dist. Y el archivo se llama J query punto JS ejecutamos nuevamente gulpscripts.
+
+resources/assets/js/sass/app,js
+
+
+
+Y aquí podemos ver que me ha combinado estos 2 archivos, si actualizamos vemos que ya funciona.
+
+
+Y también al redimensionar el navegador podemos desplegar el menú.
+
+
+¿Excelente ahora dónde ubicamos los scripts que nosotros creamos?
+
+
+Vamos a crear una carpeta llamada js dentro de Resources assets.
+
+
+Y aquí voy a crear un archivo javascript llamado APP js y para el ejemplo simplemente voy a escribir un consollog con el mensaje custom Scripts. Entonces agregamos este archivo al array, pero este archivo no está dentro de note modules, así que vamos a quitarlo y vamos a decirle que comience a buscar todos los archivos desde la raíz del proyecto.
+
+
+Devolvemos la carpeta not motus a estas 2 referencias y ahora sí, agregamos.
+
+
+gulpfile.js
+-----------
+
+var elixir = require('laravel-elixir');
+
+elixir(function(mix)){
+
+	mix.sass(['app,scss');
+
+	mix.scripts([
+		'node_modules/jquery/dist/jquery.js',
+		'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+		'resources/assets/js/app.js'
+	], 'public/js/all.js', './');
+
+});
+----------
+
+
+
+En resources Assets JSA app punto JS ejecutamos nuevamente el script. Actualizamos y vemos el mensaje en la consola. Si revisamos la carpeta public JS, vemos que tenemos un solo archivo.
+
+
+
+Y al final tenemos el contenido de APP Js. Y lo mejor de todo es que si ejecutamos 
+
+gulp producction 
+
+optimiza todos los estilos y los scripts también. Si vemos el archivo final, es un archivo ilegible para nosotros, para el navegador lo puede interpretar perfectamente.
+
+
+Bien, lo último que veremos en esta lección será browser sync, 
+
+
+	https://www.browsersync.io
+
+
+que lo que hace es, entre muchas cosas, actualizarse automáticamente cada vez que se realiza un cambio en los assets.
+
+
+Y también sincroniza navegadores, es decir, que la acción que hagamos en un navegador.
+
+
+Se verá reflejada en otro dispositivo que tenga abierto la misma página. Bien para utilizarlo. Agregamos la tarea browser sync y le pasamos un objeto con la llave proxy y el valor. 
+
+	gulpfile.js
+-----------
+
+var elixir = require('laravel-elixir');
+
+elixir(function(mix)){
+
+	mix.sass(['app,scss');
+
+	mix.scripts([
+		'node_modules/jquery/dist/jquery.js',
+		'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+		'resources/assets/js/app.js'
+	], 'public/js/all.js', './');
+
+	mix.browsersync({
+		proxy: 'larevel.dev'
+	});
+
+});
+----------
+
+
+
+
+
+En mi caso laravel punto Dev en tu caso debes agregar la URL de tu proyecto, y eso es todo lo que.
+
+
+Que hacer Ejecutamos 
+
+
+gulp watch 
+
+[] Using gulpfile ~/Code/laravel/gulpfile.js
+[] Starting 'watch' ...
+[] Finished 'watch' after 11 ms
+[] Proxing: http://laravel.dev
+[] Access URLs:
+----------------------------------
+Local: 		http://localhost:3000
+External: 	http://192.168.1.5.:3000
+----------------------------------
+UI:			http://localhost/:3001
+UI External:http://192.168.1.5:3001
+----------------------------------
+[] Watching files ...
+
+
+y automáticamente me abre el navegador en Localhost puerto 3000, entonces de ahora en adelante.
+
+
+Cada que realice un cambio y guarde.
+
+
+Automáticamente se verá reflejado en el navegador lo mismo con los estilos.
+
+Guardamos y vemos el resultado en el navegador.
+
+
+Bien, vamos a dejar como estaba.
+
+
+También podemos testear esta aplicación accediendo desde diferentes dispositivos conectados a la misma red. Lo único que debemos hacer es acceder a esta URL external, ya sea desde tu teléfono, tablet, etcétera, y cualquier acción que realicemos en uno de los navegadores automáticamente se verá reflejado en el otro.
+
+
+Excelente en la siguiente lección vamos a ver cómo implementar un sistema de manejo de usuarios.
+
